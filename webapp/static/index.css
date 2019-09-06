@@ -1,0 +1,167 @@
+#header {
+    height:600px;
+}
+
+#logo_row {
+    padding-top:20px;
+    font-size:20px;
+}
+
+#des_1 {
+    font-size:28px;
+    color:#00ec8f;
+    font-weight: bold;
+}
+
+#des_2 {
+    font-size:50px;
+    font-weight: bold;
+}
+
+#des_3 {
+    font-size:14px;
+    padding-right:60px;
+}
+
+
+
+#part2_des1 {
+    font-size:36px;
+    color:#00ec8f;
+    text-align:center;
+}
+
+#login {
+    background-image: url(' ./img/login2.png');
+    background-position: left top;
+    background-repeat: no-repeat;
+    height:360px;
+    width:331px;
+    margin-top:65px;
+    padding-left:50px;
+	text-align: left;
+}
+
+#login input {
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    height:35px;
+    border-width:0px;
+    z-index: 1000;
+    margin-top:20px;
+    width:190px;
+    padding-left:10px;
+}
+
+#login input#valid {
+    width: 110px;
+}
+
+#login button {
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    height:25px;
+    width:200px;
+    margin-top:20px;
+    border-width:0px;
+    background-color:#00ec8f;
+    color:white;
+    font-size:14px;
+}
+
+#login_title {
+    color:#00ec8f;
+    font-size:18px;
+    padding-top:60px;
+}
+
+#login img#validImg {
+	height: 35px;
+	margin-top: 20px;
+}
+
+#forgot {
+    color:#00ec8f;
+    font-size:12px;
+    padding-left:150px;
+}
+
+#part2_des21 {
+    margin-top:40px;
+    background-image: url(' ./img/Group2.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    height:91px;
+}
+
+.part2_des21_title {
+    font-size:18px;
+    color:#444444;
+    text-align:center;
+    margin-top:30px;
+}
+
+.part2_des21_text{
+    color:#444444;
+    font-size:14px;
+}
+
+#map {
+    background-image: url(' ./img/map.png');
+    height:240px;
+    margin-top:80px;
+}
+
+#contact_us {
+    background-color:#062734;
+}
+
+#contact_us_text {
+    font-size:26px;
+    color:#00ec8f;
+    text-align:center;
+}
+
+#wechat {
+    background-image: url(' ./img/wechat.png');
+    background-repeat: no-repeat;
+    width:108px;
+    height:106px;
+    float:right;
+    margin-bottom:40px;
+}
+
+#wechat_text {
+    color:white;
+    font-size:14px;
+    margin-left:30px;
+}
+
+#footer {
+    text-align:center;
+    color:#999999;
+    font-size:14px;
+    padding-bottom:20px;
+}
+
+#wechat_text_1 {
+    background-image: url(' ./img/wechat_icon_1.png');
+    background-repeat: no-repeat;
+    padding-left:30px;
+}
+
+#wechat_text_2 {
+    background-image: url(' ./img/wechat_icon_2.png');
+    background-repeat: no-repeat;
+    padding-left:30px;
+    margin-top:30px;
+}
+
+#wechat_text_3 {
+    background-image: url(' ./img/wechat_icon_3.png');
+    background-repeat: no-repeat;
+    padding-left:30px;
+    margin-top:15px;
+}

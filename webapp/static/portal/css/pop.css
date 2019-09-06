@@ -1,0 +1,33 @@
+@charset "utf-8";
+/* CSS Document */
+html, body, div, h1, h2, h3, h4, h5, h6, ul, ol, dl, li, dt, dd, p, blockquote, pre, form, fieldset, table, th, td { margin : 0; padding : 0; }
+ul { list-style:none; }
+.clear { clear:both; }
+.clearfix:after { content:"."; display:block; height:0; clear:both; visibility:hidden; }
+.clearfix { display:inline-block; } /*针对ie，删除它，高度无法撑开*/
+.clearfix { display:block; } /*针对ie，删除它，chorme以撑开宽度显示*/
+a { color:#333333; cursor:pointer; text-decoration:none;font-family:"宋体","Times New Roman", Times, serif; font-size:12px;}
+a:hover { }
+em {font-style: normal; color:#999;}
+img { border:none; }
+.fl{ float:left;}
+.fr{ float:right;}
+.red{ color:#F00; font-style:normal; vertical-align:middle;height:31px; line-height:31px;  float:left;}
+.mr5{ margin-right:5px;}
+
+.bg{position:absolute;top:0;left:0;width:100%;height:100%;background:#000;opacity:0.5;filter:alpha(opacity=50);}
+.wrapper{ width:100%; position:relative; height:100%; }
+.pop{ width:488px; position:absolute; left:50%; margin-top:0px; margin-left:-244px;}
+.pop_top{ background:url(../images/popbg.jpg) repeat-x; width:488px; height:36px; border-top:1px solid #5497c0; border-bottom:1px solid #3e7cd0;}
+.pop_top_title{ color:#fff; font-size:14px; font-weight:bold; line-height:36px; padding-left:16px; width:50px;}
+.pop_top_more{ width:16px; height:17px; margin-right:15px; display:inline; margin-top:10px;}
+.pop_center{ border:0px solid #dadada; border-top:none; width:470px; padding:18px 0 0 12px; background:#fff;}
+.poptable{ width:455px; border:1px solid #d1e7e9; border-right:none; border-bottom:none; margin-bottom:20px;}
+.poptable table{ width:100%;}
+.c-text01{ border:none;background:url(../images/input01.jpg) no-repeat; width:324px; height:31px; line-height:31px;margin:9px 0 8px 0; }
+.c-text02{ border:1px solid #b5c6d6; width:314px; height:105px; line-height:24px; margin:9px 0 8px 0; padding:4px;}
+.poptable td{border-right:1px solid #d1e7e9;height:31px; line-height:31px; padding:0 8px; border-bottom:1px solid #d1e7e9; color:#3886c1; font-size:13px;}
+.num{ background:#f0feff;}
+.mind{ width:100%; text-align:center; margin:18px 0 14px 0;}
+.mind input{cursor: pointer;}
+.mindbutton{ background:url(../images/sure.jpg) no-repeat; width:99px; height:36px; border:none;}

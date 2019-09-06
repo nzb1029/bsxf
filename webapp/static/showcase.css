@@ -1,0 +1,32 @@
+/* general */
+.prepend-top {
+	margin-top:1.5em;
+}
+
+#main h2,h3 {
+	margin-bottom: 9px;
+}
+
+/* header */
+#header {
+	border-bottom: 2px solid #658A16;
+}
+
+#header h1 {
+	color: #658A16;
+}
+
+#header h1 small {
+	color: #BACE87;
+}
+
+/* footer */
+#footer {
+	margin-top: 15px;
+	padding: 15px 0px 0px 0px;
+	font-size: 95%;
+	text-align: center;
+	border-top: 2px solid #658A16;
+}
+
+#footer a {color: #999;}

@@ -1,0 +1,59 @@
+.user_page table.noborder{
+ border: #a8cbf1 0px solid;
+}
+.user_page .title {
+	width: 100%;
+	font-weight:bold;
+	color: green;
+	text-align: left;
+	border-bottom: #000000 1px solid;
+    padding: 5px 10px;
+    background-color: #f1f1f1;
+}
+.user_page .noborder td.left {
+    color: #336699;
+    width: 20%;
+    text-align: left;
+    padding-right: 10px;
+    border: #a8cbf1 0px solid;
+    background-color: #ffffff;
+    padding-left: 10px;
+}
+.user_page .noborder td.right {
+    color: #000000;
+    width: 80%;
+    padding-left: 10px;
+    border: #a8cbf1 0px solid;
+    background-color: #ffffff;
+    text-align:left;
+    padding: 3px;
+    padding: 5px;
+}
+.user_page .noborder td.right_half {
+    color: #000000;
+    width: 40%;
+    padding-left: 10px;
+    border: #a8cbf1 0px solid;
+    background-color: #ffffff;
+    text-align:left;
+    padding: 3px;
+    padding: 5px;
+}
+.user_page td.file {
+    padding: 0px;
+    border: #a8cbf1 0px solid;
+    background-color: #ffffff;
+}
+.user_page td.file_img {
+	border-top: #a8cbf1 1px solid;
+	border-left: #a8cbf1 1px solid;
+	border-right: #a8cbf1 1px solid;
+	background-color: #ffffff;
+}
+.user_page td.file_name {
+	border-left: #a8cbf1 1px solid;
+	border-right: #a8cbf1 1px solid;
+	border-bottom: #a8cbf1 1px solid;
+	text-align: center;
+    background-color: #f1f1f1;
+}

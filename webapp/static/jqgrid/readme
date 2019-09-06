@@ -1,0 +1,2 @@
+ {name:'jcrq',index:'jcrq',  editable:false,label:'检查日期',formatter:"date",formatoptions: { srcformat:'u',newformat:'Y-m-d H:i:s'}},
+		     

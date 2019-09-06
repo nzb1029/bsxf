@@ -1,0 +1,177 @@
+{"0":[{'title':'Title0','iconCls':null,'width':'373','height':'100','left':null,'top':null,'cls':null,'headerCls':null,'bodyCls':null,'style':{},'href':null,'cache':true,'fit':false,'border':true,'doSize':true,'noheader':false,'content':'<div style="padding:5px;">Content1</div>','collapsible':true,'minimizable':false,'maximizable':false,'closable':true,'collapsed':false,'minimized':false,'maximized':false,'closed':false,'tools':{'remove':function (o) {
+    var _37f = this.indexOf(o);
+    if (_37f != -1) {
+        this.splice(_37f, 1);
+    }
+    return this;
+}},'loadingMessage':'Loading...','onLoad':function () {
+},'onBeforeOpen':function () {
+},'onOpen':function () {
+},'onBeforeClose':function () {
+},'onClose':function () {
+},'onBeforeDestroy':function () {
+},'onDestroy':function () {
+},'onResize':function (_1a4, _1a5) {
+},'onMove':function (left, top) {
+},'onMaximize':function () {
+},'onRestore':function () {
+},'onMinimize':function () {
+},'onBeforeCollapse':function () {
+},'onBeforeExpand':function () {
+},'onCollapse':function () {
+},'onExpand':function () {
+}},{'title':'Title1','iconCls':null,'width':'373','height':'100','left':null,'top':null,'cls':null,'headerCls':null,'bodyCls':null,'style':{},'href':null,'cache':true,'fit':false,'border':true,'doSize':true,'noheader':false,'content':'<div style="padding:5px;">Content2</div>','collapsible':true,'minimizable':false,'maximizable':false,'closable':true,'collapsed':false,'minimized':false,'maximized':false,'closed':false,'tools':{'remove':function (o) {
+    var _37f = this.indexOf(o);
+    if (_37f != -1) {
+        this.splice(_37f, 1);
+    }
+    return this;
+}},'loadingMessage':'Loading...','onLoad':function () {
+},'onBeforeOpen':function () {
+},'onOpen':function () {
+},'onBeforeClose':function () {
+},'onClose':function () {
+},'onBeforeDestroy':function () {
+},'onDestroy':function () {
+},'onResize':function (_1a4, _1a5) {
+},'onMove':function (left, top) {
+},'onMaximize':function () {
+},'onRestore':function () {
+},'onMinimize':function () {
+},'onBeforeCollapse':function () {
+},'onBeforeExpand':function () {
+},'onCollapse':function () {
+},'onExpand':function () {
+}},{'title':'Title2','iconCls':null,'width':'373','height':'100','left':null,'top':null,'cls':null,'headerCls':null,'bodyCls':null,'style':{},'href':null,'cache':true,'fit':false,'border':true,'doSize':true,'noheader':false,'content':'<div style="padding:5px;">Content3</div>','collapsible':true,'minimizable':false,'maximizable':false,'closable':true,'collapsed':false,'minimized':false,'maximized':false,'closed':false,'tools':{'remove':function (o) {
+    var _37f = this.indexOf(o);
+    if (_37f != -1) {
+        this.splice(_37f, 1);
+    }
+    return this;
+}},'loadingMessage':'Loading...','onLoad':function () {
+},'onBeforeOpen':function () {
+},'onOpen':function () {
+},'onBeforeClose':function () {
+},'onClose':function () {
+},'onBeforeDestroy':function () {
+},'onDestroy':function () {
+},'onResize':function (_1a4, _1a5) {
+},'onMove':function (left, top) {
+},'onMaximize':function () {
+},'onRestore':function () {
+},'onMinimize':function () {
+},'onBeforeCollapse':function () {
+},'onBeforeExpand':function () {
+},'onCollapse':function () {
+},'onExpand':function () {
+}}],"1":[{'title':'Tutorials','iconCls':null,'width':'502','height':'200','left':null,'top':null,'cls':'portal-panel','headerCls':null,'bodyCls':null,'style':{},'href':null,'cache':true,'fit':false,'border':true,'doSize':false,'noheader':false,'content':null,'collapsible':true,'minimizable':false,'maximizable':false,'closable':true,'collapsed':false,'minimized':false,'maximized':false,'closed':false,'tools':{'remove':function (o) {
+    var _37f = this.indexOf(o);
+    if (_37f != -1) {
+        this.splice(_37f, 1);
+    }
+    return this;
+}},'loadingMessage':'Loading...','onLoad':function () {
+},'onBeforeOpen':function () {
+},'onOpen':function () {
+},'onBeforeClose':function () {
+},'onClose':function () {
+},'onBeforeDestroy':function () {
+},'onDestroy':function () {
+},'onResize':function (_1a4, _1a5) {
+},'onMove':function (left, top) {
+},'onMaximize':function () {
+},'onRestore':function () {
+},'onMinimize':function () {
+},'onBeforeCollapse':function () {
+},'onBeforeExpand':function () {
+},'onCollapse':function () {
+},'onExpand':function () {
+}},{'title':'Clock','iconCls':null,'width':'502','height':'150','left':null,'top':null,'cls':'portal-panel','headerCls':null,'bodyCls':null,'style':{},'href':null,'cache':true,'fit':false,'border':true,'doSize':false,'noheader':false,'content':null,'collapsible':false,'minimizable':false,'maximizable':false,'closable':false,'collapsed':false,'minimized':false,'maximized':false,'closed':false,'tools':{'remove':function (o) {
+    var _37f = this.indexOf(o);
+    if (_37f != -1) {
+        this.splice(_37f, 1);
+    }
+    return this;
+}},'loadingMessage':'Loading...','onLoad':function () {
+},'onBeforeOpen':function () {
+},'onOpen':function () {
+},'onBeforeClose':function () {
+},'onClose':function () {
+},'onBeforeDestroy':function () {
+},'onDestroy':function () {
+},'onResize':function (_1a4, _1a5) {
+},'onMove':function (left, top) {
+},'onMaximize':function () {
+},'onRestore':function () {
+},'onMinimize':function () {
+},'onBeforeCollapse':function () {
+},'onBeforeExpand':function () {
+},'onCollapse':function () {
+},'onExpand':function () {
+}}],"2":[{'title':'Searching','iconCls':'icon-search','width':'365','height':'80','left':null,'top':null,'cls':'portal-panel','headerCls':null,'bodyCls':null,'style':{},'href':null,'cache':true,'fit':false,'border':true,'doSize':false,'noheader':false,'content':null,'collapsible':false,'minimizable':false,'maximizable':false,'closable':true,'collapsed':false,'minimized':false,'maximized':false,'closed':false,'tools':{'remove':function (o) {
+    var _37f = this.indexOf(o);
+    if (_37f != -1) {
+        this.splice(_37f, 1);
+    }
+    return this;
+}},'loadingMessage':'Loading...','onLoad':function () {
+},'onBeforeOpen':function () {
+},'onOpen':function () {
+},'onBeforeClose':function () {
+},'onClose':function () {
+},'onBeforeDestroy':function () {
+},'onDestroy':function () {
+},'onResize':function (_1a4, _1a5) {
+},'onMove':function (left, top) {
+},'onMaximize':function () {
+},'onRestore':function () {
+},'onMinimize':function () {
+},'onBeforeCollapse':function () {
+},'onBeforeExpand':function () {
+},'onCollapse':function () {
+},'onExpand':function () {
+}},{'title':'DataGrid','iconCls':null,'width':'365','height':'200','left':null,'top':null,'cls':'portal-panel','headerCls':null,'bodyCls':null,'style':{},'href':null,'cache':true,'fit':false,'border':true,'doSize':false,'noheader':false,'content':null,'collapsible':false,'minimizable':false,'maximizable':false,'closable':true,'collapsed':false,'minimized':false,'maximized':false,'closed':false,'tools':{'remove':function (o) {
+    var _37f = this.indexOf(o);
+    if (_37f != -1) {
+        this.splice(_37f, 1);
+    }
+    return this;
+}},'loadingMessage':'Loading...','onLoad':function () {
+},'onBeforeOpen':function () {
+},'onOpen':function () {
+},'onBeforeClose':function () {
+},'onClose':function () {
+},'onBeforeDestroy':function () {
+},'onDestroy':function () {
+},'onResize':function (_1a4, _1a5) {
+},'onMove':function (left, top) {
+},'onMaximize':function () {
+},'onRestore':function () {
+},'onMinimize':function () {
+},'onBeforeCollapse':function () {
+},'onBeforeExpand':function () {
+},'onCollapse':function () {
+},'onExpand':function () {
+}},{'title':'Graph','iconCls':null,'width':'365','height':'200','left':null,'top':null,'cls':'portal-panel','headerCls':null,'bodyCls':null,'style':{},'href':null,'cache':true,'fit':false,'border':true,'doSize':false,'noheader':false,'content':null,'collapsible':false,'minimizable':false,'maximizable':false,'closable':true,'collapsed':false,'minimized':false,'maximized':false,'closed':false,'tools':{'remove':function (o) {
+    var _37f = this.indexOf(o);
+    if (_37f != -1) {
+        this.splice(_37f, 1);
+    }
+    return this;
+}},'loadingMessage':'Loading...','onLoad':function () {
+},'onBeforeOpen':function () {
+},'onOpen':function () {
+},'onBeforeClose':function () {
+},'onClose':function () {
+},'onBeforeDestroy':function () {
+},'onDestroy':function () {
+},'onResize':function (_1a4, _1a5) {
+},'onMove':function (left, top) {
+},'onMaximize':function () {
+},'onRestore':function () {
+},'onMinimize':function () {
+},'onBeforeCollapse':function () {
+},'onBeforeExpand':function () {
+},'onCollapse':function () {
+},'onExpand':function () {
+}}]}

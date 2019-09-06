@@ -1,0 +1,50 @@
+@charset "utf-8";
+/* CSS Document */
+
+@import url("head.css");
+/*left*/
+.search{ width:789px; height:72px; background:url(../images/fg05.jpg) repeat-x; border-top:1px solid #bbf4fe; border-bottom:1px solid #e0e0e0;border-left:1px solid #e0e0e0;border-right:1px solid #e0e0e0; padding:11px 0 0 11px;}
+.search_main{ width:776px; height:38px; background:url(../images/fg03.jpg) no-repeat;}
+.search_main input{ width:633px; height:36px; line-height:38px; border:none; background:none; float:left; font-size:14px;background:url(../images/fg03.jpg) no-repeat; color:#9fa8b1; margin:0 4px 0 0; padding:0 10 0 12px;}
+.search_main button{ width:127px; height:38px; float:left; border:0 none; background:none; cursor:pointer; background:url(../images/fg04.jpg) no-repeat;}
+.search_rent{ width:789px; height:25px; line-height:25px; font-family:"宋体"; margin:5px 0 0 0;}
+.search_rent p{ color:#181818; font-size:13px; letter-spacing:2px;}
+.search_rent p em{ color:#eb640a; font-weight:bold;}
+
+.newlistings{width:800px; height:696px; background:url(../images/fg06.jpg) repeat-x #fff; border-top:1px solid #bbf4fe; border-bottom:1px solid #e0e0e0;border-left:1px solid #e0e0e0;border-right:1px solid #e0e0e0;}
+.newlistings_top{ width:800px; height:25px; padding:0 0 0 6px;}
+.newlistings_title{ width:125px; height:25px; line-height:27px; padding:0 0 0 28px;  display:inline-block;background:url(../images/fg07.jpg) no-repeat; color:#ffffff; font-size:14px; font-weight:bold;}
+.newlistings_more{ width:60px;height:25px; line-height:27px; display:inline; font-size:14px;}
+.newlistings_more a{ color:#666;font-family:"微软雅黑"; font-size:11px;}
+.newlistings_bd{ width:793px; padding:7px 1px 0 6px;}
+.newlistings_bd1{ width:793px; height:35px;}
+.ranking{ background:url(../images/fg08.jpg) no-repeat; width:23px; padding:0 0 0 10px; margin:8px 0 0 0; height:18px; color:#cc440e; font-family:Arial; font-size:11px; font-weight:bold;}
+.newlistings_bd1_detail{ width:752px; height:32px; border-bottom:1px solid #e0e0e0;}
+.newlistings_bd1 .newlistings_bd1_detail dt{ height:32px; line-height:32px; float:left;}
+.housetitle{ width:288px;height:32px; line-height:32px; text-align:right;}
+.housetitle a{ color:#376eb7;}
+.newlistings_bd1 .newlistings_bd1_detail dd{ float:left; height:32px; line-height:32px;}
+.road{color:#5f5f5f; width:80px;text-align:right;}
+.area{ width:134px; text-align:right;color:#5f5f5f;}
+.money{ width:112px;text-align:right; color:#9e9e9e;}
+.money strong{ color:#eb640a;}
+.time{ width:112px; text-align:right;color:#9e9e9e;}
+
+/*right*/
+.right{ height:791px;}
+.manage{ width:186px; /*height:84px;*/}
+.manage img{ width:170px; height:57px; /*padding:13px 8px;*/}
+.manage a{ float:left; display:inline-block; width:170px; height:57px;padding:6px 8px;}
+.recommend{ width:186px;}
+.recommend_top{ background:url(../images/fg10.jpg) repeat-x; width:172px; height:27px; line-height:27px; font-size:15px; color:#fff; font-weight:bold; padding:0 0 0 14px;}
+.recommend_bd{ width:186px;}
+.recommend_bd ul{ width:186px;}
+.recommend_bd li{ margin-top:12px;}
+.recommend_pic01 {height: 126px;margin: 0 auto 5px; width: 174px; border:1px solid #cccccc;}
+.recommend_name01{ color:#376eb7; line-height:18px; width:174px; padding:0 6px;}
+.recommend_name01 a{color:#376eb7;}
+.recommend_name03{width:174px; padding:0 6px; height:20px; line-height:20px;}
+.title{ width:110px; color:#454545; font-weight:bold; }
+.price{ width:64px; color:#eb640a;}
+.recommend_name02{width:174px; padding:0 6px; height:20px;line-height:20px; }
+.recommend_name02 a{color:#5f5f5f;}

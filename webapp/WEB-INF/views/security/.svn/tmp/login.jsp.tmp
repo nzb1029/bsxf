@@ -1,0 +1,158 @@
+<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ page import="org.apache.shiro.web.filter.authc.FormAuthenticationFilter"%>
+<%@ page import="org.apache.shiro.authc.LockedAccountException "%>
+<%@page import="org.bsxf.utils.EhcacheManager"%>
+<%@page import="java.util.Date"%>
+<%@page import="org.bsxf.common.web.SessionKey"%>
+<%@include file="/common/taglibs.jsp" %>
+<html>
+<head>
+	<link rel="shortcut icon" href="${ctx }/static/ico/favicon.ico" type="image/x-icon" />
+	<title><%=EhcacheManager.getStationConfig().getName()%></title>
+	<link href="${ctx}/static/login.css" type="text/css" rel="stylesheet" />
+	<style type="text/css">
+	label.error,span.error{
+		 
+		}
+	</style>
+	<script>
+		$(document).ready(function() {
+			$("#loginForm").validate();
+			
+			 
+			$("#username").focus();
+		});
+		function reImg(){
+		 $("#validImg").attr("src","${ctx}/jcaptcha.jpg?t="+new Date().getTime());
+		}
+	</script>
+<style type="text/css">
+
+.header1 {
+
+    background:none repeat scroll 0 0 #113F70;
+    color: #FFFFFF;
+    height: 65px;
+    position: relative;
+    width: 100%;
+    z-index: 2;
+}
+.bg{
+   filter:"progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod='scale')";
+   -moz-background-size:100% 100%;
+   background-size:100% 100%;
+}
+</style>
+
+	<script src="${ctx}/static/bootstrap/2.1.0/js/bootstrap.min.js" type="text/javascript"></script> 
+</head>
+
+<body>
+	
+	<div class="lsec">
+		<div class="lseCon">
+			<div class="lLogo"></div>
+			
+			<%
+			String error = (String) request.getAttribute(FormAuthenticationFilter.DEFAULT_ERROR_KEY_ATTRIBUTE_NAME);
+			if(error != null){ 
+				if(error.contains("DisabledAccountException")){
+					request.getSession().removeAttribute(SessionKey.LOGIN_FAILED_COUNT);
+			%>		
+				<div class="alert lshadow lborder">
+					<button class="close" data-dismiss="alert">×</button>
+					<div class="error prepend-top" >用户已被屏蔽,请登录其他用户.</div>
+				</div>
+			<% 
+				}else if(error.contains("UnknownAccountException")){
+					//System.out.println(error);
+			%>
+				<div class="alert lshadow lborder">
+					<button class="close" data-dismiss="alert">×</button>
+					<div class="error prepend-top" >用户不存在</div>
+				</div>
+			<%
+				}else if(error.contains("IncorrectCredentialsException")){
+					//System.out.println(error);
+			%>
+				<div class="alert lshadow lborder password_location">
+					<button class="close" data-dismiss="alert">×</button>
+					<div class="error prepend-top" >密码错误</div>
+				</div>
+			<%
+				 }else if(error.contains("NoActivationException")){
+					//System.out.println(error);
+			%>
+				<div class="alert lshadow lborder">
+					<button class="close" data-dismiss="alert">×</button>
+					<div class="error prepend-top" >当前用户尚未激活</div>
+				</div>
+			<%
+			 	}else { 
+			%>
+				<div class="alert lshadow lborder">
+					<button class="close" data-dismiss="alert">×</button>
+					<div class="error prepend-top" >登录失败，请重试。</div>
+				</div>
+			<%
+					 
+				}
+			}else {
+				// String ems=request.getParameter("error"); 
+				String errorII=(String)request.getSession().getAttribute("error"); 
+				if(errorII!=null && errorII.equals("2")){
+			%>
+					<div class="alert lshadow lborder valid_location">
+						<button class="close" data-dismiss="alert">×</button>
+						<div class="error prepend-top" >验证码出错。</div>
+					</div>
+			 <% 
+				} 
+				request.getSession().removeAttribute("error");
+			}
+			%>
+			<div class="linput lborder lshadow">
+				<div class="lTit"></div>
+			  	<form:form id="loginForm"  cssStyle="text-align: center;"  action="${ctx}/login" method="post">
+				  	<table>
+				  		<tr class="lart lpad">
+							<td class="ltex">用户名</td>
+							<td colspan="2">
+								<input id="username" name="username" class="inp3" type="text" placeholder="请输入用户名" value="${username}"/>
+							</td>
+						</tr>
+							
+						<tr class="lart lpad">
+							<td class="ltex">密码</td>
+							<td colspan="2">
+								<input id="password" name="password" class="inp3" type="password" placeholder="请输入密码"/>
+							</td>
+						</tr>
+							
+						<tr class="lart lpad">
+							<td class="ltex">验证码</td>
+							<td class="lyzml">
+								<input id="valid" name="j_captcha" class="inp3" type="text" placeholder="请输入验证码"/>
+							</td>
+							<td class="lyzm">
+								<a href="javascript:void(0);"><img src="${ctx }/jcaptcha.jpg" id="validImg" onclick="reImg();" title="看不清请点击更换"></a>
+							</td>
+						</tr>
+					</table>
+					
+					<div class="lart lpadb">
+						<input id="submit" class="btn3 lborder marr40" type="submit" value="登   录"/>
+					</div>
+				</form:form>
+			</div>
+		</div>
+	</div>
+	
+	<div class="lfooter" style="height: 50px">
+		<div style="border: none;text-align: center;" >
+			<span>版权所有：爱科农科技有限公司</span>  <span>Email：icanculture@sina.com     电话：1391234567       地址：北京市海淀区双清路甲79号启迪之星410室</span>
+		</div>
+	</div>
+	<div class="lfooter" style="height: auto"> 
+</body>
+</html>
