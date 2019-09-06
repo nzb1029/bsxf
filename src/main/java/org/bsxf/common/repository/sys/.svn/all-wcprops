@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/platform/!svn/ver/2/trunk/platform/src/main/java/org/platform/common/repository/sys
+END
+RecycleMybatisDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/platform/!svn/ver/2/trunk/platform/src/main/java/org/platform/common/repository/sys/RecycleMybatisDao.java
+END
+EmailConfigMybatisDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/platform/!svn/ver/2/trunk/platform/src/main/java/org/platform/common/repository/sys/EmailConfigMybatisDao.java
+END
+LetterUserMybatisDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/platform/!svn/ver/2/trunk/platform/src/main/java/org/platform/common/repository/sys/LetterUserMybatisDao.java
+END
+LetterMybatisDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/platform/!svn/ver/2/trunk/platform/src/main/java/org/platform/common/repository/sys/LetterMybatisDao.java
+END
+EmialSendMybatisDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/platform/!svn/ver/2/trunk/platform/src/main/java/org/platform/common/repository/sys/EmialSendMybatisDao.java
+END

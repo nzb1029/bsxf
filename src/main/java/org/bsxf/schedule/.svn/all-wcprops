@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/platform/!svn/ver/2/trunk/platform/src/main/java/org/platform/schedule
+END
+QuartzConstant.java
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/platform/!svn/ver/2/trunk/platform/src/main/java/org/platform/schedule/QuartzConstant.java
+END
+SensorQuartz.java
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/platform/!svn/ver/2/trunk/platform/src/main/java/org/platform/schedule/SensorQuartz.java
+END
+QuartzManager.java
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/platform/!svn/ver/2/trunk/platform/src/main/java/org/platform/schedule/QuartzManager.java
+END
+SmsReplayQuartz.java
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/platform/!svn/ver/2/trunk/platform/src/main/java/org/platform/schedule/SmsReplayQuartz.java
+END
+ResourcesClearQuartz.java
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/platform/!svn/ver/2/trunk/platform/src/main/java/org/platform/schedule/ResourcesClearQuartz.java
+END
+QuartzController.java
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/platform/!svn/ver/2/trunk/platform/src/main/java/org/platform/schedule/QuartzController.java
+END
+TestJob.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/platform/!svn/ver/2/trunk/platform/src/main/java/org/platform/schedule/TestJob.java
+END
+TestJobII.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/platform/!svn/ver/2/trunk/platform/src/main/java/org/platform/schedule/TestJobII.java
+END
+MTGQuartz.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/platform/!svn/ver/2/trunk/platform/src/main/java/org/platform/schedule/MTGQuartz.java
+END
+PcaStatusQuartz.java
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/platform/!svn/ver/2/trunk/platform/src/main/java/org/platform/schedule/PcaStatusQuartz.java
+END

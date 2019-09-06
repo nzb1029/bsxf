@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.bsxf.common.repository.PermissionMybatisDao">
+   <sql id="permissionSql">
+         select p.id,
+				p.val,
+				p.name,
+				p.menu_id as "menu.id",
+				m.menu_name as "menu.menuName",
+				m.menu_link as "menu.link"
+				from ss_permission p 
+				left join ss_menu m on m.id=p.menu_id
+		where p.status='enabled' and m.status='enabled'
+	</sql>
+	  <select id="getAllPermission" parameterType="string" resultType="Permission">
+		<include refid="permissionSql"/>
+		 
+	</select>
+	
+	 
+    <select id="getPermission" parameterType="string" resultType="Permission">
+		<include refid="permissionSql"/>
+		  and  p.id=#{id}
+	</select>
+	<select id="findPermissionByFilter" parameterType="Page" resultType="Permission">
+		<include refid="permissionSql"/>
+		<if test="filters.menuid!=null">
+		   and p.menu_id=#{filters.menuid}
+		</if>
+		<if test="filters.name!=null">
+		   and p.name=#{filters.name}
+		</if>
+		<if test="filters.val!=null">
+		   and p.val=#{filters.val}
+		</if>
+		<if test="orderBy!=null">
+	      order by ${orderBy} ${order}
+	   </if>
+	      limit #{start},#{pageSize}
+	</select>
+	<select id="findPermissionCountByFilter" parameterType="Page" resultType="int">
+	     select count(1) from (	
+	     <include refid="permissionSql"/>
+	     <if test="filters.menuid!=null">
+		   and p.menu_id=#{filters.menuid}
+		</if>
+		<if test="filters.name!=null">
+		   and p.name=#{filters.name}
+		</if>
+		<if test="filters.val!=null">
+		   and p.val=#{filters.val}
+		</if>
+	     )t
+		
+	</select>
+	<insert id="savePermission" parameterType="Permission">
+	  
+		insert into ss_permission (id,
+			val,
+			name,
+			menu_id,
+			status) 
+		 values(#{id},
+			#{val},
+			#{name},
+			#{menu.id},
+			#{status})
+	</insert>
+	
+	<update id="updatePermissionToRole" parameterType="map">
+		update ss_role set 
+			permissions=REPLACE(permissions,#{oval},#{nval})
+	</update>
+	
+	<update id="updatePermission" parameterType="Permission">
+		update ss_permission set 
+			val=#{val},
+			name=#{name},
+			menu_id=#{menu.id}
+		 where id=#{id} 
+	</update>
+	<delete id="disabledPermission" >
+	    update   ss_permission set status='disabled' where id in 
+	  <foreach  item="item" index="index" collection="list"
+     	 open="(" separator="," close=")">
+       		 #{item}
+  	 </foreach> 
+	</delete>	
+	 <delete id="deletePermission" >
+	    delete from   ss_permission  where id in 
+	  <foreach  item="item" index="index" collection="list"
+     	 open="(" separator="," close=")">
+       		 #{item}
+  	 </foreach> 
+	</delete>	
+</mapper>

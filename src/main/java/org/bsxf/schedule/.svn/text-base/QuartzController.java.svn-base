@@ -1,0 +1,100 @@
+package org.platform.schedule;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.util.WebUtils;
+
+@Controller
+@RequestMapping(value = "/quartz")
+public class QuartzController {
+	@Autowired
+	private QuartzManager quartzManager;
+
+	//@Autowired
+	//private SchedulerService schedulerService;
+
+	@RequestMapping(value = { "list" })
+	public String list(HttpServletRequest request, Model model) {
+		List<Map<String, Object>> qList = quartzManager.getQuartzTriggerList();
+		model.addAttribute("quartzs", qList);
+		return "quartz/list";
+	}
+
+	@RequestMapping(value = { "create" })
+	public String create(HttpServletRequest request, Model model) {
+
+		return "quartz/add";
+	}
+
+	@RequestMapping(value = { "save" })
+	public String save(HttpServletRequest request, Model model) throws Exception {
+		String jobtype = request.getParameter("jobtype");
+		if (jobtype.equals("0")) {
+			addSimpleTrigger(request);
+		} else if (jobtype.equals("1")) {
+			String name = request.getParameter("triggerName");
+			String className = request.getParameter("triggerClassName");
+			String targetMethod = request.getParameter("triggerMethod");
+			String cron = request.getParameter("cronExpression");
+			quartzManager.schedule(name, className, cron);
+
+		}
+		return "redirect:/quartz/list";
+	}
+
+	private String addSimpleTrigger(HttpServletRequest request) throws Exception {
+
+		// 获取界面以p_参数
+		Map<String, Object> filterMap = WebUtils.getParametersStartingWith(request, "p_");
+		if (StringUtils.isEmpty(filterMap.get(QuartzConstant.STARTTIME).toString())) {
+			//response.getWriter().println(1);
+			return "1";
+		}
+
+		// 添加任务调试
+		quartzManager.schedule(filterMap);
+		return "0";
+		// response.setContentType("text/xml;charset=utf-8");
+		//response.getWriter().println(0);
+
+	}
+
+	@RequestMapping(value = { "pause" })
+	public String pauseSimpleTrigger(HttpServletRequest request, Model model) throws Exception {
+		String name = request.getParameter("name");
+		String group = request.getParameter("group");
+		quartzManager.pauseSchedule(name, group);
+		return "redirect:/quartz/list";
+
+	}
+
+	@RequestMapping(value = { "remove" })
+	public String removeSimpleTrigger(HttpServletRequest request, Model model) throws Exception {
+		String name = request.getParameter("name");
+		String group = request.getParameter("group");
+		quartzManager.removeSchedule(name, group);
+		return "redirect:/quartz/list";
+		// response.setContentType("text/xml;charset=utf-8");
+		//response.getWriter().println(0);
+
+	}
+
+	@RequestMapping(value = { "resume" })
+	public String resumeSimpleTrigger(HttpServletRequest request, Model model) throws Exception {
+		String name = request.getParameter("name");
+		String group = request.getParameter("group");
+		quartzManager.resumeSchedule(name, group);
+		return "redirect:/quartz/list";
+		// response.setContentType("text/xml;charset=utf-8");
+		//response.getWriter().println(0);
+
+	}
+}

@@ -1,0 +1,68 @@
+package org.platform.schedule;
+
+import java.util.HashMap;
+
+import org.apache.commons.lang3.StringUtils;
+import org.platform.common.entity.iotjk.Equipment;
+import org.platform.common.service.iotjk.EquipmentManager;
+import org.platform.tcp.HCPcaManager;
+import org.platform.utils.JdbcUtil;
+import org.quartz.JobExecutionContext;
+import org.quartz.JobExecutionException;
+import org.springframework.scheduling.quartz.QuartzJobBean;
+import org.springside.modules.web.SpringContextHolder;
+
+/**
+ * 摄像头状态实时获取
+ * */
+public class PcaStatusQuartz extends QuartzJobBean {
+
+	public void saveHK(Equipment eq) {
+		HCPcaManager pcaManager = new HCPcaManager();
+		try {
+			EquipmentManager equipmentManager = SpringContextHolder.getBean(EquipmentManager.class);
+
+			pcaManager.setEquipment(eq);
+			String status = pcaManager.connect();
+			if (status.equals("N")) {//连接失败忽略
+				//eq.setStatus("error");//设置异常状态
+				JdbcUtil.executeUpdate("update iotjk_equipment set qstate='error' where id='" + eq.getId() + "'",
+						new HashMap<String, Object>());
+				//equipmentManager.saveOrUpdate(eq);
+			} else {
+				String st = pcaManager.getStatus();
+				if (st.equals(eq.getStatus())) {
+					//igron
+				} else {//设备状态有变化，保存
+					//eq.setStatus(st);
+					JdbcUtil.executeUpdate("update iotjk_equipment set qstate='" + st + "' where id='" + eq.getId()
+							+ "'", new HashMap<String, Object>());
+					//equipmentManager.saveOrUpdate(eq);
+				}
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pcaManager.unconnect();
+		}
+	}
+
+	@Override
+	protected void executeInternal(JobExecutionContext arg0) throws JobExecutionException {
+		EquipmentManager equipmentManager = SpringContextHolder.getBean(EquipmentManager.class);
+		java.util.List<Equipment> eList = equipmentManager.getAllEquipment();
+		for (Equipment eq : eList) {
+			if (StringUtils.isBlank(eq.getEquBrand()))
+				continue;
+			if (eq.getEquBrand().equals("HK")) {
+				if (StringUtils.isNotBlank(eq.getIp()) && StringUtils.isNotBlank(eq.getPort())
+						&& StringUtils.isNotBlank(eq.getUserName()) && StringUtils.isNotBlank(eq.getPasswd())) {
+					System.out.println("摄像头状态获取[" + eq.getName() + "]");
+					saveHK(eq);
+				}
+			}
+		}
+	}
+
+}

@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Config">
+   <sql id="areaSql">
+         select a.id,
+			a.name,
+			a.parent_id as  parentId 
+		from ss_area a where 1=1
+	</sql>
+	  <select id="getAllProvince" parameterType="string" resultType="Area">
+		<include refid="areaSql"/>
+		 and a.parent_id='0'
+	 </select>
+	   <select id="getAreaByParentId" parameterType="string" resultType="Area">
+		<include refid="areaSql"/>
+		 and a.parent_id=#{parentId}
+	 </select>
+    <select id="getArea" parameterType="string" resultType="Area">
+		<include refid="areaSql"/>
+		  and  id=#{id}
+	</select>
+	  <select id="getAllArea" parameterType="string" resultType="Area">
+		<include refid="areaSql"/>
+	 </select>
+	<!-- 后台管理时用 -->
+	<select id="getAreaList" parameterType="Page" resultType="Area">
+		<include refid="areaSql"/>
+	      limit #{start},#{pageSize}
+	</select>
+	<select id="getAreaCount" parameterType="Page" resultType="int">
+	     select count(1) from (	
+	     <include refid="areaSql"/>
+	     )t
+		
+	</select>
+<!-- dictionary -->
+
+ <sql id="dictionarySql">
+         select d.id,
+				d.name,
+				d.val,
+				d.default_flg as  defaultFlg ,
+				d.status,
+				d.sort,
+				d.ext_filed as  extFiled ,
+				d.type_code as  typeCode ,
+				d.parent_id as "parent.id",
+				p.name as "parent.name",
+				p.type_code as "parent.typeCode",
+				p.ext_filed as "parent.extFiled"
+		     from ss_dictionary d
+		     left join ss_dictionary p on p.id=d.parent_id  and p.status='enabled'
+		     where d.status='enabled' 
+	</sql>
+	  <select id="getAllDictionary" parameterType="string" resultType="Dictionary">
+		<include refid="dictionarySql"/>
+	</select>
+	<select id="getDictionaryByCode" parameterType="string" resultType="Dictionary">
+		<include refid="dictionarySql"/>
+		  and  d.type_code=#{typeCode} and d.parent_id is not null
+		  order by d.sort
+	</select>
+	<select id="getParentDictionary" parameterType="string" resultType="Dictionary">
+		select d.id,
+				d.name,
+				d.val,
+				d.default_flg as  defaultFlg ,
+				d.status,
+				d.sort,
+				d.ext_filed as  extFiled ,
+				d.type_code as  typeCode  
+				 
+		     from ss_dictionary d
+		       where d.status='enabled' 
+		  and d.parent_id is   null
+	</select>
+	<select id="getUseDictionaryByCode" parameterType="string" resultType="Dictionary">
+		<include refid="dictionarySql"/>
+		  and  d.type_code=#{typeCode} and d.parent_id is not null and d.status='enabled'
+		  order by d.sort
+	</select>
+    <select id="getDictionary" parameterType="string" resultType="Dictionary">
+		<include refid="dictionarySql"/>
+		  and  d.id=#{id}
+	</select>
+	 
+	<select id="getDictionaryList" parameterType="Page" resultType="Dictionary">
+		<include refid="dictionarySql"/>
+		<choose>
+			<when test="filters.parentId!=null">
+				 and d.parent_id =#{filters.parentId}
+			</when>
+			<otherwise>
+				 and (d.parent_id is null or d.parent_id='')
+			</otherwise>
+		</choose>
+		 order by ${orderBy} ${order}
+	      limit #{start},#{pageSize}
+	</select>
+	<select id="getDictionaryCount" parameterType="Page" resultType="int">
+	     select count(1) from (	
+	     <include refid="dictionarySql"/>
+		     <choose>
+				<when test="filters.parentId!=null">
+					 and d.parent_id =#{filters.parentId}
+				</when>
+				<otherwise>
+					and (d.parent_id is null or d.parent_id='')
+				</otherwise>
+			 </choose>
+	     )t
+		
+	</select>
+	<select id="getDictionarySort" parameterType="string" resultType="int">
+	     select max(sort)+1 from ss_dictionary where parent_id=#{parentId}
+	</select>
+	<insert id="insertDictionary" parameterType="Dictionary">
+	  
+		insert into ss_dictionary (id,
+			name,
+			val,
+			default_flg,
+			status,
+			sort,
+			ext_filed,
+			type_code,
+			parent_id) 
+		 values(#{id},
+			#{name},
+			#{val},
+			#{defaultFlg},
+			#{status},
+			#{sort},
+			#{extFiled},
+			#{typeCode},
+			#{parent.id})
+	</insert>
+	<update id="updateDictionary" parameterType="Dictionary">
+		update ss_dictionary set 
+			name=       #{name},
+			val=		#{val},
+			default_flg=#{defaultFlg},
+			status=		#{status},
+			sort=		#{sort},
+			ext_filed=  #{extFiled},
+			type_code=  #{typeCode},
+			parent_id=  #{parent.id}
+		 where id=#{id} ;
+		 
+		 
+	</update>
+	<update id="batchUpdateDictionaryDefault" parameterType="Dictionary">
+	 	update ss_dictionary set default_flg='n' where id!=#{id} ;
+	</update>
+	<delete id="deleteDictionary" >
+	    delete from    ss_dictionary  where id in 
+	  <foreach  item="item" index="index" collection="list"
+     	 open="(" separator="," close=")">
+       		 #{item}
+  	 </foreach> 
+	</delete>	
+	<delete id="disabledDictionary" >
+	    update   ss_dictionary     set  status='disabled' 
+	                                  where id in 
+	  <foreach  item="item" index="index" collection="list"
+     	 open="(" separator="," close=")">
+       		 #{item}
+  	 </foreach> 
+	</delete>	
+	<update id="updateDictionarySort" parameterType="Dictionary">
+	    update   ss_dictionary set sort=#{sort} where id =#{id} 
+	
+	</update>	
+	<update id="updateDefaultByValue" parameterType="map">
+	    update   ss_dictionary set default_flg=( case when val=#{val} then 'y' else 'n' end) 
+	    where type_code =#{typeCode} and parent_id is not null
+	
+	</update>		
+</mapper>

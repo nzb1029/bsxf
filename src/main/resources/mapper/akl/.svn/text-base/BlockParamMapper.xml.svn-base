@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.bsxf.common.repository.akl.BlockParamMybatisDao">
+   <sql id="blockParamSql">
+ select s.id,
+		p.id as 'block.id',
+		p.name as 'block.name',
+		p.suitPlant as 'block.suitPlant',
+		s.name,
+		s.ph,
+		s.phLevel,
+		s.totalN,
+		s.totalNLevel,
+		s.availableP,
+		s.availablePLevel,
+		s.availableK,
+		s.availableKLevel,
+		s.sOM,
+		s.sOMLevel,
+		s.field01,
+		s.field02,
+		s.field03
+		from akl_block_param s 
+		 left join akl_block p on p.id=s.block_id
+		where 1=1 
+	</sql>
+	
+	  <select id="getAllBlockParam" parameterType="string" resultType="BlockParam">
+		<include refid="blockParamSql"/>
+		 
+	</select>
+	
+    <select id="getBlockParam" parameterType="string" resultType="BlockParam">
+		<include refid="blockParamSql"/>
+		  and  s.id=#{id}
+	</select>
+	
+    <select id="getBlockParamByBlockId" parameterType="string" resultType="BlockParam">
+		<include refid="blockParamSql"/>
+		  and  p.id=#{id}
+	</select>
+	
+	<select id="findBlockParamByFilter" parameterType="Page" resultType="BlockParam">
+		<include refid="blockParamSql"/>
+		<if test="filters.name!=null"> 
+			 and p.name like '%' #{filters.name} '%'
+		</if>
+		<if test="filters.blockName!=null"> 
+			 and p.name like '%' #{blockName} '%'
+		</if>
+		<if test="orderBy!=null">
+	      order by ${orderBy} ${order}
+	   </if>
+	      limit #{start},#{pageSize}
+	</select>
+	
+	<select id="findBlockParamCountByFilter" parameterType="Page" resultType="int">
+	     select count(1) from (	
+	     <include refid="blockParamSql"/>
+		  	<if test="filters.name!=null"> 
+			   and p.name like '%' #{filters.name} '%'
+			</if>
+			<if test="filters.blockName!=null"> 
+				 and p.name like '%' #{blockName} '%'
+			</if>
+			<if test="orderBy!=null">
+		      order by ${orderBy} ${order}
+		   </if>
+	     )t
+	</select>
+	<insert id="saveBlockParam" parameterType="BlockParam">
+		insert into akl_block_param (id,
+			block_id,
+			name,
+			ph,
+			phlevel,
+			TotalN,
+			TotalNLevel,
+			AvailableP,
+			AvailablePLevel,
+			AvailableK,
+			AvailableKLevel,
+			SOM,
+			SOMLevel,
+		    field01,
+		    field02,
+		    field03
+		    ) 
+		 values(#{id},
+			#{block.id},
+			#{name},
+			#{ph},
+			#{phLevel},
+			#{totalN},
+			#{totalNLevel},
+			#{availableP},
+			#{availablePLevel},
+			#{availableK},
+			#{availableKLevel},
+			#{sOM},
+			#{sOMLevel},
+		    #{field01},
+		    #{field02},
+		    #{field03}
+			)
+	</insert>
+	<update id="updateBlockParam" parameterType="BlockParam">
+		update akl_block_param set 
+			block_id         =#{block.id}, 
+			name         	 =#{name},             
+			ph               =#{ph},             
+			phlevel          =#{phLevel},        
+			TotalN           =#{totalN},         
+			TotalNLevel      =#{totalNLevel},    
+			AvailableP       =#{availableP},     
+			AvailablePLevel  =#{availablePLevel},
+			AvailableK       =#{availableK},     
+			AvailableKLevel  =#{availableKLevel},
+			SOM              =#{sOM},            
+			SOMLevel         =#{sOMLevel},       
+			field01          =#{field01},      
+			field02          =#{field02},      
+			field03          =#{field03}       
+		 where id=#{id} 
+	</update>
+	 <delete id="deleteBlockParam" >
+	    delete from   akl_block_param  where id in 
+	  <foreach  item="item" index="index" collection="list"
+     	 open="(" separator="," close=")">
+       		 #{item}
+  	 </foreach> 
+	</delete>	
+</mapper>

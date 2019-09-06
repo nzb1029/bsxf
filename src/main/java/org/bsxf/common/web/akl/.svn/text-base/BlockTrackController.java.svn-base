@@ -1,0 +1,97 @@
+package org.bsxf.common.web.akl;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+
+import org.bsxf.common.entity.akl.Block;
+import org.bsxf.common.entity.akl.BlockTrack;
+import org.bsxf.common.service.akl.BlockManager;
+import org.bsxf.common.service.akl.BlockTrackManager;
+import org.bsxf.utils.JqGirds;
+import org.bsxf.utils.Page;
+import org.bsxf.web.LtSecurityUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springside.utils.Collections3;
+
+@Controller
+@RequestMapping(value = "/track")
+public class BlockTrackController {
+	@Autowired
+	private BlockTrackManager blockTrackManager ;
+	@Autowired
+	private BlockManager blockManager ;
+
+	@RequestMapping(value = { "list" })
+	public String list(Model model) {
+		return "akl/blockTrackList";
+	}
+
+	@RequestMapping(value = { "jqgrid" })
+	@ResponseBody
+	public Map jqgrid(HttpServletRequest request) {
+		Page page = JqGirds.parmsToPage(request);
+		if (StringUtils.isBlank(page.getOrder())) {
+			page.setOrder("p.create_time", "desc");
+		}
+		page = blockTrackManager.findBlockTrackByPage(page);
+		return JqGirds.renderJson(page);
+	}
+	
+
+	@RequestMapping(value = { "create/{id}" })
+	public String create(@PathVariable("id")String id, Model model) {
+	    BlockTrack blockTrack = new BlockTrack();
+		if (StringUtils.isNotBlank(id)&& !"undefined".equals(id)) {
+			blockTrack = blockTrackManager.getBlockTrack(id);
+		}
+		
+		List<Block> blockList=blockManager.getAllBlock();
+		
+		model.addAttribute("blockList", blockList);
+		model.addAttribute("blockTrack", blockTrack);
+		
+		return "akl/blockTrackForm";
+	}
+	
+	@RequestMapping(value = { "save" }, method = RequestMethod.POST)
+	public String save(@Valid @ModelAttribute("blockTrack") BlockTrack blockTrack, RedirectAttributes redirectAttributes, HttpServletRequest request) {
+		
+		blockTrackManager.saveOrUpdate(blockTrack);
+		redirectAttributes.addFlashAttribute("message", "创建成功");
+		return "redirect:/track/list";
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "delete/{id}")
+	@ResponseBody
+	public String delete(@PathVariable("id") String id) {
+		blockTrackManager.deleteBlockTrack(Collections3.extractToList(id.split(",")));
+		return "true" ;
+	}
+	
+	@RequestMapping(value = { "ssjz" })
+	public String ssjz( Model model) {
+		BlockTrack blockTrack = new BlockTrack();
+		String blockId = LtSecurityUtils.getShiroUser().getBlockId();
+		if(StringUtils.isNotEmpty(blockId)){
+			List<BlockTrack> blockTrackList=blockTrackManager.getTrackListByBlockId(blockId);
+			if(blockTrackList !=null && blockTrackList.size()>0){
+				blockTrack = blockTrackList.get(0);
+			}
+		}
+		model.addAttribute("blockTrack", blockTrack);
+		return "akl/ssjz";
+	}
+}

@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.bsxf.common.repository.bsxf.EquipmentMybatisDao">
+   <sql id="equipmentSql">
+ select s.id, 
+		s.create_time as  createTime ,
+		u.id as "createUser.id" ,
+		u.name as "createUser.name",
+		s.equipment_type_id as equipmentTypeId ,
+		s.sub_type_id as subTypeId,
+		s.name ,
+		s.eno ,
+		s.area ,
+		s.location ,
+		s.comments ,
+		s.status ,
+		s.runStatus ,
+		s.effDate ,
+		s.expDate ,
+		s.checkFreq ,
+		s.remainNum ,
+		s.lastRemainNum ,
+		uu.id as "checkUser.id" ,
+		uu.name as "checkUser.name",
+		s.pointx,
+		s.pointy,
+		s.field01,
+		s.field02,
+		s.field03
+		from bsxf_equipment s 
+	    left join ss_user u on u.id = s.create_user_id
+	    left join ss_user uu on uu.id = s.check_user_id
+		where 1=1 
+	</sql>
+	  <select id="getAllEquipment" parameterType="string" resultType="Equipment">
+		<include refid="equipmentSql"/>
+		 and s.status = 'enabled'
+	</select>
+	
+    <select id="getEquipment" parameterType="string" resultType="Equipment">
+		<include refid="equipmentSql"/>
+		  and  s.id=#{id}
+	</select>
+	
+    <select id="getUserEquipment" parameterType="string" resultType="Equipment">
+		<include refid="equipmentSql"/>
+		  and s.user_id =#{userId}
+		  and s.status = 'enabled'
+	</select>
+	
+	<select id="findEquipmentByFilter" parameterType="Page" resultType="Equipment">
+		<include refid="equipmentSql"/>
+		 and s.status = 'enabled'
+		<if test="filters.createTime!=null"> 
+			 and s.create_time = str_to_date(#{filters.createTime},'%Y-%m-%d %H:%i:%s')  
+		</if>
+		<if test="filters.name!=null"> 
+			 and s.name=#{filters.name}
+		</if>
+		<if test="filters.eno!=null"> 
+			 and s.eno=#{filters.eno}
+		</if>
+		<if test="filters.userName!=null"> 
+			 and uu.name=#{filters.userName}
+		</if>
+		<if test="orderBy!=null">
+	      order by ${orderBy} ${order}
+	   </if>
+	      limit #{start},#{pageSize}
+	</select>
+	
+	<select id="findEquipmentCountByFilter" parameterType="Page" resultType="int">
+	     select count(1) from (	
+	     <include refid="equipmentSql"/>
+	     and s.status = 'enabled'
+	   <if test="filters.name!=null"> 
+			 and s.name=#{filters.name}
+		</if>
+		<if test="filters.userName!=null"> 
+			 and uu.name=#{filters.userName}
+		</if>
+		<if test="orderBy!=null">
+	      order by ${orderBy} ${order}
+	   </if>
+	     )t
+	</select>
+	<insert id="saveEquipment" parameterType="Equipment">
+		insert into bsxf_equipment (
+		    id                  ,
+			create_time         ,
+			last_update_time    ,
+			create_user_id      ,
+			last_update_user_id ,
+			equipment_type_id   ,
+			sub_type_id         ,
+			name                ,
+			eno                 ,
+			area                ,
+			location            ,
+			comments            ,
+			status              ,
+			runStatus           ,
+			effDate             ,
+			expDate             ,
+			checkFreq           ,
+			remainNum           ,
+			lastRemainNum       ,
+			check_user_id       ,
+			pointx              ,
+			pointy              ,
+			field01             ,
+			field02             ,
+			field03             
+		    ) 
+		 values(#{id},
+			#{createTime},
+			#{lastUpdateTime},
+			#{createUser.id},
+			#{lastUpdateUser.id},
+			#{equipmentTypeId},
+			#{subTypeId},
+			#{name},
+		    #{eno},
+		    #{area},
+		    #{location},
+		    #{comments},
+		    #{status},
+		    #{runStatus},
+		    #{effDate},
+		    #{expDate},
+		    #{checkFreq},
+		    #{remainNum},
+		    #{lastRemainNum},
+		    #{checkUser.id},
+		    #{pointx},
+		    #{pointy},
+		    #{field01},
+		    #{field02},
+		    #{field03}
+			)
+	</insert>
+	<update id="updateEquipment" parameterType="Equipment">
+		update bsxf_equipment set 
+			create_time         = #{createTime},           
+			last_update_time    =	#{lastUpdateTime},   
+			create_user_id      =	#{createUser.id},    
+			last_update_user_id =	#{lastUpdateUser.id},
+			equipment_type_id   =	#{equipmentTypeId},  
+			sub_type_id         =	#{subTypeId},        
+			name                =	#{name},             
+			eno                 =	#{eno},            
+			area                =	#{area},           
+			location            =	#{location},       
+			comments            =	#{comments},       
+			status              =	#{status},         
+			runStatus           =	#{runStatus},      
+			effDate             =	#{effDate},        
+			expDate             =	#{expDate},        
+			checkFreq           =	#{checkFreq},      
+			remainNum           =	#{remainNum},      
+			lastRemainNum       =	#{lastRemainNum},  
+			check_user_id       =	#{checkUser.id},   
+			pointx              =	#{pointx},         
+			pointy              =	#{pointy},         
+			field01             =	#{field01},        
+			field02             =	#{field02},        
+			field03             =	#{field03}         
+		 where id=#{id} 
+	</update>
+	<delete id="disabledEquipment" >
+	    update   bsxf_equipment set status='disabled' where id in 
+	  <foreach  item="item" index="index" collection="list"
+     	 open="(" separator="," close=")">
+       		 #{item}
+  	 </foreach> 
+	</delete>	
+	 <delete id="deleteEquipment" >
+	    delete from   bsxf_equipment  where id in 
+	  <foreach  item="item" index="index" collection="list"
+     	 open="(" separator="," close=")">
+       		 #{item}
+  	 </foreach> 
+	</delete>	
+</mapper>

@@ -1,0 +1,52 @@
+package org.bsxf.common.entity;
+
+import java.io.Serializable;
+
+import org.bsxf.utils.Description;
+
+public abstract class IdEntity implements Serializable {
+	/**  描述   (@author: 宁宗彬) */      
+	private static final long serialVersionUID = 1L;
+	@Description(description = "主键")
+	protected String id;
+	@Description(description = "扩展字段")
+	protected String field01;
+	@Description(description = "扩展字段")
+	protected String field02;
+	@Description(description = "扩展字段")
+	protected String field03;
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getField01() {
+		return field01;
+	}
+
+	public void setField01(String field01) {
+		this.field01 = field01;
+	}
+
+	public String getField02() {
+		return field02;
+	}
+
+	public void setField02(String field02) {
+		this.field02 = field02;
+	}
+
+	public String getField03() {
+		return field03;
+	}
+
+	public void setField03(String field03) {
+		this.field03 = field03;
+	}
+	
+	
+}

@@ -1,0 +1,191 @@
+package org.bsxf.schedule;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.sql.DataSource;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.NumberUtils;
+import org.quartz.Job;
+import org.quartz.Scheduler;
+import org.quartz.TriggerKey;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.scheduling.quartz.CronTriggerFactoryBean;
+import org.springframework.scheduling.quartz.JobDetailFactoryBean;
+import org.springframework.scheduling.quartz.SchedulerFactoryBean;
+import org.springframework.scheduling.quartz.SimpleTriggerFactoryBean;
+import org.springframework.stereotype.Component;
+import org.springside.utils.Reflections;
+
+@Component
+public class QuartzManager {
+	private DataSource dataSource;
+	private JdbcTemplate jdbcTemplate;
+	private SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	public static final Map<String, String> status = new HashMap<String, String>();
+	static {
+		status.put("ACQUIRED", "运行中");
+		status.put("PAUSED", "暂停中");
+		status.put("WAITING", "等待中");
+	}
+	@Autowired
+	private SchedulerFactoryBean clusterQuartzScheduler;
+	@Autowired
+	private JobDetailFactoryBean timerJobDetail;
+
+	@Autowired
+	public void setDataSource(@Qualifier("quartzDataSource")
+	DataSource dataSource) {
+		this.dataSource = dataSource;
+		jdbcTemplate = new JdbcTemplate(dataSource);
+	}
+
+	public List<Map<String, Object>> getQuartzTriggerList() {
+		List<Map<String, Object>> results = jdbcTemplate
+				.queryForList("select q.*,c.cron_expression,d.job_class_name from QRTZ_TRIGGERS q left join qrtz_cron_triggers c on c.trigger_name=q.trigger_name left join qrtz_job_details d on d.job_name=q.job_name order by start_time");
+		long val = 0;
+		String temp = null;
+		for (Map<String, Object> map : results) {
+			temp = map.get("trigger_name").toString();
+			if (temp.indexOf("&") != -1) {
+				map.put("display_name", StringUtils.substringBefore(temp, "&"));
+			} else {
+				map.put("display_name", temp);
+			}
+
+			val = Long.valueOf(map.get("next_fire_time").toString());
+			if (val > 0) {
+				map.put("next_fire_time", df.format(val));
+			}
+
+			val = Long.valueOf(map.get("prev_fire_time").toString());
+			if (val > 0) {
+				map.put("prev_fire_time", df.format(val));
+			}
+			val = Long.valueOf(map.get("start_time").toString());
+			if (val > 0) {
+				map.put("start_time", df.format(val));
+			}
+			val = Long.valueOf(map.get("end_time").toString());
+			if (val > 0) {
+				map.put("end_time", df.format(val));
+			}
+			String trigger_state = map.get("trigger_state").toString();
+			map.put("status", status.get(trigger_state));
+			map.put("cron_expression", map.get("cron_expression"));
+		}
+		return results;
+	}
+
+	public void schedule(String name, String className, String cron) throws Exception {
+
+		Class<Job> jobClass = (Class<Job>) Class.forName(className);
+		JobDetailFactoryBean jobDetail = new JobDetailFactoryBean();
+		jobDetail.setJobClass(jobClass);
+		jobDetail.setName(name);
+		jobDetail.setGroup(Scheduler.DEFAULT_GROUP);
+		jobDetail.afterPropertiesSet();
+
+		CronTriggerFactoryBean cronTrigger = new CronTriggerFactoryBean();
+		cronTrigger.setJobDetail(jobDetail.getObject());
+		//cronTrigger.setJobDetail(methodInvoking.getObject());
+		cronTrigger.setCronExpression(cron);
+		cronTrigger.setName(name);
+		cronTrigger.setGroup(Scheduler.DEFAULT_GROUP);
+		cronTrigger.afterPropertiesSet();
+		Reflections.invokeMethodByName(clusterQuartzScheduler, "addTriggerToScheduler", new Object[] { cronTrigger
+				.getObject() });
+	}
+
+	@SuppressWarnings("unchecked")
+	public void schedule(Map<String, Object> map) throws Exception {
+
+		try {
+
+			String jobName = map.get(QuartzConstant.TRIGGERNAME) == null ? "" : map.get(QuartzConstant.TRIGGERNAME)
+					.toString();
+			if (StringUtils.isBlank(jobName))
+				jobName = "默认任务";
+			String groupName = map.get(QuartzConstant.TRIGGERGROUP) == null ? "" : map.get(QuartzConstant.TRIGGERGROUP)
+					.toString();
+			if (StringUtils.isBlank(groupName))
+				groupName = Scheduler.DEFAULT_GROUP;
+			//设置开始时间
+			String st = map.get(QuartzConstant.STARTTIME) == null ? "" : map.get(QuartzConstant.STARTTIME).toString();
+			Date startTime = new Date();
+			if (StringUtils.isNotBlank(st))
+				startTime = df.parse(st);
+
+			//设置执行次数
+			String rc = map.get(QuartzConstant.REPEATCOUNT) == null ? "" : map.get(QuartzConstant.REPEATCOUNT)
+					.toString();
+
+			int rcount = -1;
+			if (StringUtils.isNotEmpty(rc) && NumberUtils.toInt(rc) > 0) {
+				rcount = (NumberUtils.toInt(rc));
+			}
+			//设置执行时间间隔
+			String rt = map.get(QuartzConstant.REPEATINTERVEL) == null ? "" : map.get(QuartzConstant.REPEATINTERVEL)
+					.toString();
+			long rtcount = 0;
+			if (StringUtils.isNotEmpty(rt) && NumberUtils.toLong(rt) > 0) {
+				rtcount = NumberUtils.toLong(rt) * 1000;
+			}
+			Class<Job> jobClass = (Class<Job>) Class.forName(map.get(QuartzConstant.TRIGGERCLASSNAME).toString());
+			JobDetailFactoryBean jobDetail = new JobDetailFactoryBean();
+			jobDetail.setJobClass(jobClass);
+			jobDetail.setName(jobName);
+			jobDetail.setGroup(groupName);
+			jobDetail.afterPropertiesSet();
+			SimpleTriggerFactoryBean trigger = new SimpleTriggerFactoryBean();
+			trigger.setJobDetail(jobDetail.getObject());
+			trigger.setName(jobName);
+			trigger.setGroup(groupName);
+			long cst = startTime.getTime() - System.currentTimeMillis();
+			if (cst > 0)
+				trigger.setStartDelay(cst);
+			if (rcount > -1)
+				trigger.setRepeatCount(rcount); //Reflections.setFieldValue(trigger, "repeatCount", rcount);//trigger.se
+			trigger.setRepeatInterval(rtcount);
+			trigger.afterPropertiesSet();
+			Reflections.invokeMethodByName(clusterQuartzScheduler, "addTriggerToScheduler", new Object[] { trigger
+					.getObject() });
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	/**
+	 * 暂停任务
+	 * */
+	public void pauseSchedule(String name, String group) throws Exception {
+		clusterQuartzScheduler.getScheduler().pauseTrigger(new TriggerKey(name, group));
+	}
+
+	/**
+	 * 删除任务
+	 * */
+	public void removeSchedule(String name, String group) throws Exception {
+
+		clusterQuartzScheduler.getScheduler().pauseTrigger(new TriggerKey(name, group));
+		clusterQuartzScheduler.getScheduler().unscheduleJob(new TriggerKey(name, group));
+	}
+
+	/**
+	 * 恢复任务
+	 * */
+	public void resumeSchedule(String name, String group) throws Exception {
+
+		clusterQuartzScheduler.getScheduler().resumeTrigger(new TriggerKey(name, group));
+	}
+
+	public void setClusterQuartzScheduler(SchedulerFactoryBean clusterQuartzScheduler) {
+		this.clusterQuartzScheduler = clusterQuartzScheduler;
+	}
+}

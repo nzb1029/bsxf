@@ -1,0 +1,38 @@
+
+package org.platform.common.repository.sys;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.platform.utils.Page;
+import org.springframework.stereotype.Component;
+import  org.platform.common.entity.sys.LetterUser;
+
+/***
+ * mybatis自动扫描此目录，无需再写实现类
+ * */
+@Component
+public interface LetterUserMybatisDao {
+	public LetterUser getLetterUser(String id);
+
+	public List<LetterUser> getAllLetterUser();
+
+	public void updateLetterUser(LetterUser entity);
+
+	public void saveLetterUser(LetterUser entity);
+
+	public void deleteLetterUser(List<String> ids);
+
+	public void disabledLetterUser(List<String> ids);
+
+	public List<LetterUser> findLetterUserByFilter(Page page);
+
+	public int findLetterUserCountByFilter(Page page);
+	
+	public List<LetterUser> findLetterUserByCond(Map<String, Object> pars);
+	
+	
+}

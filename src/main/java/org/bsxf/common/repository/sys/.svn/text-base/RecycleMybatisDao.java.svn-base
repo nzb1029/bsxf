@@ -1,0 +1,38 @@
+
+package org.platform.common.repository.sys;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.platform.utils.Page;
+import org.springframework.stereotype.Component;
+import  org.platform.common.entity.sys.Recycle;
+
+/***
+ * mybatis自动扫描此目录，无需再写实现类
+ * */
+@Component
+public interface RecycleMybatisDao {
+	public Recycle getRecycle(String id);
+
+	public List<Recycle> getAllRecycle();
+
+	public void updateRecycle(Recycle entity);
+
+	public void saveRecycle(Recycle entity);
+
+	public void deleteRecycle(List<String> ids);
+
+	public void disabledRecycle(List<String> ids);
+
+	public List<Recycle> findRecycleByFilter(Page page);
+
+	public int findRecycleCountByFilter(Page page);
+	
+	public List<Recycle> findRecycleByCond(Map<String, Object> pars);
+	
+	
+}

@@ -1,0 +1,151 @@
+package org.bsxf.utils;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import net.sf.ehcache.Cache;
+import net.sf.ehcache.CacheManager;
+import net.sf.ehcache.Element;
+
+import org.bsxf.common.entity.account.User;
+import org.bsxf.common.entity.sys.StationConfig;
+import org.bsxf.common.service.StationConfigManager;
+import org.springside.web.SpringContextHolder;
+
+/**
+ *  Ehcache的配置.
+ * 
+ * 配置见applicationContext-ehcache.xml与ehcache.xml
+ * 
+ * 
+ */
+public class EhcacheManager {
+
+	//private static final String CACHE_NAME = "hCache";
+
+	private static String STATION_KEY = "STATION_KEY";
+	private static String EMAIL_KEY = "EMAIL_KEY";
+	private static String LOGIN_KEY = "LOGIN_KEY";
+	private static CacheManager ehcacheManager;
+	private static Cache defcache;
+	private static final String DEFAULT_CACHE_NAME = "hCache";
+	static {
+		ehcacheManager = SpringContextHolder.getBean(CacheManager.class);
+		defcache = ehcacheManager.getCache(DEFAULT_CACHE_NAME);
+		init();
+	}
+
+	private static void init() {
+
+		///初始化站点配置信息入缓存
+		StationConfigManager configManager = SpringContextHolder.getBean(StationConfigManager.class);
+		List<StationConfig> slist = configManager.getAllStationConfig();
+		StationConfig sc = new StationConfig();
+		if (slist.size() > 0)
+			sc = slist.get(0);
+		setStationConfig(sc);
+
+	}
+
+	/**
+	 * 站点配置信息的缓存
+	 * */
+	public static StationConfig getStationConfig() {
+		//Cache cache = ehcacheManager.getCache(CACHE_NAME);
+		Object element = get(STATION_KEY);
+		if (element == null) {
+			StationConfigManager stationConfigManager = SpringContextHolder.getBean(StationConfigManager.class);
+			List<StationConfig> slist = stationConfigManager.getAllStationConfig();
+			StationConfig c = new StationConfig();
+			if (slist.size() > 0) {
+				c = slist.get(0);
+			}
+			setStationConfig(c);
+			return c;
+		} else
+			return (StationConfig) element;
+	}
+
+
+	public static void setStationConfig(StationConfig config) {
+		//Element element = new Element(STATION_KEY, config);
+		//Cache cache = ehcacheManager.getCache(CACHE_NAME);
+		put(STATION_KEY, config);
+	}
+
+	/*public void demo() {
+
+		cache = ehcacheManager.getCache(CACHE_NAME);
+		String key = "foo";
+		String value = "boo";
+
+		put(key, value);
+		Object result = get(key);
+
+		assertEquals(value, result);
+	}
+
+	
+	*/
+	public static Object get(String key) {
+		Element element = defcache.get(key);
+		if (element == null)
+			return null;
+		return element.getObjectValue();
+	}
+
+	public static void put(String key, Object value) {
+		Element element = new Element(key, value);
+		defcache.put(element);
+	}
+
+	public static void remove(String key) {
+		if (get(key) != null)
+			defcache.remove(key);
+	}
+
+	public static void removeLogin(User user) {
+		List<User> list = getLogin();
+		List<User> nlist = new ArrayList<User>();
+		for (User m : list) {
+			if (!m.getId().equals(user.getId())) {
+				{
+					nlist.add(m);
+				}
+			}
+		}
+		//list.add(user);
+		//Element element = new Element(LOGIN_KEY, nlist);
+		//Cache cache = ehcacheManager.getCache(CACHE_NAME);
+		put(LOGIN_KEY, nlist);
+	}
+
+	public static void putLogin(User user) {
+		List<User> list = getLogin();
+		for (User m : list) {
+			if (m.getId().equals(user.getId())) {
+				return;
+			}
+		}
+		list.add(user);
+		//Element element = new Element(LOGIN_KEY, list);
+		///Cache cache = ehcacheManager.getCache(CACHE_NAME);
+		put(LOGIN_KEY, list);
+	}
+
+	@SuppressWarnings("unchecked")
+	public static List<User> getLogin() {
+		//Element element = new Element(LOGIN_KEY, value);
+		//Cache cache = ehcacheManager.getCache(CACHE_NAME);
+		Object element = get(LOGIN_KEY);
+		if (element == null) {
+			List<User> list = new ArrayList<User>();
+			Element e = new Element(LOGIN_KEY, list);
+			defcache.put(e);
+			return list;
+		}
+		//Object lo = element.getObjectValue();
+		return (List<User>) element;
+
+	}
+}

@@ -1,0 +1,43 @@
+10
+
+dir
+65
+svn://218.206.178.148:7558/akl/branches/akl/src/main/java/org/akl/common
+svn://218.206.178.148:7558
+
+
+
+2017-04-28T15:54:13.143554Z
+42
+dev1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+125df227-909e-4467-8bf9-a2a6f538d109
+
+repository
+dir
+
+service
+dir
+
+dao
+dir
+
+entity
+dir
+
+web
+dir
+

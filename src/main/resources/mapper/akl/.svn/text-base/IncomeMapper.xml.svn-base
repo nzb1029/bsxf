@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.bsxf.common.repository.akl.IncomeMybatisDao">
+   <sql id="incomeSql">
+ select s.id,
+		p.id as 'block.id',
+		p.name as 'block.name',
+		s.time,
+		s.unitPrice,
+		s.normalProduct,
+		s.aKLProduct,
+		s.normalIncome,
+		s.aKLIncome,
+		s.field01,
+		s.field02,
+		s.field03
+		from akl_income s 
+		 left join akl_block p on p.id=s.block_id
+		where 1=1 
+	</sql>
+	
+	  <select id="getAllIncome" parameterType="string" resultType="Income">
+		<include refid="incomeSql"/>
+		 
+	</select>
+	
+    <select id="getIncomeByBlockId" parameterType="string" resultType="Income">
+		<include refid="incomeSql"/>
+		  and  s.block_id =#{blockId}
+		  order by s.time asc
+	</select>
+	
+    <select id="getIncome" parameterType="string" resultType="Income">
+		<include refid="incomeSql"/>
+		  and  s.id=#{id}
+	</select>
+	
+	<select id="findIncomeByFilter" parameterType="Page" resultType="Income">
+		<include refid="incomeSql"/>
+		<if test="filters.name!=null"> 
+			 and p.name like '%' #{filters.name} '%'
+		</if>
+		<if test="orderBy!=null">
+	      order by ${orderBy} ${order}
+	   </if>
+	      limit #{start},#{pageSize}
+	</select>
+	
+	<select id="findIncomeCountByFilter" parameterType="Page" resultType="int">
+	     select count(1) from (	
+	     <include refid="incomeSql"/>
+		  	<if test="filters.name!=null"> 
+			   and p.name like '%' #{filters.name} '%'
+			</if>
+			<if test="orderBy!=null">
+		      order by ${orderBy} ${order}
+		   </if>
+	     )t
+	</select>
+	<insert id="saveIncome" parameterType="Income">
+		insert into akl_income (id,
+			block_id,
+			time,
+			UnitPrice,
+			NormalProduct,
+			AKLProduct,
+			NormalIncome,
+			AKLIncome,
+		    field01,
+		    field02,
+		    field03
+		    ) 
+		 values(#{id},
+			#{block.id},
+			#{time},
+			#{unitPrice},
+			#{normalProduct},
+			#{aKLProduct},
+			#{normalIncome},
+			#{aKLIncome},
+		    #{field01},
+		    #{field02},
+		    #{field03}
+			)
+	</insert>
+	<update id="updateIncome" parameterType="Income">
+		update akl_income set 
+			block_id      =#{block.id},          
+			time          =#{time},         
+			UnitPrice     =#{unitPrice},    
+			NormalProduct =#{normalProduct},
+			AKLProduct    =#{aKLProduct},   
+			NormalIncome  =#{normalIncome}, 
+			AKLIncome     =#{aKLIncome},      
+			field01      = #{field01},      
+			field02      = #{field02},      
+			field03      = #{field03}    
+		 where id=#{id} 
+	</update>
+	 <delete id="deleteIncome" >
+	    delete from   akl_income  where id in 
+	  <foreach  item="item" index="index" collection="list"
+     	 open="(" separator="," close=")">
+       		 #{item}
+  	 </foreach> 
+	</delete>	
+</mapper>

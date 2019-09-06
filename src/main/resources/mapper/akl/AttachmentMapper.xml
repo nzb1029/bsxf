@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.bsxf.common.repository.akl.AttachmentMybatisDao">
+   <sql id="attachmentSql">
+ select s.id,
+		s.businessId,
+		s.create_time as createTime,
+		s.fileType,
+		s.filename,
+		s.filepath,
+		s.field01,
+		s.field02,
+		s.field03
+		from ss_attachment s 
+		where 1=1 
+	</sql>
+	
+	  <select id="getAllAttachment" parameterType="string" resultType="Attachment">
+		<include refid="attachmentSql"/>
+		 
+	</select>
+	
+    <select id="getAttachment" parameterType="string" resultType="Attachment">
+		<include refid="attachmentSql"/>
+		  and  id=#{id}
+	</select>
+	
+	<select id="findAttachmentByFilter" parameterType="Page" resultType="Attachment">
+		<include refid="attachmentSql"/>
+		<if test="filters.filename!=null"> 
+			 and s.filename like '%' #{filters.filename} '%'
+		</if>
+		<if test="filters.blockId!=null"> 
+			 and s.block_id = #{filters.blockId}
+		</if>
+		<if test="filters.fileType!=null"> 
+			 and s.fileType = #{filters.fileType}
+		</if>
+		<if test="orderBy!=null">
+	      order by ${orderBy} ${order}
+	   </if>
+	      limit #{start},#{pageSize}
+	</select>
+	
+	<select id="findAttachmentCountByFilter" parameterType="Page" resultType="int">
+	     select count(1) from (	
+	     <include refid="attachmentSql"/>
+		  	<if test="filters.filename!=null"> 
+			   and s.filename like '%' #{filters.filename} '%'
+			</if>
+			<if test="orderBy!=null">
+		      order by ${orderBy} ${order}
+		   </if>
+	     )t
+	</select>
+	<insert id="saveAttachment" parameterType="Attachment">
+		insert into ss_attachment (id,
+			businessId,
+			create_time,
+			fileType,
+			filename,
+			filepath,
+		    field01,
+		    field02,
+		    field03
+		    ) 
+		 values(#{id},
+			#{businessId},
+			#{createTime},
+			#{fileType},
+			#{filename},
+			#{filepath},
+		    #{field01},
+		    #{field02},
+		    #{field03}
+			)
+	</insert>
+	<update id="updateAttachment" parameterType="Attachment">
+		update ss_attachment set 
+			businessId     = #{businessId},       
+			create_time  = #{createTime},
+			fileType     = #{fileType},  
+			filename     = #{filename},  
+			filepath     = #{filepath},        
+			field01      = #{field01},      
+			field02      = #{field02},      
+			field03      = #{field03}    
+		 where id=#{id} 
+	</update>
+	 <delete id="deleteAttachment" >
+	    delete from   ss_attachment  where id in 
+	  <foreach  item="item" index="index" collection="list"
+     	 open="(" separator="," close=")">
+       		 #{item}
+  	 </foreach> 
+	</delete>	
+	
+	 <delete id="deleteAttachmentWhen" parameterType="Attachment">
+	    delete from ss_attachment where businessId=#{businessId} and fileType=#{fileType}
+	    <if test="field01 !=null"> 
+			   and field01 = #{field01}
+		</if>
+		and filename = #{filename}
+	</delete>	
+</mapper>

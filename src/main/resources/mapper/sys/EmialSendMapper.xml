@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.bsxf.common.repository.sys.EmialSendMybatisDao">
+   <sql id="emialSendSql">
+         select e.id,	##ID
+				e.create_time as  createTime ,	##创建时间
+				e.last_update_time as  lastUpdateTime ,	##最后修改时间
+				e.create_user_id as "createUser.id",	##创建人
+				e.last_update_user_id as "lastUpdateUser.id",	##最后修改人
+				e.status,	##状态
+				e.host,	##SMTP服务器
+				e.username,	##用户名
+				e.password,	##密码
+				e.port,	##端口
+				e.subject,	##主题
+				e.message,	##内容
+				e.toemail as toemail,	##接收者
+				e.fsend,	##是否发送
+				e.send_time as  sendTime 	##发送时间
+				
+		from ss_email_send e where 1=1
+	</sql>
+	  <select id="getAllEmialSend" parameterType="string" resultType="EmialSend">
+		<include refid="emialSendSql"/>
+		 
+	</select>
+	
+	 <select id="findEmialSendByCond" parameterType="map" resultType="EmialSend">
+		<include refid="emialSendSql"/>
+		 
+	</select>
+    <select id="getEmialSend" parameterType="string" resultType="EmialSend">
+		<include refid="emialSendSql"/>
+		  and  e.id = #{id}
+	</select>
+	<select id="findEmialSendByFilter" parameterType="Page" resultType="EmialSend">
+		<include refid="emialSendSql"/>
+		<if test="filters.createTime!=null"> 
+			 and e.create_time = str_to_date(#{filters.createTime},'%Y-%m-%d %H:%i:%s')  
+		</if>
+		<if test="filters.lastUpdateTime!=null"> 
+			 and e.last_update_time = str_to_date(#{filters.lastUpdateTime},'%Y-%m-%d %H:%i:%s')  
+		</if>
+		<if test="filters.createUser!=null"> 
+			 and e.create_user = #{filters.createUser}
+		</if>
+		<if test="filters.lastUpdateUser!=null"> 
+			 and e.last_update_user = #{filters.lastUpdateUser}
+		</if>
+		<if test="filters.status!=null"> 
+			 and e.status = #{filters.status}
+		</if>
+		<if test="filters.host!=null"> 
+			 and e.host = #{filters.host}
+		</if>
+		<if test="filters.username!=null"> 
+			 and e.username like '%' #{filters.username}  '%'
+		</if>
+		<if test="filters.password!=null"> 
+			 and e.password = #{filters.password}
+		</if>
+		<if test="filters.port!=null"> 
+			 and e.port = #{filters.port}
+		</if>
+		<if test="filters.subject!=null"> 
+			 and e.subject = #{filters.subject}
+		</if>
+		<if test="filters.message!=null"> 
+			 and e.message = #{filters.message}
+		</if>
+		<if test="filters.toemail!=null"> 
+			 and e.toemail like '%'  #{filters.toemail} '%'
+		</if>
+		<if test="filters.fsend!=null"> 
+			 and e.fsend = #{filters.fsend}
+		</if>
+		<if test="filters.sendTime!=null"> 
+			 and e.send_time = str_to_date(#{filters.sendTime},'%Y-%m-%d %H:%i:%s')  
+		</if>
+
+		<if test="orderBy!=null">
+	      order by ${orderBy} ${order}
+	   </if>
+	      limit #{start},#{pageSize}
+	</select>
+	<select id="findEmialSendCountByFilter" parameterType="Page" resultType="int">
+	     select count(1) from (	
+	     <include refid="emialSendSql"/>
+		<if test="filters.createTime!=null"> 
+			 and e.create_time = str_to_date(#{filters.createTime},'%Y-%m-%d %H:%i:%s')  
+		</if>
+		<if test="filters.lastUpdateTime!=null"> 
+			 and e.last_update_time = str_to_date(#{filters.lastUpdateTime},'%Y-%m-%d %H:%i:%s')  
+		</if>
+		<if test="filters.createUser!=null"> 
+			 and e.create_user = #{filters.createUser}
+		</if>
+		<if test="filters.lastUpdateUser!=null"> 
+			 and e.last_update_user = #{filters.lastUpdateUser}
+		</if>
+		<if test="filters.status!=null"> 
+			 and e.status = #{filters.status}
+		</if>
+		<if test="filters.host!=null"> 
+			 and e.host = #{filters.host}
+		</if>
+		<if test="filters.username!=null"> 
+			 and e.username like '%'  #{filters.username} '%'
+		</if>
+		<if test="filters.password!=null"> 
+			 and e.password = #{filters.password}
+		</if>
+		<if test="filters.port!=null"> 
+			 and e.port = #{filters.port}
+		</if>
+		<if test="filters.subject!=null"> 
+			 and e.subject = #{filters.subject}
+		</if>
+		<if test="filters.message!=null"> 
+			 and e.message = #{filters.message}
+		</if>
+		<if test="filters.toemail!=null"> 
+			 and e.toemail like '%'  #{filters.toemail} '%'
+		</if>
+		<if test="filters.fsend!=null"> 
+			 and e.fsend = #{filters.fsend}
+		</if>
+		<if test="filters.sendTime!=null"> 
+			 and e.send_time = str_to_date(#{filters.sendTime},'%Y-%m-%d %H:%i:%s')  
+		</if>
+
+	     )t
+		
+	</select>
+	<insert id="saveEmialSend" parameterType="EmialSend">
+	  
+		insert into ss_email_send (id,
+			create_time,
+			last_update_time,
+			create_user_id,
+			last_update_user_id,
+			status,
+			host,
+			username,
+			password,
+			port,
+			subject,
+			message,
+			toemail,
+			fsend,
+			send_time) 
+		 values(#{id},
+			#{createTime},
+			#{lastUpdateTime},
+			#{createUser.id},
+			#{lastUpdateUser.id},
+			#{status},
+			#{host},
+			#{username},
+			#{password},
+			#{port},
+			#{subject},
+			#{message},
+			#{toemail},
+			#{fsend},
+			#{sendTime})
+	</insert>
+	<update id="updateEmialSend" parameterType="EmialSend">
+		update ss_email_send set 
+			last_update_time=#{lastUpdateTime},
+			last_update_user_id=#{lastUpdateUser.id},
+			status=#{status},
+			host=#{host},
+			username=#{username},
+			password=#{password},
+			port=#{port},
+			subject=#{subject},
+			message=#{message},
+			toemail=#{toemail},
+			fsend=#{fsend},
+			send_time=#{sendTime}
+		 where id=#{id} 
+	</update>
+	<delete id="disabledEmialSend" >
+	    update   ss_email_send set status='disabled' where id in 
+	  <foreach  item="item" index="index" collection="list"
+     	 open="(" separator="," close=")">
+       		 #{item}
+  	 </foreach> 
+	</delete>	
+	 <delete id="deleteEmialSend" >
+	    delete from   ss_email_send  where id in 
+	  <foreach  item="item" index="index" collection="list"
+     	 open="(" separator="," close=")">
+       		 #{item}
+  	 </foreach> 
+	</delete>	
+</mapper>

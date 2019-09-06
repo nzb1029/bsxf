@@ -1,0 +1,61 @@
+#h2 database settings
+jdbc.driver=com.mysql.jdbc.Driver
+jdbc.url=jdbc:mysql://47.92.24.190:3306/akldb?zeroDateTimeBehavior=convertToNull
+jdbc.username=akl
+jdbc.password=akl
+ 
+ 
+dbcp.maxIdle=20
+dbcp.maxActive=20
+
+#parent.domain=http://localhost:7070/akl-min
+
+#mtg.jdbc.driver=com.mysql.jdbc.Driver
+#mtg.jdbc.url=jdbc:mysql://localhost:33069/mentougou?zeroDateTimeBehavior=convertToNull
+#mtg.jdbc.username=root
+#mtg.jdbc.password=MenTouGou@33069
+ 
+#mtg.jdbc.driver=com.microsoft.sqlserver.jdbc.SQLServerDriver
+#mtg.jdbc.url=jdbc:sqlserver://localhost:1433; DatabaseName=xqcg
+#mtg.jdbc.username=sa
+#mtg.jdbc.password=123456
+
+
+#datasource
+quartz.jdbc.driver=com.mysql.jdbc.Driver
+quartz.jdbc.url=jdbc:mysql://47.92.24.190:3306/akldb?zeroDateTimeBehavior=convertToNull
+quartz.jdbc.username=akl
+quartz.jdbc.password=akl
+#log4jdbc driver
+#jdbc.driver=net.sf.log4jdbc.DriverSpy
+#jdbc.url=jdbc:log4jdbc:h2:file:~/.h2/showcase4;AUTO_SERVER=TRUE
+
+#quartz.jdbc.driver=org.h2.Driver
+#quartz.jdbc.url=jdbc:h2:file:~/.h2/showcase-quartz4;AUTO_SERVER=TRUE
+#quartz.jdbc.username=sa
+#quartz.jdbc.password=
+
+#activemq settings
+#vm broker
+jms.broker_url=vm://akl?broker.persistent=false&broker.useJmx=false&broker.schedulerSupport=false
+#localhost broker
+#jms.broker_url=tcp://localhost:61616
+#network of brokers
+#jms.broker_url=failover://(tcp://mqremote1:61616,tcp://mqremote2:61616)?randomize=false&initialReconnectDelay=100&timeout=5000
+
+jms.clicent_id=durableTopicListenerDemo
+
+#memcached settings
+#memcached.url=localhost:11211
+
+#jmx settings
+#jmx.rmi_port=2099
+
+#demo settings
+#server.node_name=default
+#server.addr=localhost
+merCode=103502259709017
+merKey=88888888
+########## 
+permissions=\u7F16\u8F91\u7528\u6237-user\:edit;\u7F16\u8F91\u89D2\u8272-role\:edit
+widgets=\u901A\u77E5\u516C\u544A\:notice;\u65E5\u5386\:calendar;\u6211\u7684\u65E5\u7A0B\:scheduler;\u5929\u6C14\:weather;\u4EE3\u529E\u4EFB\u52A1\:todo

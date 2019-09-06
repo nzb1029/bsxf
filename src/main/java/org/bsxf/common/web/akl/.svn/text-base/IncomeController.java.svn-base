@@ -1,0 +1,244 @@
+package org.bsxf.common.web.akl;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+
+import org.bsxf.common.entity.akl.Block;
+import org.bsxf.common.entity.akl.Cost;
+import org.bsxf.common.entity.akl.Income;
+import org.bsxf.common.service.akl.BlockManager;
+import org.bsxf.common.service.akl.CostManager;
+import org.bsxf.common.service.akl.IncomeManager;
+import org.bsxf.utils.JqGirds;
+import org.bsxf.utils.Page;
+import org.bsxf.web.LtSecurityUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springside.utils.Collections3;
+
+@Controller
+@RequestMapping(value = "/income")
+public class IncomeController {
+	
+
+	
+	@Autowired
+	private IncomeManager incomeManager ;
+	
+	@Autowired
+	private CostManager costManager ;
+	
+	@Autowired
+	private BlockManager blockManager ;
+
+	@RequestMapping(value = { "list" })
+	public String list(Model model) {
+		return "akl/blockIncomeList";
+	}
+
+	@RequestMapping(value = { "jqgrid" })
+	@ResponseBody
+	public Map jqgrid(HttpServletRequest request) {
+		Page page = JqGirds.parmsToPage(request);
+		if (StringUtils.isBlank(page.getOrder())) {
+			page.setOrder("s.time", "desc");
+		}
+		page = incomeManager.findIncomeByPage(page);
+		return JqGirds.renderJson(page);
+	}
+	
+	@RequestMapping(value = { "create/{id}" })
+	public String create(@PathVariable("id")String id, Model model) {
+	    Income income = new Income();
+		if (StringUtils.isNotBlank(id)&& !"undefined".equals(id)) {
+			income = incomeManager.getIncome(id);
+		}
+		List<Block> blockList=blockManager.getAllBlock();
+		
+		model.addAttribute("blockList", blockList);
+		model.addAttribute("income", income);
+		
+		return "akl/blockIncomeForm";
+	}
+	@RequestMapping(value = { "save" }, method = RequestMethod.POST)
+	public String save(@Valid @ModelAttribute("income") Income income, RedirectAttributes redirectAttributes, HttpServletRequest request) {
+		
+		incomeManager.saveOrUpdate(income);
+		redirectAttributes.addFlashAttribute("message", "创建成功");
+		return "redirect:/income/list";
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "delete/{id}")
+	@ResponseBody
+	public String delete(@PathVariable("id") String id) {
+		incomeManager.deleteIncome(Collections3.extractToList(id.split(",")));
+		return "true" ;
+	}
+	
+	@RequestMapping(value = { "xyfx" })
+	public String xyfx(Model model) {
+		return "akl/xyfx";
+	}
+	
+	@RequestMapping(value = { "generateColumn" })
+	@ResponseBody
+	public List<Map<String, Object>> generateColumn(HttpServletRequest request) {
+		String blockId = LtSecurityUtils.getShiroUser().getBlockId();
+		List<Map<String, Object>> dList = new ArrayList<Map<String, Object>>();
+		List<Cost> costList = costManager.getCostByBlockId(blockId);
+		List<Income> incomeList = incomeManager.getIncomeByBlockId(blockId);
+		if(costList != null && costList.size() > 0){
+			generateCostDunData(dList,costList);
+			generateCostData(dList,costList);
+		}
+		
+		if(incomeList != null && incomeList.size() > 0){
+			generateIncomeDunData(dList,incomeList);
+			generateIncomeData(dList,incomeList);
+		}
+		
+		return dList;
+	}
+    /**
+     * 肥料使用量
+     */
+	public void generateCostDunData(List<Map<String, Object>> dList, List<Cost> costList) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		dList.add(map);
+		List<Date>  timeList = new ArrayList<Date>();
+		List<Double> cost1List = new ArrayList<Double>();
+		List<Double> cost2List = new ArrayList<Double>();
+		List<Double> cost3List = new ArrayList<Double>();
+		List<Double> cost4List = new ArrayList<Double>();
+		for (Cost cost : costList) {
+			timeList.add(cost.getTime());
+			cost1List.add(cost.getFhfNormalUse());
+			cost2List.add(cost.getFhfAKLUse());
+			cost3List.add(cost.getTsNormalUse());
+			cost4List.add(cost.getTsAKLUse());
+		}
+		List<Map<String, Object>> dataList = new ArrayList<Map<String,Object>>();
+		Map<String, Object> map1 = new HashMap<String, Object>();
+		dataList.add(map1);
+		map1.put("name", "复合肥传统使用量");
+		map1.put("data", cost1List.toArray());
+		Map<String, Object> map2 = new HashMap<String, Object>();
+		dataList.add(map2);
+		map2.put("name", "复合肥爱科农使用量");
+		map2.put("data", cost2List.toArray());
+		Map<String, Object> map3 = new HashMap<String, Object>();
+		dataList.add(map3);
+		map3.put("name", "碳酸氢铵传统使用量");
+		map3.put("data", cost3List.toArray());
+		Map<String, Object> map4 = new HashMap<String, Object>();
+		dataList.add(map4);
+		map4.put("name", "碳酸氢铵爱科农使用量");
+		map4.put("data", cost4List.toArray());
+		//X轴坐标
+		map.put("xAxis", timeList.toArray());
+		//数据封装
+		map.put("series",dataList.toArray());
+	}
+	/**
+     * 总成本
+     */
+	public void generateCostData(List<Map<String, Object>> dList, List<Cost> costList) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		dList.add(map);
+		List<Date>  timeList = new ArrayList<Date>();
+		List<Double> cost1List = new ArrayList<Double>();
+		List<Double> cost2List = new ArrayList<Double>();
+		for (Cost cost : costList) {
+			timeList.add(cost.getTime());
+			cost1List.add(cost.getNormalCost());
+			cost2List.add(cost.getaKLCost());
+		}
+		List<Map<String, Object>> dataList = new ArrayList<Map<String,Object>>();
+		Map<String, Object> map1 = new HashMap<String, Object>();
+		dataList.add(map1);
+		map1.put("name", "传统成本");
+		map1.put("data", cost1List.toArray());
+		Map<String, Object> map2 = new HashMap<String, Object>();
+		dataList.add(map2);
+		map2.put("name", "爱科农成本");
+		map2.put("data", cost2List.toArray());
+		//X轴坐标
+		map.put("xAxis", timeList.toArray());
+		//数据封装
+		map.put("series",dataList.toArray());
+	}
+    /**
+     * 产量
+     */
+	public void generateIncomeDunData(List<Map<String, Object>> dList, List<Income> incomeList) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		dList.add(map);
+		List<Date>  timeList = new ArrayList<Date>();
+		List<Double> income1List = new ArrayList<Double>();
+		List<Double> income2List = new ArrayList<Double>();
+		for (Income income : incomeList) {
+			timeList.add(income.getTime());
+			income1List.add(income.getNormalProduct());
+			income2List.add(income.getaKLProduct());
+		}
+		List<Map<String, Object>> dataList = new ArrayList<Map<String,Object>>();
+		Map<String, Object> map1 = new HashMap<String, Object>();
+		dataList.add(map1);
+		map1.put("name", "传统产量");
+		map1.put("data", income1List.toArray());
+		Map<String, Object> map2 = new HashMap<String, Object>();
+		dataList.add(map2);
+		map2.put("name", "爱科农产量");
+		map2.put("data", income2List.toArray());
+		//X轴坐标
+		map.put("xAxis", timeList.toArray());
+		//数据封装
+		map.put("series",dataList.toArray());
+		
+	}
+	/**
+     * 收益
+     */
+	public void generateIncomeData(List<Map<String, Object>> dList, List<Income> incomeList) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		dList.add(map);
+		List<Date>  timeList = new ArrayList<Date>();
+		List<Double> income1List = new ArrayList<Double>();
+		List<Double> income2List = new ArrayList<Double>();
+		for (Income income : incomeList) {
+			timeList.add(income.getTime());
+			income1List.add(income.getNormalIncome());
+			income2List.add(income.getaKLIncome());
+		}
+		List<Map<String, Object>> dataList = new ArrayList<Map<String,Object>>();
+		Map<String, Object> map1 = new HashMap<String, Object>();
+		dataList.add(map1);
+		map1.put("name", "传统收益");
+		map1.put("data", income1List.toArray());
+		Map<String, Object> map2 = new HashMap<String, Object>();
+		dataList.add(map2);
+		map2.put("name", "爱科农收益");
+		map2.put("data", income2List.toArray());
+		//X轴坐标
+		map.put("xAxis", timeList.toArray());
+		//数据封装
+		map.put("series",dataList.toArray());
+		
+	}
+	
+}

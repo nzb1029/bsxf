@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.bsxf.common.repository.StationConfigMybatisDao">
+   <sql id="stationConfigSql">
+ select s.id,
+		s.auth_code as  authCode ,
+		s.auth_data as authData,
+		s.name,
+		s.ename,
+		s.smsName,
+		s.smsPasswd,
+		s.company_name as companyName,
+		s.company_address as companyAddress,
+		s.company_tel as companyTel,
+		s.fail_count as failCount,
+		s.pointx,
+		s.pointy,
+		s.intro
+		from ss_station_config s where 1=1
+	</sql>
+	  <select id="getAllStationConfig" parameterType="string" resultType="StationConfig">
+		<include refid="stationConfigSql"/>
+		 
+	</select>
+    <select id="getStationConfig" parameterType="string" resultType="StationConfig">
+		<include refid="stationConfigSql"/>
+		  and  id=#{id}
+	</select>
+	<select id="findStationConfigByFilter" parameterType="Page" resultType="StationConfig">
+		<include refid="stationConfigSql"/>
+	      limit #{start},#{pageSize}
+	</select>
+	<select id="getAllAreaTree"  resultType="map">
+		select * from ss_area
+	</select>
+	
+	<select id="findStationConfigCountByFilter" parameterType="Page" resultType="int">
+	     select count(1) from (	
+	     <include refid="stationConfigSql"/>
+	     )t
+		
+	</select>
+	<insert id="saveStationConfig" parameterType="StationConfig">
+	  
+		insert into ss_station_config (id,
+			auth_code,
+			name,ename,
+			s.smsName,
+		    s.smsPasswd,
+		    s.company_name ,
+		    s.company_address ,
+		    s.company_tel,
+		    s.fail_count,
+		    pointx,
+		    pointy,
+		    auth_data,
+		    intro
+		    ) 
+		 values(#{id},
+			#{authCode},
+			#{name},
+			#{ename},
+			#{smsName},
+			#{smsPasswd},
+			#{companyName},
+		    #{companyAddress},
+		    #{companyTel},
+		    #{failCount},
+		    #{pointx},
+		    #{pointy},
+		    #{authData},
+		    #{intro}
+			)
+	</insert>
+	<update id="updateStationConfig" parameterType="StationConfig">
+		update ss_station_config set 
+			auth_code=#{authCode},
+			name=#{name},
+			ename=#{ename},
+			smsName=#{smsName},
+			smsPasswd=#{smsPasswd},
+			company_name =#{companyName},
+		    company_address =#{companyAddress},
+		    company_tel=#{companyTel},
+		    fail_count=#{failCount},
+		    pointx=#{pointx},
+		    pointy=#{pointy},
+		    auth_data=#{authData},
+		    intro=#{intro}
+		 where id=#{id} 
+	</update>
+	<delete id="disabledStationConfig" >
+	    update   ss_station_config set status='disabled' where id in 
+	  <foreach  item="item" index="index" collection="list"
+     	 open="(" separator="," close=")">
+       		 #{item}
+  	 </foreach> 
+	</delete>	
+	 <delete id="deleteStationConfig" >
+	    delete from   ss_station_config  where id in 
+	  <foreach  item="item" index="index" collection="list"
+     	 open="(" separator="," close=")">
+       		 #{item}
+  	 </foreach> 
+	</delete>	
+</mapper>

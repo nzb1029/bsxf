@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd"
+	default-lazy-init="true">
+
+	<description>Email配置</description>
+
+	<!-- 文本邮件服务类 -->
+	<bean id="simpleMailService" class="org.platform.email.SimpleMailService">
+		<property name="mailSender" ref="mailSender" />
+		<property name="from" value="53934569@qq.com" />
+		<property name="textTemplate">
+			<value><![CDATA[
+			尊敬的%s，您的QQ的密码在%tF被神秘人修改.
+					QQ Administrator.
+			]]></value>
+		</property>
+	</bean>
+
+	<!-- MIME邮件服务类 -->
+	<bean id="mimeMailService" class="org.platform.email.MimeMailService">
+		<property name="mailSender" ref="mailSender" />
+		<property name="from" value="53934569@qq.com" />
+		<property name="freemarkerConfiguration" ref="freemarkerConfiguration" />
+	
+	</bean>
+
+	<!-- 用于生成HTML邮件内容的Freemarker配置 -->
+	<bean id="freemarkerConfiguration" class="org.springframework.ui.freemarker.FreeMarkerConfigurationFactoryBean">
+		<property name="templateLoaderPath" value="classpath:/email" />
+	</bean>
+	
+	<beans profile="production">
+		<!-- 邮件发送器 -->
+		<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+			<!-- <property name="host" value="smtp.qq.com" />
+			<property name="username" value="53934569@qq.com" />
+			<property name="password" value="huletian2008" />
+			 -->
+			<property name="defaultEncoding" value="UTF-8"/>
+			<property name="javaMailProperties">
+				<props>
+					<prop key="mail.smtp.auth">true</prop>
+					<prop key="mail.smtp.timeout">25000</prop>  
+					<!-- 使用gmail smtp server的必须参数
+					<prop key="mail.smtp.starttls.enable">true</prop> -->
+				</props>
+			</property>
+		</bean>
+	</beans>
+	
+	<beans profile="development,functional,test">
+		<!-- 发送至greenmail的邮件发送器 -->
+		<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+			<!-- 配置greenmail simulatore中的默认值 -->
+			<property name="host" value="localhost" />
+			<property name="port" value="${mailserver.port}" />
+			<property name="username" value="greenmail@localhost.com" />
+			<property name="password" value="greenmail" />
+			<property name="defaultEncoding" value="UTF-8"/>
+			<property name="javaMailProperties">
+				<props>
+					<prop key="mail.smtp.auth">true</prop>
+				</props>
+			</property>
+		</bean>
+		
+		<!-- greenmail smtp邮件服务器模拟器  -->
+		<bean id="greenmail" class="org.springside.modules.test.mail.MailServerSimulator" lazy-init="false">
+			<property name="port" value="${mailserver.port}" />
+		</bean>
+	</beans>
+</beans>

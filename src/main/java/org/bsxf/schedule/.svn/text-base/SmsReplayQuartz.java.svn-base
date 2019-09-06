@@ -1,0 +1,255 @@
+package org.platform.schedule;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.conn.PoolingClientConnectionManager;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
+import org.apache.http.protocol.BasicHttpContext;
+import org.apache.http.protocol.HttpContext;
+import org.dom4j.Document;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
+import org.platform.common.service.SmsStepManager;
+import org.platform.utils.DateUtil;
+import org.platform.utils.EhcacheManager;
+import org.quartz.JobExecutionContext;
+import org.quartz.JobExecutionException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.quartz.QuartzJobBean;
+import org.springside.modules.utils.Identities;
+import org.springside.modules.web.SpringContextHolder;
+
+public class SmsReplayQuartz extends QuartzJobBean {
+	static String url = "http://sms.webchinese.cn/web_api/SMS/GBK/?Action=UP&Prompt=0";
+	private static final long serialVersionUID = -8483811141908827663L;
+
+	private static final int CONNECTION_POOL_SIZE = 10;
+	private static final int TIMEOUT_SECONDS = 20;
+
+	private static Logger logger = LoggerFactory.getLogger(SmsReplayQuartz.class);
+
+	private static HttpClient httpClient = null;
+	private static SmsStepManager smsStepManager;
+
+	//private static Logger logger = LoggerFactory.getLogger(SmsReplayQuartz.class);
+
+	//&Uid=本站用户名&Key=接口安全密码
+	/**
+	 * -1 	没有该用户账户
+	-2 	密钥不正确（不是用户密码）
+	-11 	该用户被禁用
+	0 	没有回复信息
+	
+	
+	<delivers>
+		<deliver>
+			<mob>13395117782</mob>
+			<content>为何只能看到一次</content>
+			<time>2013-6-27 9:42:50</time>
+		</deliver>
+	</delivers>
+	 * */
+	@Override
+	protected void executeInternal(JobExecutionContext arg0) throws JobExecutionException {
+		try {
+			String curl = url + "&Uid=" + EhcacheManager.getStationConfig().getSmsName() + "&Key="
+					+ EhcacheManager.getStationConfig().getSmsPasswd();
+			String st = fetchContentByApacheHttpClient(curl);
+			if (st.equals("-1")) {
+				logger.debug("短信回复查询--短信账号不存在");
+			} else if (st.equals("-2")) {
+				logger.debug("短信回复查询--密钥不正确");
+			} else if (st.equals("-11")) {
+				logger.debug("短信回复查询--该用户被禁用");
+			} else if (st.equals("0")) {
+				logger.debug("短信回复查询--没有回复信息");
+			} else {
+				//System.out.println(st);
+				Document doc = null;
+				doc = DocumentHelper.parseText(st);
+				//String uid = LtSecurityUtils.getLoginUser().getId();
+				Element root = doc.getRootElement();
+				List<Element> delivers = (List<Element>) root.selectNodes("deliver");
+				List<Map<String, Object>> smsList = new ArrayList<Map<String, Object>>();
+				//	DateUtil df=new SimpleDateFormat();
+				for (Element e : delivers) {
+					String mob = e.elementText("mob");
+					String content = e.elementText("content");
+					String time = e.elementText("time");
+					Map<String, Object> smsMap = new HashMap<String, Object>();
+					smsMap.put("seqId", mob);
+					//smsMap.put("userId", uid);
+					smsMap.put("createTime", DateUtil.StringTimeToDate(time));//回复时间
+					smsMap.put("content", content);
+					smsMap.put("id", Identities.uuid2());
+					smsMap.put("stype", "receive");
+					smsList.add(smsMap);
+				}
+
+				smsStepManager.saveOrUpdateSmsDeliver(smsList);
+				//Deliver deliver = JaxbMapper.fromXml(st, Deliver.class);
+				//System.out.println(deliver);
+			}
+
+			//System.out.println("短信回复代码：" + st);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	static {
+		init();
+	}
+
+	/**
+	 * 创建多线程安全的HttpClient实例.
+	 */
+
+	public static void init() {
+		//Set connection pool
+		PoolingClientConnectionManager cm = new PoolingClientConnectionManager();
+		cm.setMaxTotal(CONNECTION_POOL_SIZE);
+		httpClient = new DefaultHttpClient(cm);
+
+		//set timeout
+		HttpParams httpParams = httpClient.getParams();
+		HttpConnectionParams.setSoTimeout(httpParams, TIMEOUT_SECONDS * 1000);
+		smsStepManager = SpringContextHolder.getBean(SmsStepManager.class);
+	}
+
+	/*protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		//获取参数
+		String contentUrl = request.getParameter("contentUrl");
+		if (StringUtils.isBlank(contentUrl)) {
+			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "contentUrl parameter is required.");
+		}
+
+		//远程访问获取内容的方式
+		String client = request.getParameter("client");
+
+		InputStream input = null;
+		if ("apache".equals(client)) {
+			//使用Apache HttpClient
+			fetchContentByApacheHttpClient(response, contentUrl);
+		} else {
+			//使用JDK HttpUrlConnection
+			fetchContentByJDKConnection(response, contentUrl);
+		}
+	}*/
+
+	/**
+	 * 使用HttpClient取得内容.
+	 */
+	private String fetchContentByApacheHttpClient(String contentUrl) throws IOException {
+
+		//获取内容
+		HttpEntity entity = null;
+		HttpGet httpGet = new HttpGet(contentUrl);
+		try {
+			HttpContext context = new BasicHttpContext();
+			HttpResponse remoteResponse = httpClient.execute(httpGet, context);
+			entity = remoteResponse.getEntity();
+		} catch (Exception e) {
+			logger.error("fetch remote content" + contentUrl + "  error", e);
+			httpGet.abort();
+			return "-100";
+		}
+
+		//404返回
+		if (entity == null) {
+			//	response.sendError(HttpServletResponse.SC_NOT_FOUND, contentUrl + " is not found.");
+			//return;
+		}
+
+		//设置Header
+		//response.setContentType(entity.getContentType().getValue());
+		//if (entity.getContentLength() > 0) {
+		//response.setContentLength((int) entity.getContentLength());
+		//}
+
+		//输出内容
+		//InputStream input = entity.getContent();
+
+		//OutputStream output = response.getOutputStream();
+		try {
+			return dump(entity, "gbk");
+			//基于byte数组读取InputStream并直接写入OutputStream, 数组默认大小为4k.
+			//IOUtils.copy(input, output);
+			//output.flush();
+		} finally {
+			//保证InputStream的关闭.
+			//IOUtils.closeQuietly(input);
+		}
+
+	}
+
+	private static String dump(HttpEntity entity, String encoding) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(entity.getContent(), encoding));
+		StringBuffer sp = new StringBuffer();
+		String str = "";
+		while ((str = br.readLine()) != null) {
+			sp.append(str);
+		}
+		return sp.toString();
+	}
+
+	@XmlRootElement(name = "delivers")
+	// 指定子节点的顺序
+	@XmlType(propOrder = { "mob", "content", "time" })
+	private static class Deliver {
+
+		private Long mob;
+		private String content;
+		private String time;
+
+		@Override
+		public String toString() {
+			return ToStringBuilder.reflectionToString(this);
+		}
+
+		@XmlAttribute
+		public Long getMob() {
+			return mob;
+		}
+
+		public void setMob(Long mob) {
+			this.mob = mob;
+		}
+
+		@XmlAttribute
+		public String getContent() {
+			return content;
+		}
+
+		public void setContent(String content) {
+			this.content = content;
+		}
+
+		@XmlAttribute
+		public String getTime() {
+			return time;
+		}
+
+		public void setTime(String time) {
+			this.time = time;
+		}
+	}
+}

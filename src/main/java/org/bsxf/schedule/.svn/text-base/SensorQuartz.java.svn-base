@@ -1,0 +1,19 @@
+package org.platform.schedule;
+
+import org.platform.common.service.iotjk.EquipmentManager;
+import org.quartz.JobExecutionContext;
+import org.quartz.JobExecutionException;
+import org.springframework.scheduling.quartz.QuartzJobBean;
+import org.springside.modules.web.SpringContextHolder;
+
+/**
+ * 温感设备数据转换
+ * */
+public class SensorQuartz extends QuartzJobBean {
+
+	@Override
+	protected void executeInternal(JobExecutionContext arg0) throws JobExecutionException {
+		EquipmentManager eqManager = SpringContextHolder.getBean(EquipmentManager.class);
+		eqManager.updateKLEquipmentII();
+	}
+}

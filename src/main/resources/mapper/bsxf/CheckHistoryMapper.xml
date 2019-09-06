@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.bsxf.common.repository.bsxf.CheckHistoryMybatisDao">
+   <sql id="checkHistorySql">
+ select s.id,
+		s.create_time as createTime ,
+		u.id as "createUser.id" ,
+		u.name as "createUser.name",
+		uu.id as "checkUser.id" ,
+		uu.name as "checkUser.name",
+		s.check_time as checkTime ,
+		s.status,
+		s.comments,
+		s.runStatus,
+		s.field01,
+		s.field02,
+		s.field03
+		from bsxf_check_history s 
+		left join bsxf_equipment e on e.id = s.equipment_id
+	    left join ss_user u on u.id = s.create_user_id
+	    left join ss_user uu on uu.id = s.check_user_id
+		where 1=1
+	</sql>
+	
+	  <select id="getAllCheckHistory" parameterType="string" resultType="CheckHistory">
+		<include refid="checkHistorySql"/>
+		 and s.status = 'enabled'
+	</select>
+	
+    <select id="getCheckHistory" parameterType="string" resultType="CheckHistory">
+		<include refid="checkHistorySql"/>
+		  and  s.id=#{id}
+	</select>
+	
+    <select id="getUserCheckHistory" parameterType="string" resultType="CheckHistory">
+		<include refid="checkHistorySql"/>
+		  and s.user_id =#{userId}
+		  and s.status = 'enabled'
+	</select>
+	
+	<select id="findCheckHistoryByFilter" parameterType="Page" resultType="CheckHistory">
+		<include refid="checkHistorySql"/>
+		 and s.status = 'enabled'
+		<if test="filters.createTime!=null"> 
+			 and s.create_time = str_to_date(#{filters.createTime},'%Y-%m-%d %H:%i:%s')  
+		</if>
+		<if test="filters.name!=null"> 
+			 and s.name=#{filters.name}
+		</if>
+		<if test="filters.userName!=null"> 
+			 and uu.name=#{filters.userName}
+		</if>
+		<if test="orderBy!=null">
+	      order by ${orderBy} ${order}
+	   </if>
+	      limit #{start},#{pageSize}
+	</select>
+	
+	<select id="findCheckHistoryCountByFilter" parameterType="Page" resultType="int">
+	     select count(1) from (	
+	     <include refid="checkHistorySql"/>
+	     and s.status = 'enabled'
+	   <if test="filters.name!=null"> 
+			 and s.name=#{filters.name}
+		</if>
+		<if test="filters.userName!=null"> 
+			 and uu.name=#{filters.userName}
+		</if>
+		<if test="orderBy!=null">
+	      order by ${orderBy} ${order}
+	   </if>
+	     )t
+	</select>
+	<insert id="saveCheckHistory" parameterType="CheckHistory">
+		insert into bsxf_check_history (id,
+			create_time,
+			last_update_time,
+			create_user_id,
+			last_update_user_id,
+		    equipment_id,
+		    comments,
+		    check_user_id,
+		    check_time,
+		    status,
+		    runStatus,
+		    field01,
+		    field02,
+		    field03
+		    ) 
+		 values(#{id},
+			#{createTime},
+			#{lastUpdateTime},
+			#{createUser.id},
+			#{lastUpdateUser.id},
+			#{equipment.id},
+			#{comments},
+			#{checkUser.id},
+			#{checkTime},
+		    #{status},
+		    #{runStatus},
+		    #{field01},
+		    #{field02},
+		    #{field03}
+			)
+	</insert>
+	<update id="updateCheckHistory" parameterType="CheckHistory">
+		update bsxf_check_history set 
+			create_time         = #{createTime},             
+			last_update_time    = #{lastUpdateTime},   
+			create_user_id      = #{createUser.id},    
+			last_update_user_id = #{lastUpdateUser.id},
+			equipment_id        = #{equipment.id},     
+			comments            = #{comments},         
+			check_user_id       = #{checkUser.id},     
+			check_time          = #{checkTime},        
+			status              = #{status},         
+			runStatus           = #{runStatus},      
+			field01             = #{field01},        
+			field02             = #{field02},        
+			field03             = #{field03}         
+		 where id=#{id} 
+	</update>
+	<delete id="disabledCheckHistory" >
+	    update   bsxf_check_history set status='disabled' where id in 
+	  <foreach  item="item" index="index" collection="list"
+     	 open="(" separator="," close=")">
+       		 #{item}
+  	 </foreach> 
+	</delete>	
+	 <delete id="deleteCheckHistory" >
+	    delete from   bsxf_check_history  where id in 
+	  <foreach  item="item" index="index" collection="list"
+     	 open="(" separator="," close=")">
+       		 #{item}
+  	 </foreach> 
+	</delete>	
+</mapper>

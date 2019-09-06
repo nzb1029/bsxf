@@ -1,0 +1,99 @@
+/*******************************************************************************
+ * Copyright (c) 2005, 2014 springside.github.io
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ *******************************************************************************/
+package org.bsxf.email;
+
+import org.apache.commons.lang3.StringUtils;
+import org.bsxf.common.entity.sys.EmailConfig;
+import org.bsxf.utils.EhcacheManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
+
+/**
+ * 纯文本邮件服务类.
+ * 
+ * @author calvin
+ */
+public class SimpleMailService {
+	private static Logger logger = LoggerFactory.getLogger(SimpleMailService.class);
+
+	private JavaMailSenderImpl mailSender;
+	private String textTemplate;
+	private String from;
+	public boolean sendMail(String subject, String message, String to) {
+	 
+			EmailConfig config= EhcacheManager.getEmailConfig();
+			SimpleMailMessage msg = new SimpleMailMessage();
+			msg.setFrom(config.getUsername());
+			msg.setTo(to);
+			msg.setSubject(subject);
+			msg.setText(message);
+			try {
+				mailSender.setHost(config.getHost());
+				mailSender.setUsername(config.getUsername());
+				mailSender.setPassword(config.getPassword());
+				mailSender.setPort(Integer.valueOf(config.getPort()));
+				mailSender.send(msg);
+				if (logger.isInfoEnabled()) {
+					logger.info("纯文本邮件已发送至{}", StringUtils.join(msg.getTo(), ","));
+				}
+			} catch (Exception e) {
+				logger.error("发送邮件失败", e);
+				return false;
+			}
+		 
+		return true;
+	}
+	/**
+	 * 发送纯文本的邮件
+	 * @param subject 邮件标题
+	 * @param message 邮件内容
+	 * @param from 发送者
+	 * @param to 接收者
+	 */
+	public void sendNotificationMail(String subject, String message, String to) {
+		SimpleMailMessage msg = new SimpleMailMessage();
+		msg.setFrom(from);
+		msg.setTo(to);
+		msg.setSubject(subject);
+
+		// 将用户名与当期日期格式化到邮件内容的字符串模板
+		//String content = String.format(textTemplate, userName, new Date());
+		msg.setText(message);
+		//JavaMailSenderImpl d = ((JavaMailSenderImpl) mailSender);
+		try {
+			mailSender.send(msg);
+			if (logger.isInfoEnabled()) {
+				logger.info("纯文本邮件已发送至{}", StringUtils.join(msg.getTo(), ","));
+			}
+		} catch (Exception e) {
+			logger.error("发送邮件失败", e);
+		}
+	}
+
+	/**
+	 * Spring的MailSender.
+	 */
+	public void setMailSender(JavaMailSenderImpl mailSender) {
+		this.mailSender = mailSender;
+	}
+
+	/**
+	 * 邮件内容的字符串模板.
+	 */
+	public void setTextTemplate(String textTemplate) {
+		this.textTemplate = textTemplate;
+	}
+
+	public String getFrom() {
+		return from;
+	}
+
+	public void setFrom(String from) {
+		this.from = from;
+	}
+}

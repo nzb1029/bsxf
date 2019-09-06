@@ -1,0 +1,584 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Account">
+    <sql id="userSql">
+        select u.id, u.name, u.login_name as loginName, u.email ,u.password,u.status ,
+        u.is_lock as isLock,u.lock_time as lockTime,
+        u.user_type as userType,
+        u.exp_date as expDate,
+        (select group_concat(aa.name) from ss_role aa ,ss_user_role bb where aa.id=bb.role_id and bb.user_id=u.id group by bb.user_id) as roles,
+        (SELECT name FROM ss_dictionary WHERE type_code = 'iot_userType' AND STATUS ='enabled' and parent_id is not null and val = u.user_type) as userTypeName,
+		 u.phone_NO as phoneNo,
+		 u.card_no as cardNo
+		from ss_user u   
+	</sql>
+	 <select id="getUserLog" parameterType="string" resultType="map">
+		select  log_count ,
+			    log_time,
+			    ip
+		 from ss_user_log  
+		where user_id=#{id} and log_type='0'
+		order by log_time desc 
+		limit 2
+		
+	</select>
+	 <select id="getUserLogList" parameterType="page" resultType="map">
+		select * from (
+		select   case when l.log_type='0' then '登录成功' else l.log_type end log_des,l.log_time,l.ip,l.log_count,u.login_name, l.log_type
+		 from ss_user_log l
+		 left join ss_user u on u.id=l.user_id
+		   where l.log_type!='1'
+		   ) l where 1=1 
+		   
+		    <if test="filters.log_des!=null">
+	            and  l.log_des like '%' #{filters.log_des} '%'
+	       </if>
+	        <if test="filters.loginName!=null">
+	            and  u.login_name like '%' #{filters.loginName} '%'
+	       </if>
+		    order by log_time desc 
+		   limit #{start},#{pageSize}
+		
+	</select>
+	<select id="getUserLogListCount" parameterType="page" resultType="int">
+		select  count(1)
+		 from ss_user_log l
+		 left join ss_user u on u.id=l.user_id
+		   where l.log_type!='1'
+		    <if test="filters.log_type!=null">
+	            and  l.log_type like '%' #{filters.log_type} '%'
+	       </if>
+	        <if test="filters.loginName!=null">
+	            and  u.login_name like '%' #{filters.loginName} '%'
+	       </if>
+		   
+		
+	</select>
+	<select id="getUser" parameterType="string" resultType="User">
+		<include refid="userSql"/>
+		where u.id=#{id}
+	</select>
+	<select id="getUserByIds"  resultType="User">
+		<include refid="userSql"/>
+		where u.id in
+		<foreach  item="item" index="index" collection="array"
+	     	      open="(" separator="," close=")">
+	       		 #{item}
+  			</foreach> 
+	</select>
+	<select id="search" parameterType="map" resultType="User">
+		<include refid="userSql"/>
+		where u.login_name like '%' #{q} '%' or u.name like '%' #{q} '%'
+		limit #{limit} 
+	</select>
+	<select id="getAllUser" parameterType="map"  resultType="User">
+		<include refid="userSql"/> 
+		 where u.status='enabled'
+	     <if test="searchq!=null">
+	     and (  u.login_name like '%${searchq}%'
+	       or   u.name like '%${searchq}%')
+	     </if>
+	</select>
+	<select id="getTreeUser" parameterType="map"  resultType="map">
+		 select u.id, 
+		 	    concat(u.name,'(',u.login_name,')') as name,
+		 	    u.depart_id  as parentId,
+			    'user' as type,
+			    '../../static/img/05231_7.png' as icon,
+			    getDepartmentParentList(u.depart_id) as parentIds,
+			    u.depart_id as departId
+			from ss_user u  
+			where u.status='enabled'
+	     <if test="searchq!=null">
+	          and ( u.login_name like '%${searchq}%'
+	          or   u.name like '%${searchq}%')
+	     </if>
+	    <if test="pregionid!=null">
+	          and   d.region_id like  #{pregionid} '%'
+	          or d.id ='0001' 
+	     </if>
+	     <if test="organId!=null">
+	          and   u.organ_id =  #{organId} 
+	       
+	     </if>  
+	     
+	</select>
+	<select id="getAllRoleUser" parameterType="map"  resultType="map">
+		 select u.id, 
+		 	    concat(u.name,'(',u.login_name,')') as name,
+		 	    case when ur.role_id is null then 'role_0001' else concat('role_',ur.role_id) end  as parentId
+			    ,'user' as type,
+			    '../../static/img/05231_7.png' as icon
+			from ss_user u  
+			inner  join ss_user_role ur on ur.user_id=u.id
+			inner join ss_role r on r.id=ur.role_id 
+			where u.status='enabled' and r.status='enabled'
+	     <if test="searchq!=null">
+	          and ( u.login_name like '%${searchq}%'
+	          or   u.name like '%${searchq}%')
+	     </if>
+	 
+	</select>
+		 
+	
+	
+	<select id="getAllUserCount" parameterType="Page" resultType="int">
+	    select count(1) from (	
+	      <include refid="userSql"/> 
+	     where u.status='enabled'
+	     <if test="filters.loginName!=null">
+	      and  u.login_name like '%' #{filters.loginName} '%'
+	     </if>
+	      <if test="filters.email!=null">
+	       and   u.email like '%' #{filters.email} '%'
+	     </if>
+		)t
+	</select>
+	<select id="getAllUserPage" parameterType="Page"  resultType="User">
+		<include refid="userSql"/> 
+		 where u.status='enabled'
+	     <if test="filters.loginName!=null">
+	      and  u.login_name like '%' #{filters.loginName} '%'
+	     </if>
+	     <if test="filters.email!=null">
+	     and   u.email like '%' #{filters.email} '%'
+	     </if>
+	     limit #{start},#{pageSize}
+	</select>  
+	<select id="getUserByLoginName" parameterType="string" resultType="User">
+	   select u.id, 
+		    u.name, 
+		    u.login_name as loginName, 
+		    u.email ,
+		    u.password,
+		    u.status,  
+            u.is_lock as isLock,
+            u.lock_time as lockTime,
+            u.user_type as userType,
+            u.phone_no as phoneNo,
+            u.exp_date as expDate,
+	        u.card_NO as cardNo
+		from ss_user u   
+		where u.login_name=#{loginName} and u.status='enabled'
+	</select>	
+	
+	<select id="findUserByLoginNameOrEmailOrMobile" parameterType="string" resultType="User">
+	   select u.id, 
+		    u.name, 
+		    u.login_name as loginName, 
+		    u.email ,
+		    u.password,
+		    u.status,  
+            u.is_lock as isLock,
+            u.user_type as userType,
+            u.phone_no as phoneNo,
+            u.exp_date as expDate,
+            u.card_no as cardNo,
+            u.lock_time as lockTime
+		from ss_user u   
+		where (u.login_name=#{loginName} or u.phone_no=#{phoneNo} or u.email=#{email})  and u.status='enabled'
+	</select>	
+	<select id="findUserByMobile" parameterType="string" resultType="User">
+	   select u.id
+		    
+		from ss_user u   
+		 
+		where u.phone_no=#{phoneNo} and u.status='enabled'
+	</select>	
+	<select id="findUserByEmail" parameterType="string" resultType="User">
+	   select u.id
+		    
+		from ss_user u   
+		 
+		where u.email=#{email} and u.status='enabled'
+	</select>
+	<select id="findUserByCarno" parameterType="string" resultType="User">
+	   select u.id
+		    
+		from ss_user u   
+		 
+		where u.card_no=#{cardNo} and u.status='enabled'
+	</select>	
+	<select id="findUserIdsByLoginNames"   resultType="string">
+	   select group_concat(u.id) as id 
+		      from ss_user u 
+		      where u.login_name in 
+			<foreach  item="item" index="index" collection="array"
+	     	      open="(" separator="," close=")">
+	       		 #{item}
+  			</foreach> 
+	</select>	
+	<select id="findUserIdsByLoginAndNames"   resultType="string">
+	   select group_concat(u.id) as id 
+		      from ss_user u 
+		      where concat(u.login_name,'(',u.name,')') in 
+			<foreach  item="item" index="index" collection="array"
+	     	      open="(" separator="," close=")">
+	       		 #{item}
+  			</foreach> 
+	</select>	
+	<insert id="insertUser" parameterType="User">
+	   
+		insert into ss_user 
+			(  id,
+			   name,
+			   login_name,
+			   email ,
+			   password,
+			   status,
+			   create_time,
+			   user_type,
+			   exp_date,
+			   phone_no,
+			   card_no)
+			values (
+				 #{id},
+				 #{name},
+				 #{loginName}, 
+				 #{email} ,
+				 #{password},
+				 #{status},
+				 #{createTime},
+				 #{userType},
+				 #{expDate},
+				 #{phoneNo},
+				 #{cardNo}
+				 )
+	</insert>
+	<update id="updateUser" parameterType="User">
+		update ss_user set 
+				name=#{name}, 
+				login_name=#{loginName},
+		 		email= #{email},
+		        password=#{password},
+		        phone_no=#{phoneNo},
+		        user_type=#{userType},
+		        exp_date=#{expDate},
+		        card_no=#{cardNo}
+		         where id=#{id}
+	</update>	
+	<delete id="deleteUser" >
+	  delete from ss_user where id in 
+	  <foreach  item="item" index="index" collection="array"
+     	 open="(" separator="," close=")">
+       		 #{item}
+  			</foreach> 
+	</delete>
+	<delete id="disabledUser" >
+	  update    ss_user  set status='disabled' where id in 
+	  <foreach  item="item" index="index" collection="array"
+     	 open="(" separator="," close=")">
+       		 #{item}
+  			</foreach> 
+	</delete>
+	<!-- menu -->
+	
+	<!-- role -->
+	<sql id="roleSql">
+        select 
+        r.id, 
+        r.name as roleName,
+        r.status,
+        r.permissions,
+        r.alias,
+        r.remark
+        from ss_role r
+        where r.status='enabled'
+	</sql>
+	<select id="getRole" parameterType="string" resultType="Role">
+		<include refid="roleSql"/>
+		and r.id=#{id}
+	</select>
+	<select id="getRoleByAlias" parameterType="string" resultType="Role">
+		<include refid="roleSql"/>
+		and r.alias=#{alias}
+	</select>
+	  <select id="getRoleByIds"  resultType="Role" parameterType="string">
+		<include refid="roleSql"/>
+		 and r.id in
+		 <foreach  item="item" index="index" collection="list"
+     	 open="(" separator="," close=")">
+       		 #{item}
+  		</foreach> 
+	</select> 
+	
+	<select id="getUserRole" parameterType="string" resultType="Role">
+	       select 
+	       r.id, 
+	       r.name as roleName,
+	       r.status,
+	       r.permissions,
+	       r.alias,
+	       r.remark
+	       from ss_role r 
+	       inner join ss_user_role ur on ur.role_id=r.id
+	       where r.status='enabled'
+		   and ur.user_id=#{id}
+	</select>
+	<select id="getRoleList" parameterType="Page" resultType="Role">
+		<include refid="roleSql"/>
+	     <if test="filters.name!=null">
+	      and  r.name like '%' #{filters.name} '%'
+	     </if>
+	      limit #{start},#{pageSize}
+	</select>
+	<select id="getRoleCount" parameterType="Page" resultType="int">
+	     select count(1) from (	
+	     <include refid="roleSql"/>
+	     <if test="filters.name!=null">
+	      and  r.name like '%' #{filters.name} '%'
+	     </if>
+	     )t
+		
+	</select>
+	<insert id="insertRole" parameterType="Role">
+		insert into ss_role (id,name,status,permissions,alias,remark)
+					values (#{id},#{roleName},#{status},#{permissions},#{alias},#{remark})
+	</insert>
+	<update id="updateRole" parameterType="Role">
+		update ss_role set name=#{roleName},status=#{status},permissions=#{permissions}
+		  ,alias=#{alias},remark=#{remark}
+		  where id=#{id}
+	</update>	
+    <delete id="deleteRole" >
+	  delete  from ss_role where id in 
+	  <foreach  item="item" index="index" collection="list"
+     	 open="(" separator="," close=")">
+       		 #{item}
+  			</foreach> 
+	</delete>	
+	<select id="getRoleUsers" parameterType="string" resultType="User">
+	   <include refid="userSql"/>
+	    inner join ss_user_role ur on ur.user_id=u.id
+	    where ur.role_id=#{roleId}
+		
+	</select>
+	<select id="getRoleMenus" parameterType="string" resultType="Menu">
+	 select     m.id,
+        		m.menu_name as menuName,
+        		m.menu_link as link ,
+                m.parent_id as parentId,
+                m.sort_no as sortNo
+                from ss_menu m
+			    inner join ss_role_menu rm on rm.menu_id=m.id
+			    where rm.role_id=#{roleId} and m.status='enabled'
+		
+	</select>
+	<select id="getMenuTree"  resultType="Map">
+	 select  distinct   m.id, 
+        		m.menu_name as name,
+        		m.menu_link as link ,
+                m.parent_id as parentId,
+                m.sort_no as sortNo,
+                case when rm.menu_id is not null then 'true' else 'false' end as checked
+                from ss_menu m
+			    left join ss_role_menu rm on rm.menu_id=m.id and  rm.role_id in 
+					     <foreach  item="item" index="index" collection="array"
+		     	 			open="(" separator="," close=")">
+		       		         #{item}
+		  			     </foreach> 
+			   
+			    where m.status='enabled' 
+		order by m.parent_id,m.sort_no
+	</select>
+		<select id="getMulMenuTree"  resultType="Map">
+	 select  distinct   m.id, 
+        		m.menu_name as name,
+        		m.menu_link as link ,
+                m.parent_id as parentId,
+                m.sort_no as sortNo
+                from ss_menu m
+			   
+			    where m.status='enabled' 
+			    order by m.parent_id,m.sort_no
+		
+	</select>
+		<select id="getUserMenusByParent"  resultType="Menu" parameterType="map">
+		
+	 select     m.id, 
+        		m.menu_name as menuName,
+        		m.menu_link as link ,
+                m.parent_id as parentId,
+                m.sort_no as sortNo
+                from ss_menu m
+			    
+			    where m.status='enabled' and m.parent_id=#{pid} 
+			    <if test="uid != null">
+	             and m.id in(
+				 select  srm.menu_id 
+				         from  ss_role_menu srm  
+			             left join ss_role ssr on ssr.id=srm.role_id
+			             left join ss_user_role sur on sur.role_id=ssr.id  
+				          where sur.user_id=#{uid} 
+				  
+					)
+					   </if>
+			    order by m.parent_id,m.sort_no
+		
+	</select>
+	
+	<select id="getMenuSortNoByParentId"  resultType="int">
+	 select  max(sort_no)+1 as sortNo
+                from ss_menu m
+			    where m.status='enabled'  and m.parent_id=#{id}
+		
+	</select>
+	 <delete id="deleteUserRoleByRoleId" parameterType="string">
+	 	 delete from  ss_user_role where role_id = #{roleId}
+	</delete>
+	 <delete id="deleteUserRoleByUserId" parameterType="string">
+	 	 delete from  ss_user_role where user_id=#{userId}
+	</delete>	
+	<insert id="insertUserRole">
+	       insert into ss_user_role (user_id,role_id) values
+	        <foreach  item="item" index="index" collection="list" separator=",">
+       		    (#{item.userId},#{item.roleId})
+  	        </foreach> 
+	</insert>
+	<update id="updateRoleAuth" parameterType="map">
+		update ss_role set permissions=#{permission}
+		  where id=#{roleId}
+	</update>	
+	 <delete id="deleteRoleMenuByRoleId">
+	 	 delete from  ss_role_menu where role_id in
+	 	 <foreach  item="item" index="index" collection="list"
+     	 open="(" separator="," close=")">
+       		 #{item}
+  			</foreach> 
+	</delete>	
+	<insert id="insertRoleMenu">
+	       insert into ss_role_menu (menu_id,role_id) values
+	        <foreach  item="item" index="index" collection="list" separator=",">
+       		    (#{item.menuId},#{item.roleId})
+  	        </foreach> 
+	</insert>
+	<!-- menu -->
+	<sql id="menuSql">
+        select  id, 
+        		menu_name as menuName,
+        		menu_link as link ,
+                parent_id as parentId,
+                sort_no as sortNo,
+                m.status
+                from ss_menu m where status='enabled'
+	</sql>
+	<select id="getMenu" parameterType="string" resultType="Menu">
+		<include refid="menuSql"/>
+		  and id=#{id}
+	</select>
+	
+	<select id="getMenuList" parameterType="Page" resultType="Menu">
+		<include refid="menuSql"/>
+	     <if test="filters.parentId!=null">
+	      	and  parent_id = #{filters.parentId}
+	     </if>
+	     order by sort_no
+	      limit #{start},#{pageSize}
+	</select>
+	<select id="getMenuCount" parameterType="Page" resultType="int">
+	     select count(1) from (	
+	     <include refid="menuSql"/>
+	     <if test="filters.parentId!=null">
+	     	 and  parent_id = #{filters.parentId}
+	     </if>
+	     )t
+		
+	</select>
+	<insert id="insertMenu" parameterType="Menu">
+	  
+		insert into ss_menu (id,menu_name,menu_link,parent_id,sort_no,status)
+					values (#{id},#{menuName},#{link},#{parentId},#{sortNo},#{status})
+	</insert>
+	<update id="updateMenu" parameterType="Menu">
+		update ss_menu set  
+		 menu_name=#{menuName}
+		,menu_link=#{link}
+		,parent_id=#{parentId}
+		,sort_no=#{sortNo}
+		,status=#{status}
+		 where id=#{id}
+	</update>	
+    <delete id="deleteMenu" >
+	  delete from  ss_menu  where id in 
+	  <foreach  item="item" index="index" collection="list"
+     	 open="(" separator="," close=")">
+       		 #{item}
+  			</foreach> 
+	</delete>	
+	<delete id="disabledMenu" >
+	  update  ss_menu set status='disabled' where id in 
+	  <foreach  item="item" index="index" collection="list"
+     	 open="(" separator="," close=")">
+       		 #{item}
+  			</foreach> 
+	</delete>
+	<delete id="disabledSubMenu" >
+	  update  ss_menu set status='disabled'  where parent_id in 
+	  <foreach  item="item" index="index" collection="list"
+     	 open="(" separator="," close=")">
+       		 #{item}
+  			</foreach> 
+	</delete>		
+	 <select id="getAllMenuSelf" parameterType="string" resultType="Menu">
+		select  m.id, 
+	        m.menu_name as menuName, 
+	        m.menu_link as link ,
+            m.parent_id  as parentId
+		    from ss_menu m where m.status='enabled' order by sort_no
+	</select>
+	<select id="getAllMenu" resultMap="menuDetailMap" parameterType="map"> 
+	 select distinct m.id , 
+	        m.menu_name , 
+	        m.menu_link  ,
+            m.parent_id ,
+            sm.id as sub_id ,
+	        sm.menu_name as submenu_name , 
+	        sm.menu_link as submenu_link ,
+            sm.parent_id as subparent_id ,
+            m.sort_no,
+	        sm.sort_no
+		from ss_menu m
+	             left join ss_menu sm on sm.parent_id = m.id and sm.status='enabled' 
+	            
+	             <if test="userId != null">
+	             and sm.id in(
+				 select  srm.menu_id 
+				         from  ss_role_menu srm  
+			             left join ss_role ssr on ssr.id=srm.role_id
+			             left join ss_user_role sur on sur.role_id=ssr.id  
+					
+				          where sur.user_id=#{userId} 
+				  
+					)
+				 </if>
+	             left join ss_role_menu rm on rm.menu_id=m.id
+	             left join ss_role r on r.id=rm.role_id
+	             left join ss_user_role ur on ur.role_id=r.id
+	             where m.status='enabled'     
+	                   and 
+	                   m.parent_id='1'
+	         <if test="noOne != null">
+				and  m.id!='1'
+			</if>
+			 <if test="userId != null">
+				and  ur.user_id=#{userId}
+			</if>
+	          order by m.sort_no,
+	          sm.sort_no asc
+	</select>
+	<resultMap id="menuDetailMap" type="Menu">
+		<id property="id" column="id" />
+		<result property="menuName"     column="menu_name" />
+		<result property="link"         column="menu_link" />
+		<result property="parentId"     column="parent_id" />
+		<collection property="menuList" javaType="Menu">
+			<id property="id"           column="sub_id" />
+			<result property="menuName" column="submenu_name" />
+			<result property="link"     column="submenu_link" />
+			<result property="parentId" column="subparent_id" />
+		</collection>
+	</resultMap>
+
+</mapper> 

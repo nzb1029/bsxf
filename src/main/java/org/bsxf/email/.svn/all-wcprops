@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/platform/!svn/ver/2/trunk/platform/src/main/java/org/platform/email
+END
+MimeMailService.java
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/platform/!svn/ver/2/trunk/platform/src/main/java/org/platform/email/MimeMailService.java
+END
+SimpleMailService.java
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/platform/!svn/ver/2/trunk/platform/src/main/java/org/platform/email/SimpleMailService.java
+END

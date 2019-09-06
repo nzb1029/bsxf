@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.bsxf.common.repository.employee.WidgetMybatisDao">
+   <sql id="widgetSql">
+         select w.id,	##ID
+				w.create_time as  createTime ,	##创建时间
+				w.last_update_time as  lastUpdateTime ,	##最后修改时间
+				w.create_user_id as "createUser.id",	##创建人
+				w.last_update_user_id as "lastUpdateUser.id",	##最后修改人
+				w.name,	##部件名称
+				w.url,	##部件地址
+				w.status	##Description
+				
+		from ss_widget w where status='enabled'
+	</sql>
+	  <select id="getAllWidget" parameterType="string" resultType="Widget">
+		<include refid="widgetSql"/>
+		 
+	</select>
+	  <select id="getUserWidget"   resultType="Widget">
+		<include refid="widgetSql"/>
+		and w.id in   
+		<foreach  item="item" index="index" collection="list"
+     	 open="(" separator="," close=")">
+       		 #{item}
+  	 </foreach> 
+		 
+	</select>
+	
+	 <select id="getWidgetPos" parameterType="map" resultType="String">
+		select id from ss_pos_widget_user where userId=#{userId} and widgetId=#{widgetId}
+		 
+	</select>
+	 <select id="getUserWidgetPos" parameterType="string" resultType="map">
+		select widgetId,col,row from ss_pos_widget_user where userId=#{userId}  
+		order by col,row
+		 
+	</select>
+	<insert id="savePos" parameterType="map">
+	    insert into ss_pos_widget_user(id,widgetId,userId,col,row)
+	     values(#{id},
+			#{widgetId},
+			#{userId},
+			#{col},
+			#{row})
+	
+	</insert>
+	<insert id="updatePos" parameterType="map">
+	   update ss_pos_widget_user
+	       set  
+	        col=	#{col},
+		    row=	#{row}
+		    where id=#{id}
+	
+	</insert>
+	 <select id="findWidgetByCond" parameterType="map" resultType="Widget">
+		<include refid="widgetSql"/>
+		 
+	</select>
+    <select id="getWidget" parameterType="string" resultType="Widget">
+		<include refid="widgetSql"/>
+		  and  w.id = #{id}
+	</select>
+	<select id="findWidgetByFilter" parameterType="Page" resultType="Widget">
+		<include refid="widgetSql"/>
+		<if test="filters.createTime!=null"> 
+			 and w.create_time = str_to_date(#{filters.createTime},'%Y-%m-%d %H:%i:%s')  
+		</if>
+		<if test="filters.lastUpdateTime!=null"> 
+			 and w.last_update_time = str_to_date(#{filters.lastUpdateTime},'%Y-%m-%d %H:%i:%s')  
+		</if>
+		<if test="filters.createUser!=null"> 
+			 and w.create_user = #{filters.createUser}
+		</if>
+		<if test="filters.lastUpdateUser!=null"> 
+			 and w.last_update_user = #{filters.lastUpdateUser}
+		</if>
+		<if test="filters.name!=null"> 
+			 and w.name = #{filters.name}
+		</if>
+		<if test="filters.url!=null"> 
+			 and w.url = #{filters.url}
+		</if>
+		<if test="filters.status!=null"> 
+			 and w.status = #{filters.status}
+		</if>
+
+		<if test="orderBy!=null">
+	      order by ${orderBy} ${order}
+	   </if>
+	      limit #{start},#{pageSize}
+	</select>
+	<select id="findWidgetCountByFilter" parameterType="Page" resultType="int">
+	     select count(1) from (	
+	     <include refid="widgetSql"/>
+		<if test="filters.createTime!=null"> 
+			 and w.create_time = str_to_date(#{filters.createTime},'%Y-%m-%d %H:%i:%s')  
+		</if>
+		<if test="filters.lastUpdateTime!=null"> 
+			 and w.last_update_time = str_to_date(#{filters.lastUpdateTime},'%Y-%m-%d %H:%i:%s')  
+		</if>
+		<if test="filters.createUser!=null"> 
+			 and w.create_user = #{filters.createUser}
+		</if>
+		<if test="filters.lastUpdateUser!=null"> 
+			 and w.last_update_user = #{filters.lastUpdateUser}
+		</if>
+		<if test="filters.name!=null"> 
+			 and w.name = #{filters.name}
+		</if>
+		<if test="filters.url!=null"> 
+			 and w.url = #{filters.url}
+		</if>
+		<if test="filters.status!=null"> 
+			 and w.status = #{filters.status}
+		</if>
+
+	     )t
+		
+	</select>
+		<select id="getUserDeleteWidget" parameterType="string" resultType="Widget">
+			select w.id,w.name,w.url 
+			   from ss_del_widget_user  a 
+			   inner join ss_widget w on w.id=a.widgetId
+			   where a.userId=#{id}
+		</select>
+	<insert id="deleteUserWidget" parameterType="map">
+	    insert into ss_del_widget_user(id,widgetId,userId)
+	     values(#{id},
+			#{widgetId},
+			#{userId})
+	
+	</insert>
+	
+	<insert id="saveWidget" parameterType="Widget">
+	  
+		insert into ss_widget (id,
+			create_time,
+			last_update_time,
+			create_user_id,
+			last_update_user_id,
+			name,
+			url,
+			status) 
+		 values(#{id},
+			#{createTime},
+			#{lastUpdateTime},
+			#{createUser.id},
+			#{lastUpdateUser.id},
+			#{name},
+			#{url},
+			#{status})
+	</insert>
+	<update id="updateWidget" parameterType="Widget">
+		update ss_widget set 
+			last_update_time=#{lastUpdateTime},
+			last_update_user_id=#{lastUpdateUser.id},
+			name=#{name},
+			url=#{url},
+			status=#{status}
+		 where id=#{id} 
+	</update>
+	<delete id="removeWid" >
+	  delete from ss_del_widget_user where userId=#{userId} and widgetId=#{widgetId}
+	</delete>
+	
+	<delete id="disabledWidget" >
+	    update   ss_widget set status='disabled' where id in 
+	  <foreach  item="item" index="index" collection="list"
+     	 open="(" separator="," close=")">
+       		 #{item}
+  	 </foreach> 
+	</delete>	
+	 <delete id="deleteWidget" >
+	    delete from   ss_widget  where id in 
+	  <foreach  item="item" index="index" collection="list"
+     	 open="(" separator="," close=")">
+       		 #{item}
+  	 </foreach> 
+	</delete>	
+</mapper>

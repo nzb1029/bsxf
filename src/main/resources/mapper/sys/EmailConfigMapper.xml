@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.bsxf.common.repository.sys.EmailConfigMybatisDao">
+   <sql id="emailConfigSql">
+         select e.id,	##ID
+				e.create_time as  createTime ,	##创建时间
+				e.last_update_time as  lastUpdateTime ,	##最后修改时间
+				e.create_user_id as "createUser.id",	##创建人
+				e.last_update_user_id as "lastUpdateUser.id",	##最后修改人
+				e.status,	##状态
+				e.host,	##SMTP服务器
+				e.username,	##用户名
+				e.password,	##密码
+				e.port	##端口
+				
+		from ss_email_config e where 1=1
+	</sql>
+	  <select id="getAllEmailConfig" parameterType="string" resultType="EmailConfig">
+		<include refid="emailConfigSql"/>
+		 
+	</select>
+	
+	 <select id="findEmailConfigByCond" parameterType="map" resultType="EmailConfig">
+		<include refid="emailConfigSql"/>
+		 
+	</select>
+    <select id="getEmailConfig" parameterType="string" resultType="EmailConfig">
+		<include refid="emailConfigSql"/>
+		  and  e.id = #{id}
+	</select>
+	<select id="findEmailConfigByFilter" parameterType="Page" resultType="EmailConfig">
+		<include refid="emailConfigSql"/>
+		<if test="filters.createTime!=null"> 
+			 and e.create_time = str_to_date(#{filters.createTime},'%Y-%m-%d %H:%i:%s')  
+		</if>
+		<if test="filters.lastUpdateTime!=null"> 
+			 and e.last_update_time = str_to_date(#{filters.lastUpdateTime},'%Y-%m-%d %H:%i:%s')  
+		</if>
+		<if test="filters.createUser!=null"> 
+			 and e.create_user = #{filters.createUser}
+		</if>
+		<if test="filters.lastUpdateUser!=null"> 
+			 and e.last_update_user = #{filters.lastUpdateUser}
+		</if>
+		<if test="filters.status!=null"> 
+			 and e.status = #{filters.status}
+		</if>
+		<if test="filters.host!=null"> 
+			 and e.host = #{filters.host}
+		</if>
+		<if test="filters.username!=null"> 
+			 and e.username = #{filters.username}
+		</if>
+		<if test="filters.password!=null"> 
+			 and e.password = #{filters.password}
+		</if>
+		<if test="filters.port!=null"> 
+			 and e.port = #{filters.port}
+		</if>
+
+		<if test="orderBy!=null">
+	      order by ${orderBy} ${order}
+	   </if>
+	      limit #{start},#{pageSize}
+	</select>
+	<select id="findEmailConfigCountByFilter" parameterType="Page" resultType="int">
+	     select count(1) from (	
+	     <include refid="emailConfigSql"/>
+		<if test="filters.createTime!=null"> 
+			 and e.create_time = str_to_date(#{filters.createTime},'%Y-%m-%d %H:%i:%s')  
+		</if>
+		<if test="filters.lastUpdateTime!=null"> 
+			 and e.last_update_time = str_to_date(#{filters.lastUpdateTime},'%Y-%m-%d %H:%i:%s')  
+		</if>
+		<if test="filters.createUser!=null"> 
+			 and e.create_user = #{filters.createUser}
+		</if>
+		<if test="filters.lastUpdateUser!=null"> 
+			 and e.last_update_user = #{filters.lastUpdateUser}
+		</if>
+		<if test="filters.status!=null"> 
+			 and e.status = #{filters.status}
+		</if>
+		<if test="filters.host!=null"> 
+			 and e.host = #{filters.host}
+		</if>
+		<if test="filters.username!=null"> 
+			 and e.username = #{filters.username}
+		</if>
+		<if test="filters.password!=null"> 
+			 and e.password = #{filters.password}
+		</if>
+		<if test="filters.port!=null"> 
+			 and e.port = #{filters.port}
+		</if>
+
+	     )t
+		
+	</select>
+	<insert id="saveEmailConfig" parameterType="EmailConfig">
+	  
+		insert into ss_email_config (id,
+			create_time,
+			last_update_time,
+			create_user_id,
+			last_update_user_id,
+			status,
+			host,
+			username,
+			password,
+			port) 
+		 values(#{id},
+			#{createTime},
+			#{lastUpdateTime},
+			#{createUser.id},
+			#{lastUpdateUser.id},
+			#{status},
+			#{host},
+			#{username},
+			#{password},
+			#{port})
+	</insert>
+	<update id="updateEmailConfig" parameterType="EmailConfig">
+		update ss_email_config set 
+			last_update_time=#{lastUpdateTime},
+			last_update_user_id=#{lastUpdateUser.id},
+			status=#{status},
+			host=#{host},
+			username=#{username},
+			password=#{password},
+			port=#{port}
+		 where id=#{id} 
+	</update>
+	<delete id="disabledEmailConfig" >
+	    update   ss_email_config set status='disabled' where id in 
+	  <foreach  item="item" index="index" collection="list"
+     	 open="(" separator="," close=")">
+       		 #{item}
+  	 </foreach> 
+	</delete>	
+	 <delete id="deleteEmailConfig" >
+	    delete from   ss_email_config  where id in 
+	  <foreach  item="item" index="index" collection="list"
+     	 open="(" separator="," close=")">
+       		 #{item}
+  	 </foreach> 
+	</delete>	
+</mapper>
