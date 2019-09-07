@@ -9,7 +9,9 @@
 		u.id as "createUser.id" ,
 		u.name as "createUser.name",
 		s.equipment_type_id as equipmentTypeId ,
+		d1.name as equipmentTypeName,
 		s.sub_type_id as subTypeId,
+		d2.name as subTypeName,
 		s.name ,
 		s.eno ,
 		s.area ,
@@ -17,9 +19,11 @@
 		s.comments ,
 		s.status ,
 		s.runStatus ,
+		d4.name as runStatusDes,
 		s.effDate ,
 		s.expDate ,
 		s.checkFreq ,
+		d3.name as checkFreqDes,
 		s.remainNum ,
 		s.lastRemainNum ,
 		uu.id as "checkUser.id" ,
@@ -30,8 +34,12 @@
 		s.field02,
 		s.field03
 		from bsxf_equipment s 
-	    left join ss_user u on u.id = s.create_user_id
-	    left join ss_user uu on uu.id = s.check_user_id
+		    left join ss_user u on u.id = s.create_user_id
+		    left join ss_user uu on uu.id = s.check_user_id
+		    left join ss_dictionary d1 on d1.type_code = 'xf_type' AND d1.STATUS ='enabled' and d1.parent_id is not null and d1.val = s.equipment_type_id
+		    left join ss_dictionary d2 on d2.type_code = 'xf_category' AND d2.STATUS ='enabled' and d2.parent_id is not null and d2.val = s.sub_type_id
+		    left join ss_dictionary d3 on d3.type_code = 'xf_check_freq' AND d3.STATUS ='enabled' and d3.parent_id is not null and d3.val = s.checkFreq
+		    left join ss_dictionary d4 on d4.type_code = 'xf_status' AND d4.STATUS ='enabled' and d4.parent_id is not null and d4.val = s.runStatus
 		where 1=1 
 	</sql>
 	  <select id="getAllEquipment" parameterType="string" resultType="Equipment">
@@ -63,7 +71,7 @@
 			 and s.eno=#{filters.eno}
 		</if>
 		<if test="filters.userName!=null"> 
-			 and uu.name=#{filters.userName}
+			 and uu.name like '%' #{filters.userName} '%'
 		</if>
 		<if test="orderBy!=null">
 	      order by ${orderBy} ${order}
@@ -78,8 +86,11 @@
 	   <if test="filters.name!=null"> 
 			 and s.name=#{filters.name}
 		</if>
+		<if test="filters.eno!=null"> 
+			 and s.eno=#{filters.eno}
+		</if>
 		<if test="filters.userName!=null"> 
-			 and uu.name=#{filters.userName}
+			 and uu.name like '%' #{filters.userName} '%'
 		</if>
 		<if test="orderBy!=null">
 	      order by ${orderBy} ${order}

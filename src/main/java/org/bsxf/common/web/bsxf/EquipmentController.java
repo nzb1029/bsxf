@@ -1,13 +1,11 @@
 package org.bsxf.common.web.bsxf;
 
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.apache.commons.lang3.StringUtils;
-import org.bsxf.common.entity.akl.Block;
 import org.bsxf.common.entity.bsxf.Equipment;
 import org.bsxf.common.service.bsxf.EquipmentManager;
 import org.bsxf.utils.JqGirds;
@@ -22,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springside.utils.Collections3;
+import org.springside.utils.Identities;
 
 @Controller
 @RequestMapping(value = "/equipment")
@@ -47,6 +46,9 @@ public class EquipmentController {
 	    Equipment equipment = new Equipment();
 		if (StringUtils.isNotBlank(id)&& !"undefined".equals(id)) {
 			equipment = equipmentManager.getEquipment(id);
+		}else{
+			id = Identities.uuid2();
+			equipment.setId(id);
 		}
 		
 		model.addAttribute("equipment", equipment);

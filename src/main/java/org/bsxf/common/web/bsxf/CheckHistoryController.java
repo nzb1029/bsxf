@@ -1,13 +1,11 @@
 package org.bsxf.common.web.bsxf;
 
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.apache.commons.lang3.StringUtils;
-import org.bsxf.common.entity.akl.Block;
 import org.bsxf.common.entity.bsxf.CheckHistory;
 import org.bsxf.common.service.bsxf.CheckHistoryManager;
 import org.bsxf.common.service.bsxf.EquipmentManager;
@@ -23,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springside.utils.Collections3;
+import org.springside.utils.Identities;
 
 @Controller
 @RequestMapping(value = "/history")
@@ -50,6 +49,9 @@ public class CheckHistoryController {
 	    CheckHistory checkHistory = new CheckHistory();
 		if (StringUtils.isNotBlank(id)&& !"undefined".equals(id)) {
 			checkHistory = historyManager.getCheckHistory(id);
+		}else{
+			id = Identities.uuid2();
+			checkHistory.setId(id);
 		}
 		
 		model.addAttribute("checkHistory", checkHistory);

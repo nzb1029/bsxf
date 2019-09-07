@@ -30,12 +30,14 @@ public class Equipment extends IdEntity {
 	private String status="enabled";
 	@Description(description = "状态：1-正常工作；2-运行异常")
 	private String runStatus="1";
+	private String runStatusDes;
 	@Description(description = "有效起期")
 	private Date effDate;
 	@Description(description = "有效止期")
 	private Date expDate;
 	@Description(description = "巡检频率:1-每月一次；2-半月1次；3-10天每次；4-每周一次")
 	private int checkFreq;
+	private String checkFreqDes;
 	@Description(description = "每月剩余巡检次数,在下个月时会将这个字段复制到lastremainNum字段，这个字段重置")
 	private int remainNum;
 	@Description(description = "上月剩余巡检次数(正常为0)")
@@ -47,6 +49,18 @@ public class Equipment extends IdEntity {
 	@Description(description = "纬度")
 	private String pointy;
 	
+	public String getRunStatusDes() {
+		return runStatusDes;
+	}
+	public void setRunStatusDes(String runStatusDes) {
+		this.runStatusDes = runStatusDes;
+	}
+	public String getCheckFreqDes() {
+		return checkFreqDes;
+	}
+	public void setCheckFreqDes(String checkFreqDes) {
+		this.checkFreqDes = checkFreqDes;
+	}
 	public String getName() {
 		return name;
 	}
