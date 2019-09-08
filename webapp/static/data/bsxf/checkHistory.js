@@ -1,25 +1,23 @@
 var ggridId="table_center_table";
 $(function(){
 	  jQuery("#table_center_table").jqGrid({ 
-			url:ctx+'/block/jqgrid', 
+			url:ctx+'/history/jqgrid', 
 			datatype: "json", 
-			colNames:['地块名称','监测站点编号', '所属用户','所在省','所在市','详细地址','状态','操作'],
+			colNames:['灭火器编号','区域', '位置','状态','巡检人','巡检时间','备注','操作'],
 			colModel:[ 
-			  {name:'name',index:'name', editable:false}, 
-			  {name:'monitorSite',index:'monitorSite',  editable:false}, 
-			  {name:'user.name',index:'user_id', editable:false,},
-			  {name:'provice.name',index:'provice.name',editable:false,sortable:false},
-			  {name:'city.name',index:'city.name',editable:false,sortable:false},
-			  {name:'address',index:'address', editable:false,sortable:false},
-			  {name:'status',index:'status',editable:false},
+			  {name:'equipment.eno',index:'equipment.eno', editable:false}, 
+			  {name:'equipment.area',index:'equipment.area',  editable:false}, 
+			  {name:'equipment.location',index:'equipment.location', editable:false,},
+			  {name:'runStatusDes',index:'runStatusDes',editable:false,sortable:false},
+			  {name:'checkUser.name',index:'checkUser.name',editable:false,sortable:false},
+			  {name:'checkTime',index:'checkTime', editable:false,sortable:false,formatter:"date",formatoptions:{srcformat:'Y-m-d H:i:s',newformat:'Y-m-d H:i:s'}},
+			  {name:'comments',index:'comments',editable:false},
 			  {name:'edit',index:'edit', formatter :function(value, options, rData){
-				  return "<a  style=\"cursor: pointer;\" title='编辑' onclick=\"update('"+rData['id']+"')\" >编辑</a>"
-					 +"&nbsp;&nbsp;&nbsp;<a style=\"cursor: pointer;\"title='删除' onclick=\"toRemove('"+rData['id']+"')\">删除</a>"
-					 +"&nbsp;&nbsp;&nbsp;<a style=\"cursor: pointer;\"title='百度定位' onclick=\"dwII('"+rData['id']+"','"+rData['pointx']+"','"+rData['pointy']+"','"+rData['name']+"')\">定位</a>";
+				  return "<a  style=\"cursor: pointer;\" title='详情' onclick=\"viewDetail('"+rData['id']+"')\" >查看详情</a>";
 			  },sortable:false}
 			  ], 
 			    rowNum:10,
-			    multiselect: true,
+			    //multiselect: true,
 			    rowList:[10,20,30], 
 			    pager: '#pjqgajax',
 			    viewrecords: true, 
@@ -42,63 +40,63 @@ $(function(){
 	 });
 	 
 });
-function dwII(id,x,y,name){
-	var url=ctx+"/baidu/dingwei?x="+x+"&y="+y+"&id="+id+"&eName="+encodeURIComponent(name);
-	window.open(url);
-}
-
-function update(id){ 
-	  var cn="添加";
-	  var url=ctx+'/block/create/'+id; 
-   if(id) {
-  	  cn="编辑";
-   }
-    $.dialog({
-	          id: 'LHG1976D1',
-	          content: "url:"+url,
-	          lock:true,
-	          title: cn+'地块',
-	          height:500,
-	          width:750,
-	          ok:function(){return this.content.okFunc();},
-	          init:function(){ 
-	          },
-		       cancel: true
-	      });
-	//window.location=ctx+"/equipment/create?id="+id;
-	
-}
-
-function batchDel(){
-	var ids = jQGridSupport.getSelectRowIds(ggridId);
-	var idary=[];
-	for(var i=0;i<ids.length;i++){
-			idary.push(ids[i]);
-	}
-	if(idary.length>0){
-		toRemove(idary.join(","));
-	}
-	else {
-		alert("请至少选择一条记录!");
-	}
-}
-function toRemove(id){
-	var f=confirm("确定删除吗？");
-	if(f){
-		$.ajax({
-			url:ctx+"/block/delete/"+id,
-			dataType: 'json',
-			success:function(d){
-				 	jQGridSupport.reloadGrid(ggridId);
-				 	alert("删除地块成功");
-				  
-				}
-			
-			
-		}).fail(function(d) { 
-		alert( d.responseText); });
-	}
-}
+//function dwII(id,x,y,name){
+//	var url=ctx+"/baidu/dingwei?x="+x+"&y="+y+"&id="+id+"&eName="+encodeURIComponent(name);
+//	window.open(url);
+//}
+//
+//function update(id){ 
+//	  var cn="添加";
+//	  var url=ctx+'/block/create/'+id; 
+//   if(id) {
+//  	  cn="编辑";
+//   }
+//    $.dialog({
+//	          id: 'LHG1976D1',
+//	          content: "url:"+url,
+//	          lock:true,
+//	          title: cn+'地块',
+//	          height:500,
+//	          width:750,
+//	          ok:function(){return this.content.okFunc();},
+//	          init:function(){ 
+//	          },
+//		       cancel: true
+//	      });
+//	//window.location=ctx+"/equipment/create?id="+id;
+//	
+//}
+//
+//function batchDel(){
+//	var ids = jQGridSupport.getSelectRowIds(ggridId);
+//	var idary=[];
+//	for(var i=0;i<ids.length;i++){
+//			idary.push(ids[i]);
+//	}
+//	if(idary.length>0){
+//		toRemove(idary.join(","));
+//	}
+//	else {
+//		alert("请至少选择一条记录!");
+//	}
+//}
+//function toRemove(id){
+//	var f=confirm("确定删除吗？");
+//	if(f){
+//		$.ajax({
+//			url:ctx+"/block/delete/"+id,
+//			dataType: 'json',
+//			success:function(d){
+//				 	jQGridSupport.reloadGrid(ggridId);
+//				 	alert("删除地块成功");
+//				  
+//				}
+//			
+//			
+//		}).fail(function(d) { 
+//		alert( d.responseText); });
+//	}
+//}
 
 function afterSave(){
 	 jQGridSupport.reloadGrid(ggridId);
@@ -107,11 +105,11 @@ function afterSave(){
 function viewDetail(id){
       $.dialog({
 	          id: 'LHG1976D12',
-	          content: 'url:'+ctx+'/block/viewDetail/'+id,
+	          content: 'url:'+ctx+'/history/viewDetail/'+id,
 	          lock:true,
-	          title: '查看地块详情',
-	          height:500,
-	          width:600,
+	          title: '查看巡检记录详情',
+	          height:600,
+	          width:700,
 	          ok:false,
 	          init:function(){//this.max();alert(123);
 	           //this.max();

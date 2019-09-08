@@ -17,7 +17,7 @@ $(function(){
 			  {name:'runStatusDes',index:'runStatusDes',editable:false}
 			  ], 
 			    rowNum:10,
-			    multiselect: true,
+			    //multiselect: true,
 			    rowList:[10,20,30], 
 			    pager: '#pjqgajax',
 			    viewrecords: true, 
@@ -37,77 +37,3 @@ $(function(){
 	 });
 	 
 });
-
-function batchPrint(){
-	
-	var ids = jQGridSupport.getSelectRowIds(ggridId);
-	var idary=[];
-	for(var i=0;i<ids.length;i++){
-			idary.push(ids[i]);
-	}
-	if(idary.length>0){
-		toPrint(idary.join(","));
-	}
-	else {
-		alert("请至少选择一条记录!");
-	}
-}
-
-function toPrint(id){
-	$.ajax({
-		url:ctx+"/equipment/print/"+id,
-		dataType: 'json',
-		success:function(d){
-			 	jQGridSupport.reloadGrid(ggridId);
-			 	alert("打印成功");
-			}
-	}).fail(function(d) { 
-	alert( d.responseText); });
-}
- 
-function printAll(){
-	$.ajax({
-		url:ctx+"/equipment/printAll",
-		dataType: 'json',
-		success:function(d){
-			 	jQGridSupport.reloadGrid(ggridId);
-			 	alert("打印成功");
-			}
-	}).fail(function(d) { 
-	alert( d.responseText); });
-}
-
-function batchDel(){
-	var ids = jQGridSupport.getSelectRowIds(ggridId);
-	var idary=[];
-	for(var i=0;i<ids.length;i++){
-			idary.push(ids[i]);
-	}
-	if(idary.length>0){
-		toRemove(idary.join(","));
-	}
-	else {
-		alert("请至少选择一条记录!");
-	}
-}
-function toRemove(id){
-	var f=confirm("确定删除吗？");
-	if(f){
-		$.ajax({
-			url:ctx+"/equipment/delete/"+id,
-			dataType: 'json',
-			success:function(d){
-				 	jQGridSupport.reloadGrid(ggridId);
-				 	alert("删除设备成功");
-				  
-				}
-			
-			
-		}).fail(function(d) { 
-		alert( d.responseText); });
-	}
-}
-
-function afterSave(){
-	 jQGridSupport.reloadGrid(ggridId);
-}
