@@ -11,9 +11,13 @@
 		uu.id as "checkUser.id" ,
 		uu.name as "checkUser.name",
 		s.check_time as checkTime ,
+		e.eno as "equipment.eno",
+		e.area as "equipment.area",
+		e.location as "equipment.location",
 		s.status,
 		s.comments,
 		s.runStatus,
+		d1.name as runStatusDes,
 		s.field01,
 		s.field02,
 		s.field03
@@ -21,6 +25,7 @@
 		left join bsxf_equipment e on e.id = s.equipment_id
 	    left join ss_user u on u.id = s.create_user_id
 	    left join ss_user uu on uu.id = s.check_user_id
+	    left join ss_dictionary d1 on d1.type_code = 'xf_status' AND d1.STATUS ='enabled' and d1.parent_id is not null and d1.val = s.runStatus
 		where 1=1
 	</sql>
 	
@@ -43,14 +48,20 @@
 	<select id="findCheckHistoryByFilter" parameterType="Page" resultType="CheckHistory">
 		<include refid="checkHistorySql"/>
 		 and s.status = 'enabled'
-		<if test="filters.createTime!=null"> 
-			 and s.create_time = str_to_date(#{filters.createTime},'%Y-%m-%d %H:%i:%s')  
+		<if test="filters.checkUserId!=null"> 
+			 and s.check_user_id=#{filters.checkUserId}
 		</if>
-		<if test="filters.name!=null"> 
-			 and s.name=#{filters.name}
+		<if test="filters.eno!=null"> 
+			 and e.eno=#{filters.eno}
 		</if>
 		<if test="filters.userName!=null"> 
 			 and uu.name=#{filters.userName}
+		</if>
+		<if test="filters.startDate!=null"> 
+			 and s.check_time &gt;= str_to_date(#{filters.startDate},'%Y-%m-%d %H:%i:%s')  
+		</if>
+		<if test="filters.endDate!=null"> 
+			 and s.check_time &lt;=	 str_to_date(#{filters.endDate},'%Y-%m-%d %H:%i:%s')  
 		</if>
 		<if test="orderBy!=null">
 	      order by ${orderBy} ${order}
@@ -61,16 +72,25 @@
 	<select id="findCheckHistoryCountByFilter" parameterType="Page" resultType="int">
 	     select count(1) from (	
 	     <include refid="checkHistorySql"/>
-	     and s.status = 'enabled'
-	   <if test="filters.name!=null"> 
-			 and s.name=#{filters.name}
-		</if>
-		<if test="filters.userName!=null"> 
-			 and uu.name=#{filters.userName}
-		</if>
-		<if test="orderBy!=null">
-	      order by ${orderBy} ${order}
-	   </if>
+		    and s.status = 'enabled'
+			<if test="filters.checkUserId!=null"> 
+				 and s.check_user_id=#{filters.checkUserId}
+			</if>
+			<if test="filters.eno!=null"> 
+				 and e.eno=#{filters.eno}
+			</if>
+			<if test="filters.userName!=null"> 
+				 and uu.name=#{filters.userName}
+			</if>
+			<if test="filters.startDate!=null"> 
+				 and s.check_time &gt;= str_to_date(#{filters.startDate},'%Y-%m-%d %H:%i:%s')  
+			</if>
+			<if test="filters.endDate!=null"> 
+				 and s.check_time &lt;=	 str_to_date(#{filters.endDate},'%Y-%m-%d %H:%i:%s')  
+			</if>
+			<if test="orderBy!=null">
+		      order by ${orderBy} ${order}
+		   </if>
 	     )t
 	</select>
 	<insert id="saveCheckHistory" parameterType="CheckHistory">
@@ -128,9 +148,9 @@
      	 open="(" separator="," close=")">
        		 #{item}
   	 </foreach> 
-	</delete>	
+	</delete>
 	 <delete id="deleteCheckHistory" >
-	    delete from   bsxf_check_history  where id in 
+	    delete from  bsxf_check_history  where id in 
 	  <foreach  item="item" index="index" collection="list"
      	 open="(" separator="," close=")">
        		 #{item}

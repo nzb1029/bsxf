@@ -1,5 +1,7 @@
 package org.bsxf.schedule;
 
+import java.util.Date;
+
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.springframework.context.ApplicationContext;
@@ -22,7 +24,7 @@ public class TestJob extends QuartzJobBean {
 
 	@Override
 	protected void executeInternal(JobExecutionContext ctx) throws JobExecutionException {
-		System.out.println("定时任务执行了" + applicationContext);
+		System.out.println("定时任务执行了" + new Date()+"========="+ applicationContext);
 
 	}
 

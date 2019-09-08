@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.bsxf.common.entity.bsxf.Equipment;
 import org.bsxf.common.repository.bsxf.EquipmentMybatisDao;
+import org.bsxf.security.ShiroDbRealm.ShiroUser;
 import org.bsxf.utils.Page;
 import org.bsxf.web.LtSecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +54,10 @@ public class EquipmentManager {
 
 	@Transactional(readOnly = true)
 	public Page<Equipment> findEquipmentByPage(Page<Equipment> page) {
+		ShiroUser user = LtSecurityUtils.getShiroUser();
+		if(user != null && "1".equals(user.getUserType())){
+			page.getFilters().put("checkUserId", user.getId());
+		}
 		int count = equipmentDao.findEquipmentCountByFilter(page);
 		List<Equipment> cmps = equipmentDao.findEquipmentByFilter(page);
 		page.setTotalCount(count);

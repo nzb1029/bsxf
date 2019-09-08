@@ -67,6 +67,9 @@
 		<if test="filters.name!=null"> 
 			 and s.name=#{filters.name}
 		</if>
+		<if test="filters.checkUserId!=null"> 
+			 and s.check_user_id=#{filters.checkUserId}
+		</if>
 		<if test="filters.eno!=null"> 
 			 and s.eno=#{filters.eno}
 		</if>
@@ -85,6 +88,9 @@
 	     and s.status = 'enabled'
 	   <if test="filters.name!=null"> 
 			 and s.name=#{filters.name}
+		</if>
+	   <if test="filters.checkUserId!=null"> 
+			 and s.check_user_id=#{filters.checkUserId}
 		</if>
 		<if test="filters.eno!=null"> 
 			 and s.eno=#{filters.eno}

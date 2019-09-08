@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.bsxf.common.entity.bsxf.CheckHistory;
 import org.bsxf.common.repository.bsxf.CheckHistoryMybatisDao;
+import org.bsxf.security.ShiroDbRealm.ShiroUser;
 import org.bsxf.utils.Page;
 import org.bsxf.web.LtSecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +54,10 @@ public class CheckHistoryManager {
 
 	@Transactional(readOnly = true)
 	public Page<CheckHistory> findCheckHistoryByPage(Page<CheckHistory> page) {
+		ShiroUser user = LtSecurityUtils.getShiroUser();
+		if(user != null && "1".equals(user.getUserType())){
+			page.getFilters().put("checkUserId", user.getId());
+		}
 		int count = checkHistoryDao.findCheckHistoryCountByFilter(page);
 		List<CheckHistory> cmps = checkHistoryDao.findCheckHistoryByFilter(page);
 		page.setTotalCount(count);

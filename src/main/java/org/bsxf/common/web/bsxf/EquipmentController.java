@@ -32,6 +32,17 @@ public class EquipmentController {
 	public String list(Model model) {
 		return "bsxf/equipmentList";
 	}
+	
+	@RequestMapping(value = { "zxingList" })
+	public String zxingList(Model model) {
+		return "bsxf/equipmentZxingList";
+	}
+	
+	@RequestMapping(value = { "userList" })
+	public String userList(Model model) {
+		return "bsxf/equipmentUserList";
+	}
+	
 
 	@RequestMapping(value = { "jqgrid" })
 	@ResponseBody
@@ -68,6 +79,24 @@ public class EquipmentController {
 	@ResponseBody
 	public String delete(@PathVariable("id") String id) {
 		equipmentManager.deleteEquipment(Collections3.extractToList(id.split(",")));
+		return "true" ;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "print/{id}")
+	@ResponseBody
+	public String print(@PathVariable("id") String id,RedirectAttributes redirectAttributes, HttpServletRequest request) {
+		//equipmentManager.deleteEquipment(Collections3.extractToList(id.split(",")));
+		//TODO
+		return "true" ;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "printAll")
+	@ResponseBody
+	public String printAll(RedirectAttributes redirectAttributes, HttpServletRequest request) {
+		//TODO
+		//equipmentManager.deleteEquipment(Collections3.extractToList(id.split(",")));
 		return "true" ;
 	}
 	

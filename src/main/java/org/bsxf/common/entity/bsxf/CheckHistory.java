@@ -17,11 +17,19 @@ public class CheckHistory extends IdEntity {
 	private String status="enabled";
 	@Description(description = "状态：1-正常工作；2-运行异常")
 	private String runStatus="1";
+	private String runStatusDes;
 	@Description(description = "巡检负责人")
 	private User checkUser;
 	@Description(description = "巡检时间")
 	protected Date checkTime;
 	
+	
+	public String getRunStatusDes() {
+		return runStatusDes;
+	}
+	public void setRunStatusDes(String runStatusDes) {
+		this.runStatusDes = runStatusDes;
+	}
 	public Equipment getEquipment() {
 		return equipment;
 	}
