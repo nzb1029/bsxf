@@ -77,7 +77,7 @@ public class EquipmentManager {
 	}
 
 	private static final String defaultSheetName = "equipment_list";
-	private static final String defaultFilePath = "D:\\project\\xiaofang\\excel\\";
+	private static final String defaultFilePath = "D:\\xiaofang\\excel\\";
 
 	@Transactional
 	public String importEquipmentList(MultipartFile file) {
