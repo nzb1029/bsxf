@@ -25,7 +25,7 @@ public class ExcelUtil {
         Sheet sheet = getSheet(workbook, sheetName);
         Integer firstRowNum = sheet.getFirstRowNum();
         Integer lastRowNum = sheet.getLastRowNum();
-        List<Map<String, Object>> dataMapList = new ArrayList<>(lastRowNum);
+        List<Map<String, Object>> dataMapList = new ArrayList<Map<String, Object>>(lastRowNum);
         Map<Integer, String> titleMap = getTitleMap(sheet.getRow(firstRowNum));
         for (int rowNum = firstRowNum + 1; rowNum <= lastRowNum; rowNum++) {
             dataMapList.add(getDataMap(sheet.getRow(rowNum), titleMap));
@@ -102,7 +102,7 @@ public class ExcelUtil {
     }
 
     private static Map<Integer, String> getTitleMap(Row row) {
-        Map<Integer, String> titleMap = new HashMap<>();
+        Map<Integer, String> titleMap = new HashMap<Integer, String>();
         if (row != null) {
             for (int colNum = row.getFirstCellNum(); colNum < row.getLastCellNum(); colNum++) {
                 Cell cell = row.getCell(colNum);
@@ -119,7 +119,7 @@ public class ExcelUtil {
     }
 
     private static Map<String, Object> getDataMap(Row row, Map<Integer, String> titleMap) {
-        Map<String, Object> dataMap = new HashMap<>();
+        Map<String, Object> dataMap = new HashMap<String, Object>();
         if (row != null) {
             for (int colNum = row.getFirstCellNum(); colNum <= row.getLastCellNum(); colNum++) {
                 Cell cell = row.getCell(colNum);

@@ -57,6 +57,17 @@ public class CheckHistoryController {
 		model.addAttribute("checkHistory", checkHistory);
 		return "bsxf/checkHistoryForm";
 	}
+	
+	@RequestMapping(value = { "viewDetail/{id}" })
+	public String viewDetail(@PathVariable("id")String id, Model model) {
+	    CheckHistory checkHistory = new CheckHistory();
+		if (StringUtils.isNotBlank(id)&& !"undefined".equals(id)) {
+			checkHistory = historyManager.getCheckHistory(id);
+		}
+		model.addAttribute("checkHistory", checkHistory);
+		model.addAttribute("readOnly", true);
+		return "bsxf/checkHistoryForm";
+	}
 	@RequestMapping(value = { "save" }, method = RequestMethod.POST)
 	public String save(@Valid @ModelAttribute("checkHistory") CheckHistory checkHistory, RedirectAttributes redirectAttributes, HttpServletRequest request) {
 		

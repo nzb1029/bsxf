@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.apache.commons.lang3.StringUtils;
+import org.bsxf.common.entity.bsxf.CheckHistory;
 import org.bsxf.common.entity.bsxf.Equipment;
 import org.bsxf.common.service.bsxf.EquipmentManager;
 import org.bsxf.utils.JqGirds;
@@ -63,6 +64,17 @@ public class EquipmentController {
 		
 		return "bsxf/equipmentForm";
 	}
+	@RequestMapping(value = { "viewDetail/{id}" })
+	public String viewDetail(@PathVariable("id")String id, Model model) {
+	    Equipment equipment = new Equipment();
+		if (StringUtils.isNotBlank(id)&& !"undefined".equals(id)) {
+			equipment = equipmentManager.getEquipment(id);
+		}
+		model.addAttribute("equipment", equipment);
+		model.addAttribute("readOnly", true);
+		return "bsxf/equipmentForm";
+	}
+	
 	@RequestMapping(value = { "save" }, method = RequestMethod.POST)
 	public String save(@Valid @ModelAttribute("equipment") Equipment equipment, RedirectAttributes redirectAttributes, HttpServletRequest request) {
 		

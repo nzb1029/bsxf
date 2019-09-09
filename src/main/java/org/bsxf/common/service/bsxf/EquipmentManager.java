@@ -99,43 +99,35 @@ public class EquipmentManager {
 	}
 
 	private SystemManager systemManager = new SystemManager();
+	
 	private Equipment generateEquipment(Map<String, Object> data) {
 		Equipment equipment = new Equipment();
 		equipment.setId(Identities.uuid2());
 		equipment.setCreateTime(new Date());
 		equipment.setCreateUser(LtSecurityUtils.getLoginUser());
 		for (String key : data.keySet()) {
-			switch (key) {
-				case "设备编号":
-					equipment.setEno(data.get(key).toString());
-					break;
-				case "设备类别":
-					equipment.setSubTypeName(data.get(key).toString());
-					if ("4kg干粉".equals(data.get(key).toString().toLowerCase())) {
-						equipment.setSubTypeId("1");
-					}
-					break;
-				case "设备名称":
-					equipment.setName(data.get(key).toString());
-					break;
-				case "区域":
-					equipment.setArea(data.get(key).toString());
-					break;
-				case "位置":
-					equipment.setLocation(data.get(key).toString());
-					break;
-				case "有效起期":
-					equipment.setEffDate((Date) data.get(key));
-					break;
-				case "有效止期":
-					equipment.setExpDate((Date) data.get(key));
-					break;
-				case "备注":
-					equipment.setComments(data.get(key).toString());
-					break;
-				default:
-					logger.error("{}-{} 无匹配字段", new Object[]{key, data.get(key)});
-			}
+			if("设备编号".equals(key)) {
+				equipment.setEno(data.get(key).toString().trim());
+			}else if("设备类别".equals(key)){
+				equipment.setSubTypeName(data.get(key).toString().trim());
+				if ("4kg干粉".equals(data.get(key).toString().trim().toLowerCase())) {
+					equipment.setSubTypeId("1");
+				}
+			}else if("设备名称".equals(key)){
+				equipment.setName(data.get(key).toString().trim());
+			}else if("区域".equals(key)){
+				equipment.setName(data.get(key).toString().trim());
+			}else if("位置".equals(key)){
+				equipment.setName(data.get(key).toString().trim());
+			}else if("有效起期".equals(key)){
+				equipment.setName(data.get(key).toString().trim());
+			}else if("有效止期".equals(key)){
+				equipment.setName(data.get(key).toString().trim());
+			}else if("备注".equals(key)){
+				equipment.setName(data.get(key).toString().trim());
+			}else{
+				logger.error("{}-{} 无匹配字段", new Object[]{key, data.get(key)});
+			 }
 		}
 		System.out.println(systemManager.getDictionaryByCode("xf_category"));
 		return equipment;
