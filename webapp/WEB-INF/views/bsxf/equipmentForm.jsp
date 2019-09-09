@@ -41,10 +41,12 @@
 	 	          
 				var fileType = '3';	
 				var businessId = $("#id").val();
-				var frameUrl="${ctx }/upload/upload2.jsp?fileType="+fileType+"&businessId="+businessId+"&fileSizeLimit=100MB&uploadLimit=20&multi=true&iframeId=okFrame&adap=true&fileTypeExts=*.jpg;*.jpge;*.gif;*.png;*.pdf"
-			    $("#okFrame").attr("src",frameUrl);		
-
-				  
+				var readflag = $("#readflag").val();
+				var frameUrl="${ctx }/upload/upload2.jsp?fileType="+fileType+"&businessId="+businessId+"&fileSizeLimit=100MB&uploadLimit=20&multi=true&iframeId=okFrame&adap=true&fileTypeExts=*.jpg;*.jpge;*.gif;*.png;*.pdf";
+				if(readflag == true){
+					 frameUrl="${ctx }/upload/upload2.jsp?fileType="+fileType+"&businessId="+businessId+"&fileSizeLimit=100MB&uploadLimit=20&multi=true&iframeId=okFrame&adap=true&fileTypeExts=*.jpg;*.jpge;*.gif;*.png;*.pdf&isview=true";
+				}
+				$("#okFrame").attr("src",frameUrl);		
 		});
 		
 	function selUser(){
@@ -89,11 +91,12 @@
 		<div id="messageBox" class="alert alert-error" style="display:none">输入有误，请先更正。</div>
         <form:form id="inputForm" modelAttribute="equipment" action="${ctx}/equipment/save" method="post" class="form-horizontal">
 		<input type="hidden" name="id" id="id" value="${equipment.id}"/>
+		<input type="hidden" name="readflag" id="readflag" value="${readOnly}"/>
 		<table class="inputView" style="width: 700px;">
 			<tr>
 				<td class="left"><span class="req">*</span>设备类型：</td>
 				<td class="right">
-				<select name="equipmentTypeId" id="equipmentTypeId" value="1" class="required">
+				<select name="equipmentTypeId" id="equipmentTypeId" value="1" class="required" <c:if test="${readOnly == true}"> disabled="disabled" </c:if> >
 			 			<c:forEach items="${dic['xf_type']}" var="item">
           		 				<option value="${item.val }">${item.name }</option>
            				</c:forEach>
@@ -102,24 +105,24 @@
 			</tr>
 			<tr>
 				<td class="left">设备名称：</td>
-				<td class="right"><input type="text" name="name" size="40" id="name" value="${equipment.name}"/></td>
+				<td class="right"><input type="text" name="name" size="40" id="name" value="${equipment.name}" <c:if test="${readOnly == true}"> disabled="disabled" </c:if>/></td>
 			</tr>
 			<tr>
 				<td class="left"><span class="req">*</span>设备编号：</td>
-				<td class="right"><input type="text" name="eno" size="40" id="eno" value="${equipment.eno}" class="required"/></td>
+				<td class="right"><input type="text" name="eno" size="40" id="eno" value="${equipment.eno}" <c:if test="${readOnly == true}"> disabled="disabled" </c:if> class="required"/></td>
 			</tr>
 			<tr>
 				<td class="left"><span class="req">*</span>区域：</td>
-				<td class="right"><input type="text" name="area" size="40" id="area" value="${equipment.area}" class="required"/></td>
+				<td class="right"><input type="text" name="area" size="40" id="area" value="${equipment.area}" <c:if test="${readOnly == true}"> disabled="disabled" </c:if>  class="required"/></td>
 			</tr>
 			<tr>
 				<td class="left"><span class="req">*</span>位置：</td>
-				<td class="right"><input type="text" name="location" size="40" id="location" value="${equipment.location}" class="required"/></td>
+				<td class="right"><input type="text" name="location" size="40" id="location" value="${equipment.location}" <c:if test="${readOnly == true}"> disabled="disabled" </c:if>  class="required"/></td>
 			</tr>
 			<tr>
 				<td class="left"><span class="req">*</span>类别：</td>
 				<td class="right">
-					<select  name="subTypeId" id="subTypeId" value="1" class="required">
+					<select  name="subTypeId" id="subTypeId" value="1" class="required" <c:if test="${readOnly == true}"> disabled="disabled" </c:if> >
 				 			<c:forEach items="${dic['xf_category']}" var="item">
 	          		 				<option value="${item.val }">${item.name }</option>
 	           				</c:forEach>
@@ -130,23 +133,23 @@
 			<tr>
 				<td class="left">有效期：</td>
 				<td class="right">
-				 <input type="text" id="effDate" name="effDate" onclick="new WdatePicker() "  value="<fmt:formatDate value="${equipment.effDate }" pattern="yyyy-MM-dd"/>" />
+				 <input type="text" id="effDate" name="effDate" onclick="new WdatePicker() "  <c:if test="${readOnly == true}"> disabled="disabled" </c:if>  value="<fmt:formatDate value="${equipment.effDate }" pattern="yyyy-MM-dd"/>" />
 				  至
-				 <input type="text" id="expDate" name="expDate" onclick="new WdatePicker() "  value="<fmt:formatDate value="${equipment.expDate }" pattern="yyyy-MM-dd"/>" />
+				 <input type="text" id="expDate" name="expDate" onclick="new WdatePicker() "  <c:if test="${readOnly == true}"> disabled="disabled" </c:if>  value="<fmt:formatDate value="${equipment.expDate }" pattern="yyyy-MM-dd"/>" />
 				</td>
 			</tr>
 			<tr>
 				<td class="left" width="100">经纬度信息：</td>
 		        <td   class="right" colspan="3">
-		        <input type="text" class="number" style="width: 80px;"  name="pointx"  id="pointx" value="${equipment.pointx}"/>
-		        <input type="text" class="number" style="width: 80px;" name="pointy" id="pointy" value="${equipment.pointy}"/>
-		           <a href="#" id="addpoint">选择</a>
+		        <input type="text" class="number" style="width: 80px;"  name="pointx"  id="pointx" value="${equipment.pointx}" <c:if test="${readOnly == true}"> disabled="disabled" </c:if> />
+		        <input type="text" class="number" style="width: 80px;" name="pointy" id="pointy" value="${equipment.pointy}" <c:if test="${readOnly == true}"> disabled="disabled" </c:if> />
+		           <c:if test="${readOnly != true}"> <a href="#" id="addpoint">选择</a> </c:if>  
 		        </td>
 			</tr>
 			<tr>
 				<td class="left" width="100">设备图片：</td>
 		        <td   class="right" colspan="2">
-	         	<iframe id="okFrame" src="" style="width: 100%;height:200px;  " frameborder="0">
+	         	  <iframe id="okFrame" src="" style="width: 100%;height:200px;  " frameborder="0">
 	  			</iframe></td>
 			</tr>
 			<tr>
@@ -154,13 +157,13 @@
 				<td class="right">
 				<input type="hidden" name="checkUser.id" size="40" id="userId" value="${equipment.checkUser.id}" />
 				<input type="text" name="checkUser.name" readonly="readonly" size="40" id="userName" value="${equipment.checkUser.name}" />
-				 <a href="#" onclick="selUser()">选择</a>
+				<c:if test="${readOnly != true}">  <a href="#" onclick="selUser()">选择</a> </c:if> 
 				</td>
 			</tr>
 			<tr>
 				<td class="left"><span class="req">*</span>巡检频率设置：</td>
 				<td class="right">
-					<select  name="checkFreq" id="checkFreq" value="1" class="required">
+					<select  name="checkFreq" id="checkFreq" value="1" class="required" <c:if test="${readOnly == true}"> disabled="disabled" </c:if>  >
 					  <option>请选择</option>
 			 			<c:forEach items="${dic['xf_check_freq']}" var="item">
           		 				<option value="${item.val }">${item.name }</option>
@@ -171,7 +174,7 @@
 			<tr>
 				<td class="left"><span class="req">*</span>备注：</td>
 				<td   class="right">
-		          <textarea rows="3" style="width: 300px;" name="comments">${equipment.comments}</textarea>
+		          <textarea rows="3" style="width: 300px;" name="comments" <c:if test="${readOnly == true}"> disabled="disabled" </c:if>  >${equipment.comments}</textarea>
        		    </td>
 			</tr>
 			<tr style='display:none'>

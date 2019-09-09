@@ -105,7 +105,7 @@ var request = new Object();
 	        'method' : 'get', 
 	        buttonImg:"../static/img/logo.jpg",
 	        buttonText    :"选择文件",
-	        'formData'    :{'blockId': ""+request["blockId"],'field01': ""+(request["field01"]?request["field01"]:""),'fileType': ""+request["fileType"],'fileName':""+(request["fileName"]?request["fileName"]:""),'fullpath':""+(request["fullpath"]?request["fullpath"]:"") },//检测FLASH失败调用
+	        'formData'    :{'businessId': ""+request["businessId"],'field01': ""+(request["field01"]?request["field01"]:""),'fileType': ""+request["fileType"],'fileName':""+(request["fileName"]?request["fileName"]:""),'fullpath':""+(request["fullpath"]?request["fullpath"]:"") },//检测FLASH失败调用
 			onFallback :function(){
 				var f= confirm("您未安装FLASH控件，无法上传图片！确定安装吗？");
 				if(f)window.open("http://get.adobe.com/cn/flashplayer/");
@@ -127,7 +127,7 @@ var request = new Object();
 	  
 		function loadFiles( ){
 			       $.ajax({
-			         url:ctx+"/upload/getFileList?blockId="+request["blockId"]+"&fullpath="+(request["fullpath"]?request["fullpath"]:"")+"&fileType="+(request["fileType"]?request["fileType"]:"")+"&field01="+(request["field01"]?request["field01"]:""),
+			         url:ctx+"/upload/getFileList?businessId="+request["businessId"]+"&fullpath="+(request["fullpath"]?request["fullpath"]:"")+"&fileType="+(request["fileType"]?request["fileType"]:"")+"&field01="+(request["field01"]?request["field01"]:""),
 			         cache:false,
 			         method:"get",
 	                 dataType:"json", 
@@ -147,7 +147,7 @@ var request = new Object();
 		} 
 		
 		function getPath(fname) {
-			var contentPath = request["blockId"];
+			var contentPath = request["businessId"];
 		    if (request["fileType"])
 		    	contentPath = contentPath + "/" + request["fileType"];
 		    if (request["field01"])
@@ -238,12 +238,12 @@ var request = new Object();
 		            },
 		            'down': function(t,target) {
 		                  var fname=jQuery("a.selected").attr("fname");
-		                  downFile(fname,request["blockId"]); 
+		                  downFile(fname,request["businessId"]); 
 		                  
 		            },
 		            'delete': function(t,target) {
 		                 var fname=jQuery("a.selected").attr("fname");
-		                 deleteFile(fname,request["blockId"]);
+		                 deleteFile(fname,request["businessId"]);
 		                 
 		            
 		              //alert('Trigger was '+t.id+'\nAction was Delete');
@@ -266,7 +266,7 @@ var request = new Object();
 		} 
 		
 		
-		function deleteFile(fname,blockId){
+		function deleteFile(fname,businessId){
 		      var f=confirm("确定删除吗？");  
 		      if(f){
 		       $.ajax({
@@ -274,7 +274,7 @@ var request = new Object();
 			         cache:false,
 			         method:"POST",
 	                 dataType:"json", 
-	                 data:{fname:fname,blockId:request["blockId"],fullpath:(request["fullpath"]?request["fullpath"]:""),fileType:(request["fileType"]?request["fileType"]:""),field01:(request["field01"]?request["field01"]:"")},
+	                 data:{fname:fname,businessId:request["businessId"],fullpath:(request["fullpath"]?request["fullpath"]:""),fileType:(request["fileType"]?request["fileType"]:""),field01:(request["field01"]?request["field01"]:"")},
 			         success:function(d){
 			          loadFiles();
 			         }
@@ -283,7 +283,7 @@ var request = new Object();
 		      }
 		} 
 	    
-	    function downFile(fname,blockId){
+	    function downFile(fname,businessId){
 	        var path=ctx+"/static-content?download=true&contentPath="+getPath(fname)+"&fullpath="+(request["fullpath"]?request["fullpath"]:"")+"&fileType="+(request["fileType"]?request["fileType"]:"")+"&field01="+(request["field01"]?request["field01"]:"");
 
 	        window.location.href=path;
