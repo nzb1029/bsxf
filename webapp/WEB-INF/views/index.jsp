@@ -90,9 +90,9 @@
 		$(document).ready(function() {
 			var userType = '<%=LtSecurityUtils.getShiroUser().getUserType()%>';
 			if(userType!= null && userType == '1'){
-				$('#mainIframe').attr('src','${ctx}/block/ygsj');
+				$('#mainIframe').attr('src','${ctx}/equipment/userList');
 			}else{
-				$('#mainIframe').attr('src','${ctx}/block/list');
+				$('#mainIframe').attr('src','${ctx}/equipment/list');
 			}
 		});
 		
