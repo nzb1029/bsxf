@@ -13,11 +13,8 @@ import org.bsxf.utils.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springside.utils.Collections3;
 import org.springside.utils.Identities;
@@ -80,6 +77,13 @@ public class EquipmentController {
 	public String delete(@PathVariable("id") String id) {
 		equipmentManager.deleteEquipment(Collections3.extractToList(id.split(",")));
 		return "true" ;
+	}
+
+	@RequestMapping(value = "importEquipmentList", method = RequestMethod.POST)
+    @ResponseBody
+	public String importEquipmentList(@RequestParam("file") MultipartFile file) {
+	    String msg = equipmentManager.importEquipmentList(file);
+		return StringUtils.isNotBlank(msg) ? msg : "true";
 	}
 	
 	@SuppressWarnings("unchecked")

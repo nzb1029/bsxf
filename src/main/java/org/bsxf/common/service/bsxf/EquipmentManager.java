@@ -1,20 +1,31 @@
 package org.bsxf.common.service.bsxf;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.bsxf.common.entity.bsxf.Equipment;
 import org.bsxf.common.repository.bsxf.EquipmentMybatisDao;
 import org.bsxf.security.ShiroDbRealm.ShiroUser;
+import org.bsxf.common.service.SystemManager;
+import org.bsxf.utils.ExcelUtil;
 import org.bsxf.utils.Page;
 import org.bsxf.web.LtSecurityUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.multipart.MultipartFile;
+import org.springside.utils.Identities;
 
 @Component
 @Transactional
 public class EquipmentManager {
+	private static Logger logger = LoggerFactory.getLogger(EquipmentManager.class);
 	@Autowired
 	private EquipmentMybatisDao equipmentDao;
 
@@ -63,5 +74,70 @@ public class EquipmentManager {
 		page.setTotalCount(count);
 		page.setResult(cmps);
 		return page;
+	}
+
+	private static final String defaultSheetName = "equipment_list";
+	private static final String defaultFilePath = "D:\\project\\xiaofang\\excel\\";
+
+	@Transactional
+	public String importEquipmentList(MultipartFile file) {
+		File newFile = new File(defaultFilePath + System.currentTimeMillis() + file.getOriginalFilename());
+		try {
+			file.transferTo(newFile);
+		} catch (IOException e) {
+			logger.error("模板文件转换失败，报错：", e);
+			return "文件转换失败，请确认";
+		}
+		List<Map<String, Object>> dataList = ExcelUtil.getData(newFile, defaultSheetName);
+		if (CollectionUtils.isEmpty(dataList)) {
+			return "文件无数据，请确认";
+		}
+		for (Map<String, Object> data : dataList) {
+			equipmentDao.saveEquipment(generateEquipment(data));
+		}
+		return "";
+	}
+
+	private SystemManager systemManager = new SystemManager();
+	private Equipment generateEquipment(Map<String, Object> data) {
+		Equipment equipment = new Equipment();
+		equipment.setId(Identities.uuid2());
+		equipment.setCreateTime(new Date());
+		equipment.setCreateUser(LtSecurityUtils.getLoginUser());
+		for (String key : data.keySet()) {
+			switch (key) {
+				case "设备编号":
+					equipment.setEno(data.get(key).toString());
+					break;
+				case "设备类别":
+					equipment.setSubTypeName(data.get(key).toString());
+					if ("4kg干粉".equals(data.get(key).toString().toLowerCase())) {
+						equipment.setSubTypeId("1");
+					}
+					break;
+				case "设备名称":
+					equipment.setName(data.get(key).toString());
+					break;
+				case "区域":
+					equipment.setArea(data.get(key).toString());
+					break;
+				case "位置":
+					equipment.setLocation(data.get(key).toString());
+					break;
+				case "有效起期":
+					equipment.setEffDate((Date) data.get(key));
+					break;
+				case "有效止期":
+					equipment.setExpDate((Date) data.get(key));
+					break;
+				case "备注":
+					equipment.setComments(data.get(key).toString());
+					break;
+				default:
+					logger.error("{}-{} 无匹配字段", new Object[]{key, data.get(key)});
+			}
+		}
+		System.out.println(systemManager.getDictionaryByCode("xf_category"));
+		return equipment;
 	}
 }

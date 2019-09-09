@@ -24,6 +24,7 @@ import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.apache.poi.ss.usermodel.BorderStyle;
 import org.springside.utils.Identities;
 
 import sun.misc.BASE64Encoder;
@@ -129,7 +130,7 @@ public class ImportUtil {
 			HSSFRow row = sheet.getRow(j);
 			row.createCell(0).setCellType(HSSFCell.CELL_TYPE_STRING);
 			row.getSheet().getWorkbook().createCellStyle();
-			//row.createCell(0).setCellStyle(HSSFCellStyle.BORDER_THIN);
+			//row.createCell(0).setCellStyle(BorderStyle.THIN);
 			String station = getCellFormatValue(row.getCell(1));
 			sList.add("" + station + "");
 		}
@@ -166,10 +167,10 @@ public class ImportUtil {
 		POIFSFileSystem fs = new POIFSFileSystem(new FileInputStream(f));
 		HSSFWorkbook wb = new HSSFWorkbook(fs);//建立新HSSFWorkbook对象  
 		HSSFCellStyle setBorder = wb.createCellStyle();
-		setBorder.setBorderBottom(HSSFCellStyle.BORDER_THIN); //下边框
-		setBorder.setBorderLeft(HSSFCellStyle.BORDER_THIN);//左边框
-		setBorder.setBorderTop(HSSFCellStyle.BORDER_THIN);//上边框
-		setBorder.setBorderRight(HSSFCellStyle.BORDER_THIN);//右边框
+		setBorder.setBorderBottom(BorderStyle.THIN); //下边框
+		setBorder.setBorderLeft(BorderStyle.THIN);//左边框
+		setBorder.setBorderTop(BorderStyle.THIN);//上边框
+		setBorder.setBorderRight(BorderStyle.THIN);//右边框
 		HSSFSheet sheet = wb.getSheetAt(0);
 		int rowNum = sheet.getLastRowNum();
 		Map staaaaMap = new HashMap();
@@ -216,10 +217,10 @@ public class ImportUtil {
 			if (setBorder == null)
 				setBorder = row.getSheet().getWorkbook().createCellStyle();
 			row.getCell(1).setCellStyle(setBorder);
-			setBorder.setBorderBottom(HSSFCellStyle.BORDER_THIN); //下边框
-			setBorder.setBorderLeft(HSSFCellStyle.BORDER_THIN);//左边框
-			setBorder.setBorderTop(HSSFCellStyle.BORDER_THIN);//上边框
-			setBorder.setBorderRight(HSSFCellStyle.BORDER_THIN);//右边框
+			setBorder.setBorderBottom(BorderStyle.THIN); //下边框
+			setBorder.setBorderLeft(BorderStyle.THIN);//左边框
+			setBorder.setBorderTop(BorderStyle.THIN);//上边框
+			setBorder.setBorderRight(BorderStyle.THIN);//右边框
 		}
 		//System.out.println(s.size());
 		Iterator<String> it = staaaaMap.keySet().iterator();
@@ -259,10 +260,10 @@ public class ImportUtil {
 		if (setBorder == null)
 			setBorder = row.getSheet().getWorkbook().createCellStyle();
 		cell.setCellStyle(setBorder);
-		setBorder.setBorderBottom(HSSFCellStyle.BORDER_THIN); //下边框
-		setBorder.setBorderLeft(HSSFCellStyle.BORDER_THIN);//左边框
-		setBorder.setBorderTop(HSSFCellStyle.BORDER_THIN);//上边框
-		setBorder.setBorderRight(HSSFCellStyle.BORDER_THIN);//右边框
+		setBorder.setBorderBottom(BorderStyle.THIN); //下边框
+		setBorder.setBorderLeft(BorderStyle.THIN);//左边框
+		setBorder.setBorderTop(BorderStyle.THIN);//上边框
+		setBorder.setBorderRight(BorderStyle.THIN);//右边框
 
 	}
 

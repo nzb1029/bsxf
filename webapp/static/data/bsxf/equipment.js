@@ -46,9 +46,9 @@ function dwII(id,x,y,name){
 	window.open(url);
 }
 
-function update(id){ 
+function update(id){
 	  var cn="添加";
-	  var url=ctx+'/equipment/create/'+id; 
+	  var url=ctx+'/equipment/create/'+id;
    if(id) {
   	  cn="编辑";
    }
@@ -66,6 +66,44 @@ function update(id){
 	      });
 	//window.location=ctx+"/equipment/create?id="+id;
 	
+}
+
+function batchImp() {
+	$('#importEquipmentList').click();
+}
+
+function importEquipmentList(obj) {
+	var fileType=obj.value.substr(obj.value.lastIndexOf(".")).toLowerCase();//获得文件后缀名
+	if(fileType != '.xls' && fileType != '.xlsx'){
+        alert("请上传Excel文件");
+		$(obj).val('');
+	}else{
+        //获取到选中的文件
+        var file = obj.files[0];
+        //创建formdata对象
+        var formdata = new FormData();
+        formdata.append("file", file);
+        //创建xhr，使用ajax进行文件上传
+        var xhr = new XMLHttpRequest();
+        xhr.open("post",ctx+'/equipment/importEquipmentList');
+        //回调
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState==4 && xhr.status==200){
+                console.log(xhr.responseText);
+                $(obj).val('');
+                afterSave();
+            }
+        }
+        //获取上传的进度
+        xhr.upload.onprogress = function (event) {
+            if(event.lengthComputable){
+                var percent = event.loaded/event.total *100;
+                console.log(percent+"%");
+            }
+        }
+        //将formdata上传
+        xhr.send(formdata);
+	}
 }
 
 function batchDel(){

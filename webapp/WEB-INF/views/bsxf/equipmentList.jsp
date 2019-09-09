@@ -28,7 +28,7 @@
            <div id="table_center_info_header">本管理列表帮助你配置</div>
            <div id="table_center_info_text">
                                 新增、修改、删除、查询灭火器，批量导入、删除灭火器<br/>
-                               批量导入灭火器，请先 <a href="./importExcelTemp.xls" style="color: red;" download target="_blank">点这儿下载模板</a>，按照格式填写完毕后，点击批量导入按钮 <br/>
+                               批量导入灭火器，请先 <a href="./importExcelTemp.xlsx" style="color: red;" download target="_blank">点这儿下载模板</a>，按照格式填写完毕后，点击批量导入按钮 <br/>
          </div>
        </div>
         <div id="table_center_search">
@@ -44,6 +44,7 @@
                                    设备管理列表
             </span>
             <button class="button_right" type="button" onclick="javascript:batchImp()" id="imp" >批量导入</button>
+            <input type="file" onchange="javascript:importEquipmentList(this)" id="importEquipmentList" style="display: none;"/>
             <button class="button_right" type="button" onclick="javascript:batchDel()" id="remove">批量删除</button>
             <button class="button_right" type="button" onclick="javascript:update()" id="add" >添加设备</button>
         </div>

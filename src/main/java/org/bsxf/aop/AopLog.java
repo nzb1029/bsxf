@@ -19,6 +19,7 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Aspect;
@@ -123,7 +124,7 @@ public class AopLog {
 						sheet.addMergedRegion(cra);
 					}
 					CellStyle topStyle = wb.createCellStyle();
-					topStyle.setVerticalAlignment(CellStyle.VERTICAL_CENTER);//重新设置垂直居中
+					topStyle.setVerticalAlignment(VerticalAlignment.CENTER);//重新设置垂直居中
 					HSSFRow roww = sheet.getRow(0);
 					int colNum = roww.getPhysicalNumberOfCells();
 					int rowNum = sheet.getLastRowNum();
