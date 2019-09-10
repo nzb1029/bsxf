@@ -133,15 +133,15 @@ public class EquipmentManager {
 			}else if("设备名称".equals(key)){
 				equipment.setName(data.get(key).toString().trim());
 			}else if("区域".equals(key)){
-				equipment.setName(data.get(key).toString().trim());
+				equipment.setArea(data.get(key).toString().trim());
 			}else if("位置".equals(key)){
-				equipment.setName(data.get(key).toString().trim());
+				equipment.setLocation(data.get(key).toString().trim());
 			}else if("有效起期".equals(key)){
-				equipment.setName(data.get(key).toString().trim());
+				equipment.setEffDate((Date) data.get(key));
 			}else if("有效止期".equals(key)){
-				equipment.setName(data.get(key).toString().trim());
+				equipment.setExpDate((Date) data.get(key));
 			}else if("备注".equals(key)){
-				equipment.setName(data.get(key).toString().trim());
+				equipment.setComments(data.get(key).toString().trim());
 			}else{
 				logger.error("{}-{} 无匹配字段", new Object[]{key, data.get(key)});
 			 }
