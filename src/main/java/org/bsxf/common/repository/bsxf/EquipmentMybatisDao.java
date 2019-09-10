@@ -16,6 +16,8 @@ public interface EquipmentMybatisDao {
 	public Equipment getEquipment(String id);
 
 	public List<Equipment> getAllEquipment();
+	
+	public List<Equipment> getRemainEquipments();
 
 	public void updateEquipment(Equipment entity);
 

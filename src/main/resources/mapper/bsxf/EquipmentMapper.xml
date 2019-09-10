@@ -45,7 +45,13 @@
 	  <select id="getAllEquipment" parameterType="string" resultType="Equipment">
 		<include refid="equipmentSql"/>
 		 and s.status = 'enabled'
-	</select>
+	  </select>
+	  
+	  <select id="getRemainEquipments" parameterType="string" resultType="Equipment">
+		<include refid="equipmentSql"/>
+		 and s.status = 'enabled'
+		 and s.remainNum &gt; 0
+	  </select>
 	
     <select id="getEquipment" parameterType="string" resultType="Equipment">
 		<include refid="equipmentSql"/>

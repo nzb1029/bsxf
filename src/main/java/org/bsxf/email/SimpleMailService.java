@@ -24,6 +24,7 @@ public class SimpleMailService {
 	private JavaMailSenderImpl mailSender;
 	private String textTemplate;
 	private String from;
+	
 	public boolean sendMail(String subject, String message, String to) {
 	 
 			EmailConfig config= EhcacheManager.getEmailConfig();

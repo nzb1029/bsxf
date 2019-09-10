@@ -77,7 +77,6 @@ public class EquipmentController {
 	
 	@RequestMapping(value = { "save" }, method = RequestMethod.POST)
 	public String save(@Valid @ModelAttribute("equipment") Equipment equipment, RedirectAttributes redirectAttributes, HttpServletRequest request) {
-		
 		equipmentManager.saveOrUpdate(equipment);
 		redirectAttributes.addFlashAttribute("message", "创建成功");
 		return "redirect:/equipment/list";

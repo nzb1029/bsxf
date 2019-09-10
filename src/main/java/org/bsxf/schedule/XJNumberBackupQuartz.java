@@ -1,5 +1,8 @@
 package org.bsxf.schedule;
 
+import java.util.Date;
+
+import org.bsxf.common.service.bsxf.EquipmentManager;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.springframework.scheduling.quartz.QuartzJobBean;
@@ -9,9 +12,9 @@ public class XJNumberBackupQuartz extends QuartzJobBean {
 
 	@Override
 	protected void executeInternal(JobExecutionContext arg0) throws JobExecutionException {
-//		EquipmentManager eqManager = SpringContextHolder.getBean(EquipmentManager.class);
-//		eqManager.updateKLEquipmentMTG();
-		System.out.print("XJEmailNoticeQuartz");
+		System.out.print("XJNumberBackupQuartz==========执行了==============="+new Date());
+		EquipmentManager eqManager = SpringContextHolder.getBean(EquipmentManager.class);
+		eqManager.updateRemainNum();
 	}
 
 }

@@ -1,6 +1,7 @@
 
 package org.bsxf.common.web.sys;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -10,8 +11,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.apache.commons.lang3.StringUtils;
+import org.bsxf.common.entity.bsxf.Equipment;
 import org.bsxf.common.entity.sys.EmailConfig;
 import org.bsxf.common.service.SystemManager;
+import org.bsxf.common.service.bsxf.EquipmentManager;
 import org.bsxf.common.service.sys.EmailConfigManager;
 import org.bsxf.email.SimpleMailService;
 import org.bsxf.utils.EhcacheManager;
@@ -42,9 +45,11 @@ public class EmailConfigController {
 	@Autowired
 	private EmailConfigManager emailConfigManager;
 	@Autowired
-	private SimpleMailService simpleMailService;
+	private EquipmentManager equipmentManager;
 	@Autowired
 	private SystemManager sysManager;
+	
+	
 
     private static Logger logger = LoggerFactory.getLogger(EmailConfigController.class);
 
@@ -108,11 +113,14 @@ public class EmailConfigController {
 	@RequestMapping(value = "test")
 	@ResponseBody
 	public String test( ) {
-	     EmailConfig config=	EhcacheManager.getEmailConfig();
+	     EmailConfig config = EhcacheManager.getEmailConfig();
 	     if(StringUtils.isNotBlank(config.getId())){
-	    	 
-	    	boolean f= EmailUtil.sendSimpleEmailByNow("test", "本邮件为测试邮件", config.getUsername());
-	    	 if(f)
+	    	 /*******************************test begin************************************
+	    	List<Equipment> list = equipmentManager.getAllEquipment();
+	    	boolean e = EmailUtil.sendMineEmailByNow("【系统通知】尚未提交巡检提醒" ,list , config.getUsername(),"宁宗彬");
+	    	/****************************test begin********************************************/ 
+	    	 boolean f= EmailUtil.sendSimpleEmailByNow("test", "本邮件为测试邮件", config.getUsername());
+	    	if(f)
 	    		 return "1";
 	    	 else
 	    		 return "2";

@@ -48,7 +48,9 @@ public class EquipmentManager {
 		} else {
 			entity.setCreateTime(new Date());
 			entity.setCreateUser(LtSecurityUtils.getLoginUser());
-			
+			//如果新增的话,需要设置剩余巡检次数
+			entity.setRemainNum(entity.getCheckFreq());
+			entity.setLastRemainNum(entity.getCheckFreq());
 			equipmentDao.saveEquipment(entity);
 		}
 		return id;
@@ -102,9 +104,14 @@ public class EquipmentManager {
 	
 	private Equipment generateEquipment(Map<String, Object> data) {
 		Equipment equipment = new Equipment();
+		//set deafult value
 		equipment.setId(Identities.uuid2());
 		equipment.setCreateTime(new Date());
 		equipment.setCreateUser(LtSecurityUtils.getLoginUser());
+		equipment.setCheckFreq(1);
+		equipment.setRemainNum(1);
+		equipment.setLastRemainNum(1);
+		
 		for (String key : data.keySet()) {
 			if("设备编号".equals(key)) {
 				equipment.setEno(data.get(key).toString().trim());
@@ -132,4 +139,24 @@ public class EquipmentManager {
 		System.out.println(systemManager.getDictionaryByCode("xf_category"));
 		return equipment;
 	}
+
+	/**
+	 * 每月剩余巡检次数,在下个月时会将这个字段复制到lastremainNum字段，这个字段重置
+	 */
+	public void updateRemainNum() {
+		List<Equipment> equipmentList = this.getAllEquipment();
+		if(!CollectionUtils.isEmpty(equipmentList)){
+			for (Equipment equipment : equipmentList) {
+				equipment.setLastRemainNum(equipment.getRemainNum());
+				equipment.setRemainNum(equipment.getCheckFreq());
+				this.equipmentDao.updateEquipment(equipment);
+			}
+		}
+	}
+	
+	@Transactional(readOnly = true)
+	public List<Equipment> getRemainEquipments() {
+		return equipmentDao.getRemainEquipments();
+	}
+	
 }

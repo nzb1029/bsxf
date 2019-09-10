@@ -8,12 +8,18 @@ package org.bsxf.email;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeUtility;
 
+import org.bsxf.common.entity.bsxf.Equipment;
+import org.bsxf.common.entity.sys.EmailConfig;
+import org.bsxf.common.entity.sys.EmialSend;
+import org.bsxf.utils.EhcacheManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
@@ -80,8 +86,8 @@ public class MimeMailService {
 			MimeMessage msg = mailSender.createMimeMessage();
 			MimeMessageHelper helper = new MimeMessageHelper(msg, true, DEFAULT_ENCODING);
 
-			helper.setTo("springside3.demo@gmail.com");
-			helper.setFrom("springside3.demo@gmail.com");
+			helper.setTo("binnz_java@163.com");
+			helper.setFrom("binnz_java@163.com");
 			helper.setSubject("用户修改通知");
 
 			String content = generateContent(userName);
@@ -91,11 +97,57 @@ public class MimeMailService {
 			helper.addAttachment("mailAttachment.txt", attachment);
 
 			mailSender.send(msg);
-			logger.info("HTML版邮件已发送至springside3.demo@gmail.com");
+			logger.info("HTML版邮件已发送至binnz_java@163.com");
 		} catch (MessagingException e) {
 			logger.error("构造邮件失败", e);
 		} catch (Exception e) {
 			logger.error("发送邮件失败", e);
+		}
+	}
+	
+	/** Equipment 发送邮件使用
+	 *  发送MIME格式的
+	 */
+	public boolean sendMimeMail(String subject,String to, List<Equipment> list,String userName,EmialSend emialSend) {
+		 
+		EmailConfig config= EhcacheManager.getEmailConfig();
+		try {
+			MimeMessage msg = mailSender.createMimeMessage();
+			MimeMessageHelper helper = new MimeMessageHelper(msg, true, DEFAULT_ENCODING);
+
+			helper.setTo(to);
+			helper.setFrom(config.getUsername());
+			helper.setSubject(subject);
+
+			String content = generateEquipmentContent(list,userName);
+			helper.setText(content, true);
+			emialSend.setMessage(content);
+			//File attachment = generateAttachment();
+			//helper.addAttachment("mailAttachment.txt", attachment);
+			mailSender.send(msg);
+			
+			logger.info("HTML版邮件已发送至binnz_java@163.com");
+		} catch (MessagingException e) {
+			logger.error("构造邮件失败", e);
+		} catch (Exception e) {
+			logger.error("发送邮件失败", e);
+		}
+	 
+	return true;
+  }
+
+	private String generateEquipmentContent(List<Equipment> list, String userName) throws MessagingException  {
+		try {
+			Map context = new HashMap();
+			context.put("userName", userName);
+			context.put("equipmentList", list);
+			return FreeMarkerTemplateUtils.processTemplateIntoString(template, context);
+		} catch (IOException e) {
+			logger.error("生成邮件内容失败, FreeMarker模板不存在", e);
+			throw new MessagingException("FreeMarker模板不存在", e);
+		} catch (TemplateException e) {
+			logger.error("生成邮件内容失败, FreeMarker处理失败", e);
+			throw new MessagingException("FreeMarker处理失败", e);
 		}
 	}
 
