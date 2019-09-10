@@ -1,49 +1,0 @@
-10
-
-dir
-65
-svn://218.206.178.148:7558/akl/branches/akl/src/main/java/org/springside
-svn://218.206.178.148:7558
-
-
-
-2017-04-21T15:59:53.612134Z
-39
-dev1
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-125df227-909e-4467-8bf9-a2a6f538d109
-
-utils
-dir
-
-log
-dir
-
-mapper
-dir
-
-queue
-dir
-
-security
-dir
-
-beanvalidator
-dir
-
-web
-dir
-
