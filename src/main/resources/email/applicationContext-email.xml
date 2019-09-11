@@ -10,7 +10,7 @@
 	<!-- 文本邮件服务类 -->
 	<bean id="simpleMailService" class="org.bsxf.email.SimpleMailService">
 		<property name="mailSender" ref="mailSender" />
-		<property name="from" value="53934569@qq.com" />
+		<property name="from" value="binnz_java@163.com" />
 		<property name="textTemplate">
 			<value><![CDATA[
 			尊敬的%s，您的QQ的密码在%tF被神秘人修改.

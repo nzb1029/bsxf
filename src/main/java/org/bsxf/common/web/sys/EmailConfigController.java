@@ -115,9 +115,9 @@ public class EmailConfigController {
 	public String test( ) {
 	     EmailConfig config = EhcacheManager.getEmailConfig();
 	     if(StringUtils.isNotBlank(config.getId())){
-	    	 /*******************************test begin************************************
-	    	List<Equipment> list = equipmentManager.getAllEquipment();
-	    	boolean e = EmailUtil.sendMineEmailByNow("【系统通知】尚未提交巡检提醒" ,list , config.getUsername(),"宁宗彬");
+	    	 /*******************************test begin************************************/
+	    	 List<Equipment> list = equipmentManager.getAllEquipment();
+		     boolean e = EmailUtil.sendMineEmailByNow("【系统通知】尚未提交巡检提醒" ,list , config.getUsername(),"蒋老师");
 	    	/****************************test begin********************************************/ 
 	    	 boolean f= EmailUtil.sendSimpleEmailByNow("test", "本邮件为测试邮件", config.getUsername());
 	    	if(f)
