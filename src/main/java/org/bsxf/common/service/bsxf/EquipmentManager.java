@@ -1,16 +1,11 @@
 package org.bsxf.common.service.bsxf;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
 import org.bsxf.common.entity.bsxf.Equipment;
 import org.bsxf.common.repository.bsxf.EquipmentMybatisDao;
-import org.bsxf.security.ShiroDbRealm.ShiroUser;
 import org.bsxf.common.service.SystemManager;
+import org.bsxf.security.ShiroDbRealm.ShiroUser;
 import org.bsxf.utils.ExcelUtil;
+import org.bsxf.utils.QrcodeUtil;
 import org.bsxf.utils.Page;
 import org.bsxf.web.LtSecurityUtils;
 import org.slf4j.Logger;
@@ -22,10 +17,25 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springside.utils.Identities;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
 @Component
 @Transactional
 public class EquipmentManager {
 	private static Logger logger = LoggerFactory.getLogger(EquipmentManager.class);
+
+	private static final String defaultSheetName = "equipment_list";
+	private static final String ROOT_PATH = "D:/xiaofang";
+	private static final String EXCEL_PATH = "/excel/";
+	private static final String QRCODE_PATH = "/qrcode/";
+	private static final String QRCODE_TYPE = ".png";
+	private static final String ROOT_URL = "https://www.baidu.com/s?wd=";
+
 	@Autowired
 	private EquipmentMybatisDao equipmentDao;
 
@@ -51,6 +61,7 @@ public class EquipmentManager {
 			//如果新增的话,需要设置剩余巡检次数
 			entity.setRemainNum(entity.getCheckFreq());
 			entity.setLastRemainNum(entity.getCheckFreq());
+			QrcodeUtil.generateQRCodeImage(ROOT_URL + entity.getEno(), ROOT_PATH + QRCODE_PATH + entity.getEno() + QRCODE_TYPE);
 			equipmentDao.saveEquipment(entity);
 		}
 		return id;
@@ -78,12 +89,9 @@ public class EquipmentManager {
 		return page;
 	}
 
-	private static final String defaultSheetName = "equipment_list";
-	private static final String defaultFilePath = "D:\\xiaofang\\excel\\";
-
 	@Transactional
 	public String importEquipmentList(MultipartFile file) {
-		File newFile = new File(defaultFilePath + System.currentTimeMillis() + file.getOriginalFilename());
+		File newFile = new File(ROOT_PATH + EXCEL_PATH + System.currentTimeMillis() + "_" + file.getOriginalFilename());
 		try {
 			file.transferTo(newFile);
 		} catch (IOException e) {
@@ -95,7 +103,9 @@ public class EquipmentManager {
 			return "文件无数据，请确认";
 		}
 		for (Map<String, Object> data : dataList) {
-			equipmentDao.saveEquipment(generateEquipment(data));
+			Equipment equipment = generateEquipment(data);
+			QrcodeUtil.generateQRCodeImage(ROOT_URL + equipment.getEno(), ROOT_PATH + QRCODE_PATH + equipment.getEno() + QRCODE_TYPE);
+			equipmentDao.saveEquipment(equipment);
 		}
 		return "";
 	}
@@ -123,20 +133,19 @@ public class EquipmentManager {
 			}else if("设备名称".equals(key)){
 				equipment.setName(data.get(key).toString().trim());
 			}else if("区域".equals(key)){
-				equipment.setName(data.get(key).toString().trim());
+				equipment.setArea(data.get(key).toString().trim());
 			}else if("位置".equals(key)){
-				equipment.setName(data.get(key).toString().trim());
+				equipment.setLocation(data.get(key).toString().trim());
 			}else if("有效起期".equals(key)){
-				equipment.setName(data.get(key).toString().trim());
+				equipment.setEffDate((Date) data.get(key));
 			}else if("有效止期".equals(key)){
-				equipment.setName(data.get(key).toString().trim());
+				equipment.setExpDate((Date) data.get(key));
 			}else if("备注".equals(key)){
-				equipment.setName(data.get(key).toString().trim());
+				equipment.setComments(data.get(key).toString().trim());
 			}else{
 				logger.error("{}-{} 无匹配字段", new Object[]{key, data.get(key)});
 			 }
 		}
-		System.out.println(systemManager.getDictionaryByCode("xf_category"));
 		return equipment;
 	}
 
