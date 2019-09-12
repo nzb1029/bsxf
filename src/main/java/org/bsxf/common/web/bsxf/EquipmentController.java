@@ -1,12 +1,15 @@
 package org.bsxf.common.web.bsxf;
 
+import java.io.*;
+import java.net.URLEncoder;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.apache.commons.lang3.StringUtils;
-import org.bsxf.common.entity.bsxf.CheckHistory;
 import org.bsxf.common.entity.bsxf.Equipment;
 import org.bsxf.common.service.bsxf.EquipmentManager;
 import org.bsxf.utils.JqGirds;
@@ -113,6 +116,51 @@ public class EquipmentController {
 		//TODO
 		//equipmentManager.deleteEquipment(Collections3.extractToList(id.split(",")));
 		return "true" ;
+	}
+
+	@RequestMapping(value = "generateQrcodefile", method = RequestMethod.POST)
+	@ResponseBody
+	public String generateQrcodefile(@RequestBody List<String> idList) {
+		try {
+			String fileName = System.currentTimeMillis() + "";
+			if (equipmentManager.generateQrcodefile(idList, fileName)) {
+				return fileName;
+			} else {
+				return "";
+			}
+		} catch (Exception e) {
+			return "";
+		}
+	}
+
+	@RequestMapping(value = "downloadQrcodefile/{fileName}", method = RequestMethod.GET)
+	public void downloadQrcode(@PathVariable("fileName") String fileName, HttpServletResponse response) {
+		// 读到流中
+		InputStream inStream = null;// 文件的存放路径
+		try {
+			inStream = new FileInputStream(equipmentManager.getQrcodePath(fileName));
+			String downloadFileName = URLEncoder.encode(equipmentManager.getQrcodeFileName("二维码"),"UTF-8");
+			// 设置输出的格式
+			response.reset();
+			response.setContentType("bin");
+			response.addHeader("Content-Disposition", "attachment; filename=\"" + downloadFileName + "\"");
+			byte[] b = new byte[100];
+			int len;
+			while ((len = inStream.read(b)) > 0) {
+				response.getOutputStream().write(b, 0, len);
+			}
+			// 循环取出流中的数据
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (inStream != null) {
+				try {
+					inStream.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 	
 }

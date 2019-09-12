@@ -1,5 +1,6 @@
 package org.bsxf.common.service.bsxf;
 
+import org.apache.commons.lang3.StringUtils;
 import org.bsxf.common.entity.bsxf.Equipment;
 import org.bsxf.common.repository.bsxf.EquipmentMybatisDao;
 import org.bsxf.common.service.SystemManager;
@@ -35,6 +36,16 @@ public class EquipmentManager {
 	private static final String QRCODE_PATH = "/qrcode/";
 	private static final String QRCODE_TYPE = ".png";
 	private static final String ROOT_URL = "https://www.baidu.com/s?wd=";
+	public static String getQrcodePath(String fileName) {
+		return ROOT_PATH + QRCODE_PATH + getQrcodeFileName(fileName);
+	}
+	public static String getQrcodeFileName(String fileName) {
+		if (fileName.indexOf(QRCODE_TYPE) > 0) {
+			return fileName;
+		} else {
+			return fileName + QRCODE_TYPE;
+		}
+	}
 
 	@Autowired
 	private EquipmentMybatisDao equipmentDao;
@@ -61,7 +72,7 @@ public class EquipmentManager {
 			//如果新增的话,需要设置剩余巡检次数
 			entity.setRemainNum(entity.getCheckFreq());
 			entity.setLastRemainNum(entity.getCheckFreq());
-			QrcodeUtil.generateQRCodeImage(ROOT_URL + entity.getEno(), ROOT_PATH + QRCODE_PATH + entity.getEno() + QRCODE_TYPE);
+			QrcodeUtil.generateQRCodeImage(ROOT_URL + entity.getEno(), getQrcodePath(entity.getEno()));
 			equipmentDao.saveEquipment(entity);
 		}
 		return id;
@@ -104,7 +115,7 @@ public class EquipmentManager {
 		}
 		for (Map<String, Object> data : dataList) {
 			Equipment equipment = generateEquipment(data);
-			QrcodeUtil.generateQRCodeImage(ROOT_URL + equipment.getEno(), ROOT_PATH + QRCODE_PATH + equipment.getEno() + QRCODE_TYPE);
+			QrcodeUtil.generateQRCodeImage(ROOT_URL + equipment.getEno(), getQrcodePath(equipment.getEno()));
 			equipmentDao.saveEquipment(equipment);
 		}
 		return "";
@@ -167,5 +178,26 @@ public class EquipmentManager {
 	public List<Equipment> getRemainEquipments() {
 		return equipmentDao.getRemainEquipments();
 	}
-	
+
+	public boolean generateQrcodefile(List<String> idList, String fileName) {
+		List<String> enoList = equipmentDao.getEquipmentEnoList(idList);
+		if (CollectionUtils.isEmpty(enoList) || StringUtils.isBlank(fileName)) {
+			logger.error("二维码生成失败，参数有误：enoList[{}] qrcodePath[{}]", new Object[] {enoList, fileName});
+			return false;
+		}
+		String qrcodePath = getQrcodePath(fileName);
+		List<File> qrcodeFileList = new ArrayList<>(enoList.size());
+		for (String eno : enoList) {
+			if (StringUtils.isNotBlank(eno)) {
+				String filePath = getQrcodePath(eno);
+				File file = new File(filePath);
+				if (!file.exists()) {
+					QrcodeUtil.generateQRCodeImage(ROOT_URL + eno, filePath);
+				}
+				qrcodeFileList.add(file);
+			}
+		}
+		QrcodeUtil.mergeQRCode(qrcodeFileList, qrcodePath);
+		return true;
+	}
 }

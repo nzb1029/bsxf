@@ -45,18 +45,17 @@ public class QrcodeUtil {
         }
     }
 
-    public static boolean mergeQRCode(List<String> filePathList, String outFilePath) {
-        if (CollectionUtils.isEmpty(filePathList) || StringUtils.isBlank(outFilePath)) {
-            logger.error("生成二维码失败，参数有误；二维码文件路径 [{}] 文件输出路径 [{}]", new Object[] {filePathList, outFilePath});
+    public static boolean mergeQRCode(List<File> fileList, String outFilePath) {
+        if (CollectionUtils.isEmpty(fileList) || StringUtils.isBlank(outFilePath)) {
+            logger.error("生成二维码失败，参数有误；二维码文件个数 [{}] 文件输出路径 [{}]", new Object[] {fileList.size(), outFilePath});
             return false;
         }
         try {
-            int totalHeight = filePathList.size() * QRCODE_HEIGHT;
+            int totalHeight = fileList.size() * QRCODE_HEIGHT;
             int totalWidth = QRCODE_WIDTH;
             BufferedImage imgNew = new BufferedImage(totalWidth, totalHeight, BufferedImage.TYPE_INT_RGB);
-            for (int i = 0; i < filePathList.size(); i++) {
-                String filePath = filePathList.get(i);
-                File file = new File(filePath);
+            for (int i = 0; i < fileList.size(); i++) {
+                File file = fileList.get(i);
                 BufferedImage img = ImageIO.read(file);
                 int[] imgArray = new int[QRCODE_WIDTH * QRCODE_HEIGHT];
                 img.getRGB(0, 0, QRCODE_WIDTH, QRCODE_HEIGHT, imgArray, 0, QRCODE_WIDTH);

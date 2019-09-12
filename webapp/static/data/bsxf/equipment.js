@@ -157,3 +157,29 @@ function viewDetail(id){
 		    //  button:[{name:"打印",callback:function(){ this.iframe.contentWindow.printpreview();return false;}}]
 	      }); 
 }
+
+function downloadQrcode() {
+    var ids = jQGridSupport.getSelectRowIds(ggridId);
+    if(ids.length>0){
+        $.ajax({
+            type: "POST",
+            url:ctx+"/equipment/generateQrcodefile",
+			  data: JSON.stringify(ids),
+			  contentType:'application/json;charset=utf-8',
+            success:function(d){
+            	if (d == "") {
+            		alert("下载失败，请重试")
+				} else {
+            		window.location.href = ctx + "/equipment/downloadQrcodefile/" + d;
+            		alert("下载二维码...");
+            	}
+            	jQGridSupport.reloadGrid(ggridId);
+            }
+        }).fail(function(d) {
+            alert( d.responseText);
+        });
+    }
+    else {
+        alert("请至少选择一条记录!");
+    }
+}

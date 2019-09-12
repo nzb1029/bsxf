@@ -2,7 +2,7 @@ package org.bsxf.common.repository.bsxf;
 
 import java.util.List;
 
-import org.bsxf.common.entity.akl.Block;
+import org.apache.ibatis.annotations.Param;
 import org.bsxf.common.entity.bsxf.Equipment;
 import org.bsxf.utils.Page;
 import org.springframework.stereotype.Component;
@@ -14,6 +14,8 @@ import org.springframework.stereotype.Component;
 public interface EquipmentMybatisDao {
 	
 	public Equipment getEquipment(String id);
+
+	public List<String> getEquipmentEnoList(@Param("idList") List<String> idList);
 
 	public List<Equipment> getAllEquipment();
 	
