@@ -175,7 +175,9 @@ public class EquipmentController {
 		// TODO 巡检员密码判断
 		System.out.println(equipment.getId());
 		System.out.println(equipment.getUserPassword());
-		if (equipmentManager.updateRunStatus(equipment)) {
+		if (false) {
+			model.addAttribute("submitResult", "密码不正确，请重试");
+		} else if (equipmentManager.updateRunStatus(equipment)) {
 			model.addAttribute("submitResult", "提交成功");
 		} else {
 			model.addAttribute("submitResult", "提交失败，请重试");
