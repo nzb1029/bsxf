@@ -35,4 +35,6 @@ public interface EquipmentMybatisDao {
 
 	public List<Equipment> getUserEquipment(String userId);
 
+	int updateRunStatus(Equipment equipment);
+
 }

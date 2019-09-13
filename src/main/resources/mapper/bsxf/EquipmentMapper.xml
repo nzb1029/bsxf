@@ -212,5 +212,10 @@
      	 open="(" separator="," close=")">
        		 #{item}
   	 </foreach> 
-	</delete>	
+	</delete>
+	<update id="updateRunStatus" parameterType="Equipment">
+		update bsxf_equipment set
+			runStatus = #{runStatus}
+		 where id=#{id}
+	</update>
 </mapper>

@@ -162,5 +162,25 @@ public class EquipmentController {
 			}
 		}
 	}
-	
+
+	@RequestMapping(value = "resultForm/{id}")
+	public String resultForm(@PathVariable("id")String id, Model model) {
+		Equipment equipment = equipmentManager.getEquipment(id);
+		model.addAttribute("equipment", equipment);
+		return "bsxf/resultForm";
+	}
+
+	@RequestMapping(value = "submitResult" , method = RequestMethod.POST)
+	public String submitResult(@Valid @ModelAttribute("equipment") Equipment equipment, Model model) {
+		// TODO 巡检员密码判断
+		System.out.println(equipment.getId());
+		System.out.println(equipment.getUserPassword());
+		if (equipmentManager.updateRunStatus(equipment)) {
+			model.addAttribute("submitResult", "提交成功");
+		} else {
+			model.addAttribute("submitResult", "提交失败，请重试");
+		}
+		return "bsxf/submitResult";
+
+	}
 }

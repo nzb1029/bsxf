@@ -31,11 +31,11 @@ public class EquipmentManager {
 	private static Logger logger = LoggerFactory.getLogger(EquipmentManager.class);
 
 	private static final String defaultSheetName = "equipment_list";
-	private static final String ROOT_PATH = "D:/xiaofang";
+	private static final String ROOT_PATH = "D:/xiaofang";// TODO 更改为文件根路径，用于存储： 1. 批量导入使用的excel文件；2. 生成的二维码文件
 	private static final String EXCEL_PATH = "/excel/";
 	private static final String QRCODE_PATH = "/qrcode/";
 	private static final String QRCODE_TYPE = ".png";
-	private static final String ROOT_URL = "https://www.baidu.com/s?wd=";
+	private static final String ROOT_URL = "http://pjkbalance.mynatapp.cc/equipment/resultForm/"; // TODO http://pjkbalance.mynatapp.cc 更新为正式的域名
 	public static String getQrcodePath(String fileName) {
 		return ROOT_PATH + QRCODE_PATH + getQrcodeFileName(fileName);
 	}
@@ -180,24 +180,27 @@ public class EquipmentManager {
 	}
 
 	public boolean generateQrcodefile(List<String> idList, String fileName) {
-		List<String> enoList = equipmentDao.getEquipmentEnoList(idList);
-		if (CollectionUtils.isEmpty(enoList) || StringUtils.isBlank(fileName)) {
-			logger.error("二维码生成失败，参数有误：enoList[{}] qrcodePath[{}]", new Object[] {enoList, fileName});
+		if (CollectionUtils.isEmpty(idList) || StringUtils.isBlank(fileName)) {
+			logger.error("二维码生成失败，参数有误：enoList[{}] qrcodePath[{}]", new Object[] {idList, fileName});
 			return false;
 		}
 		String qrcodePath = getQrcodePath(fileName);
-		List<File> qrcodeFileList = new ArrayList<>(enoList.size());
-		for (String eno : enoList) {
-			if (StringUtils.isNotBlank(eno)) {
-				String filePath = getQrcodePath(eno);
+		List<File> qrcodeFileList = new ArrayList<>(idList.size());
+		for (String id : idList) {
+			if (StringUtils.isNotBlank(id)) {
+				String filePath = getQrcodePath(id);
 				File file = new File(filePath);
 				if (!file.exists()) {
-					QrcodeUtil.generateQRCodeImage(ROOT_URL + eno, filePath);
+					QrcodeUtil.generateQRCodeImage(ROOT_URL + id, filePath);
 				}
 				qrcodeFileList.add(file);
 			}
 		}
 		QrcodeUtil.mergeQRCode(qrcodeFileList, qrcodePath);
 		return true;
+	}
+
+	public boolean updateRunStatus(Equipment equipment) {
+		return equipmentDao.updateRunStatus(equipment) > 0;
 	}
 }

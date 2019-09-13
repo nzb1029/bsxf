@@ -48,6 +48,8 @@ public class Equipment extends IdEntity {
 	private String pointx;
 	@Description(description = "纬度")
 	private String pointy;
+	@Description(description = "巡检员密码，检查设备时使用")
+	private String userPassword;
 	
 	public String getRunStatusDes() {
 		return runStatusDes;
@@ -187,5 +189,10 @@ public class Equipment extends IdEntity {
 	public void setCheckUser(User checkUser) {
 		this.checkUser = checkUser;
 	}
-	
+	public String getUserPassword() {
+		return userPassword;
+	}
+	public void setUserPassword(String userPassword) {
+		this.userPassword = userPassword;
+	}
 }
