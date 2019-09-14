@@ -33,7 +33,7 @@
 		<property name="successUrl" value="/" />
 		<property name="filterChainDefinitions">
 			<value>
-			   
+				/history/resultForm/*     = anon
 			    /smsStep/receiveDeliver = anon 
 				/jcaptcha.jpg  =anon
 				/account/user/getMsg   =anon
