@@ -7,6 +7,7 @@ import org.bsxf.common.repository.bsxf.EquipmentMybatisDao;
 import org.bsxf.common.service.SystemManager;
 import org.bsxf.security.ShiroDbRealm.ShiroUser;
 import org.bsxf.utils.ExcelUtil;
+import org.bsxf.utils.PropertiesUtils;
 import org.bsxf.utils.QrcodeUtil;
 import org.bsxf.utils.Page;
 import org.bsxf.web.LtSecurityUtils;
@@ -31,14 +32,14 @@ import java.util.Map;
 public class EquipmentManager {
 	private static Logger logger = LoggerFactory.getLogger(EquipmentManager.class);
 
-	private static final String defaultSheetName = "equipment_list";
-	private static final String ROOT_PATH = "D:/xiaofang";// TODO 更改为文件根路径，用于存储： 1. 批量导入使用的excel文件；2. 生成的二维码文件
-	private static final String EXCEL_PATH = "/excel/";
-	private static final String QRCODE_PATH = "/qrcode/";
-	private static final String QRCODE_TYPE = ".png";
-	private static final String ROOT_URL = "http://pjkbalance.mynatapp.cc/history/resultForm/"; // TODO http://pjkbalance.mynatapp.cc 更新为正式的域名
+    private static final String defaultSheetName = PropertiesUtils.get("default_sheet_name");
+	private static final String ROOT_PATH = PropertiesUtils.get("dir_path");
+	private static final String EXCEL_PATH = PropertiesUtils.get("excel_path");
+	private static final String QRCODE_PATH = PropertiesUtils.get("qrcode_path");
+	private static final String QRCODE_TYPE = PropertiesUtils.get("qrcode_type");
+	private static final String ROOT_URL = PropertiesUtils.get("qrcode_url");
 	public static String getQrcodePath(String fileName) {
-		return ROOT_PATH + QRCODE_PATH + getQrcodeFileName(fileName);
+		return ROOT_PATH + File.separator + QRCODE_PATH + File.separator + getQrcodeFileName(fileName);
 	}
 	public static String getQrcodeFileName(String fileName) {
 		if (fileName.indexOf(QRCODE_TYPE) > 0) {
@@ -103,7 +104,7 @@ public class EquipmentManager {
 
 	@Transactional
 	public String importEquipmentList(MultipartFile file) {
-		File newFile = new File(ROOT_PATH + EXCEL_PATH + System.currentTimeMillis() + "_" + file.getOriginalFilename());
+		File newFile = new File(ROOT_PATH + File.separator + EXCEL_PATH + File.separator + System.currentTimeMillis() + "_" + file.getOriginalFilename());
 		try {
 			file.transferTo(newFile);
 		} catch (IOException e) {
