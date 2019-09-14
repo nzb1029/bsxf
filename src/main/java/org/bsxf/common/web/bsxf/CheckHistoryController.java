@@ -96,6 +96,7 @@ public class CheckHistoryController {
 			return "bsxf/submitResult";
 		}
 		model.addAttribute("equipment", equipment);
+		model.addAttribute("checkHistoryId", Identities.uuid2());
 		return "bsxf/resultForm";
 	}
 

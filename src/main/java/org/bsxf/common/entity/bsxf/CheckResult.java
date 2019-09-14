@@ -6,6 +6,8 @@ import org.bsxf.utils.Description;
 public class CheckResult {
     @Description(description = "设备ID")
     private String equipmentId;
+    @Description(description = "巡检记录ID")
+    private String checkHistoryId;
     @Description(description = "状态：1-正常工作；2-运行异常")
     private String runStatus;
     @Description(description = "巡检员密码")
@@ -21,6 +23,14 @@ public class CheckResult {
 
     public void setEquipmentId(String equipmentId) {
         this.equipmentId = equipmentId;
+    }
+
+    public String getCheckHistoryId() {
+        return checkHistoryId;
+    }
+
+    public void setCheckHistoryId(String checkHistoryId) {
+        this.checkHistoryId = checkHistoryId;
     }
 
     public String getRunStatus() {

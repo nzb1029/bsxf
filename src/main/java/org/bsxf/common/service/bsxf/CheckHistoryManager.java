@@ -74,7 +74,7 @@ public class CheckHistoryManager {
 	public void checkResult(CheckResult checkResult) {
 		Equipment equipment = equipmentDao.getEquipment(checkResult.getEquipmentId());
 		CheckHistory checkHistory = new CheckHistory();
-		checkHistory.setId(Identities.uuid2());
+		checkHistory.setId(checkResult.getCheckHistoryId());
 		checkHistory.setEquipment(equipment);
 		checkHistory.setComments(checkResult.getComments());
 		checkHistory.setStatus(equipment.getStatus());

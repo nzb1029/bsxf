@@ -29,6 +29,7 @@
 <body>
     <form:form id="resultForm" modelAttribute="checkResult" action="${ctx}/history/submitResult" method="post" class="form-horizontal">
         <input type="hidden" name="equipmentId" id="equipmentId" value="${equipment.id}"/>
+        <input type="hidden" name="checkHistoryId" id="checkHistoryId" value="${checkHistoryId}"/>
         <input type="hidden" name="checkUser.id" id="checkUserId" value="${equipment.checkUser.id}"/>
         <table class="inputView" style="width: 100%;">
             <tr>
