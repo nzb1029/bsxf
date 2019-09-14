@@ -7,18 +7,18 @@ import javax.validation.Valid;
 
 import org.apache.commons.lang3.StringUtils;
 import org.bsxf.common.entity.bsxf.CheckHistory;
+import org.bsxf.common.entity.bsxf.CheckResult;
+import org.bsxf.common.entity.bsxf.Equipment;
 import org.bsxf.common.service.bsxf.CheckHistoryManager;
 import org.bsxf.common.service.bsxf.EquipmentManager;
+import org.bsxf.security.ShiroDbRealm;
 import org.bsxf.utils.JqGirds;
 import org.bsxf.utils.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springside.utils.Collections3;
 import org.springside.utils.Identities;
@@ -30,6 +30,8 @@ public class CheckHistoryController {
 	private CheckHistoryManager historyManager ;
 	@Autowired
 	private EquipmentManager equipmentManager ;
+	@Autowired
+    private ShiroDbRealm shiroDbRealm;
 
 	@RequestMapping(value = { "list" })
 	public String list(Model model) {
@@ -83,5 +85,37 @@ public class CheckHistoryController {
 		historyManager.deleteCheckHistory(Collections3.extractToList(id.split(",")));
 		return "true" ;
 	}
-	
+
+	@RequestMapping(value = "resultForm/{id}")
+	public String resultForm(@PathVariable("id")String id, Model model) {
+		Equipment equipment = equipmentManager.getEquipment(id);
+		if (equipment == null
+				|| equipment.getCheckUser() == null
+				|| StringUtils.isBlank(equipment.getCheckUser().getId())) {
+			model.addAttribute("submitResult", "未设置巡检员，请先设置");
+			return "bsxf/submitResult";
+		}
+		model.addAttribute("equipment", equipment);
+		return "bsxf/resultForm";
+	}
+
+	@RequestMapping(value = "submitResult" , method = RequestMethod.POST)
+	public String submitResult(@Valid @ModelAttribute("checkResult") CheckResult checkResult, Model model) {
+        // 验证密码
+        if (shiroDbRealm.checkPassword(checkResult.getCheckUserPassword(), checkResult.getCheckUser().getId())) {
+            // 更新设备信息
+            String submitResult = equipmentManager.checkResult(checkResult);
+            if (StringUtils.isBlank(submitResult)) {
+                // 保存巡检历史
+                historyManager.checkResult(checkResult);
+                model.addAttribute("submitResult", "提价巡检结果提交成功");
+            } else {
+                model.addAttribute("submitResult", submitResult);
+            }
+        } else {
+            model.addAttribute("submitResult", "巡检员密码有误，请重试");
+        }
+        return "bsxf/submitResult";
+
+    }
 }

@@ -1,6 +1,7 @@
 package org.bsxf.common.service.bsxf;
 
 import org.apache.commons.lang3.StringUtils;
+import org.bsxf.common.entity.bsxf.CheckResult;
 import org.bsxf.common.entity.bsxf.Equipment;
 import org.bsxf.common.repository.bsxf.EquipmentMybatisDao;
 import org.bsxf.common.service.SystemManager;
@@ -35,7 +36,7 @@ public class EquipmentManager {
 	private static final String EXCEL_PATH = "/excel/";
 	private static final String QRCODE_PATH = "/qrcode/";
 	private static final String QRCODE_TYPE = ".png";
-	private static final String ROOT_URL = "http://pjkbalance.mynatapp.cc/equipment/resultForm/"; // TODO http://pjkbalance.mynatapp.cc 更新为正式的域名
+	private static final String ROOT_URL = "http://pjkbalance.mynatapp.cc/history/resultForm/"; // TODO http://pjkbalance.mynatapp.cc 更新为正式的域名
 	public static String getQrcodePath(String fileName) {
 		return ROOT_PATH + QRCODE_PATH + getQrcodeFileName(fileName);
 	}
@@ -127,6 +128,8 @@ public class EquipmentManager {
 		Equipment equipment = new Equipment();
 		//set deafult value
 		equipment.setId(Identities.uuid2());
+		equipment.setEquipmentTypeId("1");
+		equipment.setSubTypeId("1");
 		equipment.setCreateTime(new Date());
 		equipment.setCreateUser(LtSecurityUtils.getLoginUser());
 		equipment.setCheckFreq(1);
@@ -138,9 +141,6 @@ public class EquipmentManager {
 				equipment.setEno(data.get(key).toString().trim());
 			}else if("设备类别".equals(key)){
 				equipment.setSubTypeName(data.get(key).toString().trim());
-				if ("4kg干粉".equals(data.get(key).toString().trim().toLowerCase())) {
-					equipment.setSubTypeId("1");
-				}
 			}else if("设备名称".equals(key)){
 				equipment.setName(data.get(key).toString().trim());
 			}else if("区域".equals(key)){
@@ -200,7 +200,17 @@ public class EquipmentManager {
 		return true;
 	}
 
-	public boolean updateRunStatus(Equipment equipment) {
-		return equipmentDao.updateRunStatus(equipment) > 0;
+	public String checkResult(CheckResult checkResult) {
+		Equipment equipment = equipmentDao.getEquipment(checkResult.getEquipmentId());
+		if (equipment == null) {
+			return "设备未在系统中维护，请确认";
+		}
+		equipment.setRunStatus(checkResult.getRunStatus());
+		int newRemainNum = equipment.getRemainNum() - 1;
+		equipment.setRemainNum(newRemainNum < 0 ? 0 : newRemainNum);
+		equipment.setLastUpdateTime(new Date());
+		equipment.setLastUpdateUser(checkResult.getCheckUser());
+		saveOrUpdate(equipment);
+		return "";
 	}
 }

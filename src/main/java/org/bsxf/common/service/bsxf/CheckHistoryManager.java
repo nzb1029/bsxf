@@ -4,19 +4,25 @@ import java.util.Date;
 import java.util.List;
 
 import org.bsxf.common.entity.bsxf.CheckHistory;
+import org.bsxf.common.entity.bsxf.CheckResult;
+import org.bsxf.common.entity.bsxf.Equipment;
 import org.bsxf.common.repository.bsxf.CheckHistoryMybatisDao;
+import org.bsxf.common.repository.bsxf.EquipmentMybatisDao;
 import org.bsxf.security.ShiroDbRealm.ShiroUser;
 import org.bsxf.utils.Page;
 import org.bsxf.web.LtSecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springside.utils.Identities;
 
 @Component
 @Transactional
 public class CheckHistoryManager {
 	@Autowired
 	private CheckHistoryMybatisDao checkHistoryDao;
+	@Autowired
+	private EquipmentMybatisDao equipmentDao;
 
 	@Transactional(readOnly = true)
 	public CheckHistory getCheckHistory(String id) {
@@ -63,5 +69,18 @@ public class CheckHistoryManager {
 		page.setTotalCount(count);
 		page.setResult(cmps);
 		return page;
+	}
+
+	public void checkResult(CheckResult checkResult) {
+		Equipment equipment = equipmentDao.getEquipment(checkResult.getEquipmentId());
+		CheckHistory checkHistory = new CheckHistory();
+		checkHistory.setId(Identities.uuid2());
+		checkHistory.setEquipment(equipment);
+		checkHistory.setComments(checkResult.getComments());
+		checkHistory.setStatus(equipment.getStatus());
+		checkHistory.setRunStatus(equipment.getRunStatus());
+		checkHistory.setCheckUser(checkResult.getCheckUser());
+		checkHistory.setCheckTime(new Date());
+		saveOrUpdate(checkHistory);
 	}
 }

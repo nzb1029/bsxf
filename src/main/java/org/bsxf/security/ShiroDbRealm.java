@@ -93,6 +93,15 @@ public class ShiroDbRealm extends AuthorizingRealm {
 			return true;
 		return false;
 	}*/
+
+	public boolean checkPassword(String password, String userId) {
+		User user = accountManager.getUser(userId);
+		if (StringUtils.isNotBlank(password)
+				&& user != null) {
+			return checkPasswdMd5(password, user);
+		}
+		return false;
+	}
 	
 	/**
 	 * md5加密方式

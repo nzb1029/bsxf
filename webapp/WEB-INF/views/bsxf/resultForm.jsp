@@ -7,18 +7,18 @@
     <script type="application/javascript">
         function submitResult() {
             var runStatus = $("input[name='runStatus']:checked").val();
-            var userPassword = $("#userPassword").val();
+            var checkUserPassword = $("#checkUserPassword").val();
             if (runStatus == undefined
                 || runStatus == 'undefined'
                 || runStatus == null
                 || runStatus == 'null'
                 || runStatus.length < 1) {
                 alert('请选择状态');
-            } else if (userPassword == undefined
-                || userPassword == 'undefined'
-                || userPassword == null
-                || userPassword == 'null'
-                || userPassword.length < 1) {
+            } else if (checkUserPassword == undefined
+                || checkUserPassword == 'undefined'
+                || checkUserPassword == null
+                || checkUserPassword == 'null'
+                || checkUserPassword.length < 1) {
                 alert('请输入你的密码');
             } else {
                 $("#resultForm").submit();
@@ -27,24 +27,25 @@
     </script>
 </head>
 <body>
-    <form:form id="resultForm" modelAttribute="equipment" action="${ctx}/equipment/submitResult" method="post" class="form-horizontal">
-        <input type="hidden" name="id" id="id" value="${equipment.id}"/>
+    <form:form id="resultForm" modelAttribute="checkResult" action="${ctx}/history/submitResult" method="post" class="form-horizontal">
+        <input type="hidden" name="equipmentId" id="equipmentId" value="${equipment.id}"/>
+        <input type="hidden" name="checkUser.id" id="checkUserId" value="${equipment.checkUser.id}"/>
         <table class="inputView" style="width: 100%;">
             <tr>
                 <td class="left">设备编号:</td>
-                <td class="right"><label size="120" >${equipment.eno}</label><input id="eno" name="eno" type="hidden" value="${equipment.eno}"/> </td>
+                <td class="right"><label size="120" >${equipment.eno}</label></td>
             </tr>
             <tr>
                 <td class="left">设备名称:</td>
-                <td class="right"><label size="120" >${equipment.name}</label><input id="name" name="name" type="hidden" value="${equipment.name}"/></td>
+                <td class="right"><label size="120" >${equipment.name}</label></td>
             </tr>
             <tr>
                 <td class="left">区域:</td>
-                <td class="right"><label size="120" >${equipment.area}</label><input id="area" name="area" type="hidden" value="${equipment.area}"/></td>
+                <td class="right"><label size="120" >${equipment.area}</label></td>
             </tr>
             <tr>
                 <td class="left">位置:</td>
-                <td class="right"><label size="120" >${equipment.location}</label><input id="location" name="location" type="hidden" value="${equipment.location}"/></td>
+                <td class="right"><label size="120" >${equipment.location}</label></td>
             </tr>
             <tr>
                 <td class="left">状态:</td>
@@ -54,8 +55,18 @@
                 </td>
             </tr>
             <tr>
+                <td class="left">描述:</td>
+                <td class="right">
+                    <textarea id="comments" name="comments" ></textarea>
+                </td>
+            </tr>
+            <tr>
+                <td class="left">巡检员:</td>
+                <td class="right"><label size="120" >${equipment.checkUser.name}</label></td>
+            </tr>
+            <tr>
                 <td class="left">巡检员密码:</td>
-                <td class="right"><input id="userPassword" name="userPassword" type="password" size="120" value="" class="required" /></td>
+                <td class="right"><input id="checkUserPassword" name="checkUserPassword" type="password" size="120" value="" class="required" /></td>
             </tr>
             <tr>
                 <td colspan="2" class="bottom">
