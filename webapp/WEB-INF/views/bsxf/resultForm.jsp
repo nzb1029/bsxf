@@ -5,9 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link href="${ctx}/static/bootstrap/3.3.7/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
     <link href="${ctx}/static/bootstrap-dialog/css/bootstrap-dialog.min.css" type="text/css" rel="stylesheet" />
+    <link href="${ctx}/static/bootstrap-fileinput/css/fileinput.min.css" type="text/css" rel="stylesheet" />
+
     <script src="${ctx}/static/jquery/1.9.1/jquery.min.js" type="text/javascript"></script>
     <script src="${ctx}/static/bootstrap/3.3.7/js/bootstrap.min.js" type="text/javascript"></script>
     <script src="${ctx}/static/bootstrap-dialog/js/bootstrap-dialog.min.js" type="text/javascript"></script>
+    <script src="${ctx}/static/bootstrap-fileinput/js/fileinput.min.js" type="text/javascript"></script>
+    <script src="${ctx}/static/bootstrap-fileinput/js/locales/zh.js" type="text/javascript"></script>
     <script type="application/javascript">
         function dialogWarning (msg) {
             BootstrapDialog.show({
@@ -24,6 +28,7 @@
                 }]
             });
         }
+
         function submitResult() {
             var runStatus = $("input[name='runStatus']:checked").val();
             var checkUserPassword = $("#checkUserPassword").val();
@@ -44,6 +49,27 @@
             }
         }
 
+        function importPictures() {
+            $("#importPic").fileinput("upload");
+        }
+
+        function initFileInput(uploadUrl) {
+            $("#importPic").fileinput({
+                language:'zh',
+                uploadUrl: uploadUrl,
+                enableResumableUpload: true,
+                maxFileCount: 2,
+                browseLabel: '选择附件',
+                dropZoneEnabled: false,
+                showUpload: false,
+                showClose: false,
+                allowedFileExtensions : ['jpg', 'png','gif', 'jpeg']
+            }).on("fileuploaded", function(e, data) {//文件上传成功的回调函数
+                console.log("上传成功");
+                var res = data.response;
+            });
+        }
+
         $(function(){
             var submitCheckResult = $('#submitCheckResult').val();
             $('#submitCheckResult').val('');
@@ -54,6 +80,9 @@
                 && submitCheckResult.length > 0) {
                 dialogWarning(submitCheckResult);
             }
+            var ctx = $('#ctx').val();
+            var businessId = $('#checkHistoryId').val();
+            initFileInput(ctx + '/upload.file?fileType=1&businessId=' + businessId);
         });
     </script>
 </head>
@@ -95,6 +124,7 @@
             <div class="panel-heading">巡检信息录入</div>
             <div class="panel-body">
                 <input type="hidden" name="submitCheckResult" id="submitCheckResult" value="${submitCheckResult}"/>
+                <input type="hidden" name="ctx" id="ctx" value="${ctx}"/>
                 <input type="hidden" name="equipmentId" id="equipmentId" value="${equipment.id}"/>
                 <input type="hidden" name="checkHistoryId" id="checkHistoryId" value="${checkHistoryId}"/>
                 <input type="hidden" name="checkUser.id" id="checkUserId" value="${equipment.checkUser.id}"/>
@@ -118,6 +148,12 @@
                     <input id="checkUserPassword" name="checkUserPassword" type="password" class="form-control" />
                 </div>
                 <div class="form-group">
+                    <div class="file-loading">
+                        <input id="importPic" name="importPic[]" type="file" multiple>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button id="importPicturesBtn" type="button" class="btn btn-primary btn-block" onclick="importPictures()">上传图片</button>
                     <button id="submitBtn" type="button" class="btn btn-primary btn-block" onclick="submitResult()">提交</button>
                 </div>
             </div>

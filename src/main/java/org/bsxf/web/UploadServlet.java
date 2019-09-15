@@ -3,8 +3,11 @@ package org.bsxf.web;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -19,9 +22,9 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.bsxf.common.entity.akl.Attachment;
-import org.bsxf.common.entity.akl.Block;
 import org.bsxf.common.service.akl.AttachmentManager;
 import org.bsxf.utils.PropertiesUtils;
+import org.json.simple.JSONObject;
 import org.springside.web.SpringContextHolder;
 
 /**
@@ -108,7 +111,18 @@ public class UploadServlet extends HttpServlet {
 				insertAttachment(fileType,name,this.getSubPath(businessId, fileType, field01),businessId,field01);
 			}
 		}
-		resp.getWriter().write(name);
+		PrintWriter out = resp.getWriter();
+		if ("1".equals(fileType)) {
+			// 巡检图片上传返回结果需要为json
+			Map<String, Object> map =  new HashMap<>();
+			map.put("status", true);
+			map.put("fileName", name);
+			out.write(JSONObject.toJSONString(map));
+		} else {
+			out.write(name);
+		}
+		out.flush();
+		out.close();
 	}
 
 	public void insertAttachment(String fileType, String fileName,String fullpath, String businessId,String field01) {
