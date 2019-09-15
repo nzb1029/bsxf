@@ -95,7 +95,7 @@ public class UploadServlet extends HttpServlet {
 					else
 						name = getFinalFileName(PropertiesUtils.getFileDir() + this.getSubPath(businessId, fileType, field01), name);
 				}
-				if("3".equals(fileType)){
+				if("1".equals(fileType) || "3".equals(fileType)){
 					File fileModule = new File(PropertiesUtils.getFileDir() + this.getSubPath(businessId, fileType, field01));
 					if (fileModule.exists()) {
 						File[] files = fileModule.listFiles();
