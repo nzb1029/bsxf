@@ -34,7 +34,8 @@
 		<property name="filterChainDefinitions">
 			<value>
 				/history/resultForm/*     = anon
-			    /smsStep/receiveDeliver = anon 
+				/history/submitResult   = anon
+			    /smsStep/receiveDeliver = anon
 				/jcaptcha.jpg  =anon
 				/account/user/getMsg   =anon
 				/login     = authc

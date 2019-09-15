@@ -92,11 +92,12 @@ public class CheckHistoryController {
 		if (equipment == null
 				|| equipment.getCheckUser() == null
 				|| StringUtils.isBlank(equipment.getCheckUser().getId())) {
-			model.addAttribute("submitResult", "未设置巡检员，请先设置");
+			model.addAttribute("submitCheckResult", "未设置巡检员，请先设置");
 			return "bsxf/submitResult";
 		}
 		model.addAttribute("equipment", equipment);
 		model.addAttribute("checkHistoryId", Identities.uuid2());
+		model.addAttribute("submitCheckResult", "");
 		return "bsxf/resultForm";
 	}
 
@@ -109,14 +110,18 @@ public class CheckHistoryController {
             if (StringUtils.isBlank(submitResult)) {
                 // 保存巡检历史
                 historyManager.checkResult(checkResult);
-                model.addAttribute("submitResult", "提价巡检结果提交成功");
+                model.addAttribute("submitCheckResult", "巡检完成，请关闭页面");
+                return "bsxf/submitResult";
             } else {
-                model.addAttribute("submitResult", submitResult);
+                model.addAttribute("submitCheckResult", submitResult);
             }
         } else {
-            model.addAttribute("submitResult", "巡检员密码有误，请重试");
+            model.addAttribute("submitCheckResult", "巡检员密码有误，请重试");
         }
-        return "bsxf/submitResult";
+		Equipment equipment = equipmentManager.getEquipment(checkResult.getEquipmentId());
+		model.addAttribute("equipment", equipment);
+		model.addAttribute("checkHistoryId", checkResult.getCheckHistoryId());
+		return "bsxf/resultForm";
 
     }
 }

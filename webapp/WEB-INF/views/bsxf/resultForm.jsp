@@ -1,10 +1,29 @@
-<%@ include file="/common/taglibs.jsp" %>
-<%@ include file="/WEB-INF/common/lhgdialog.jsp" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
     <title>巡检结果提交</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="${ctx}/static/bootstrap/3.3.7/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
+    <link href="${ctx}/static/bootstrap-dialog/css/bootstrap-dialog.min.css" type="text/css" rel="stylesheet" />
+    <script src="${ctx}/static/jquery/1.9.1/jquery.min.js" type="text/javascript"></script>
+    <script src="${ctx}/static/bootstrap/3.3.7/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="${ctx}/static/bootstrap-dialog/js/bootstrap-dialog.min.js" type="text/javascript"></script>
     <script type="application/javascript">
+        function dialogWarning (msg) {
+            BootstrapDialog.show({
+                closable: false,
+                type: BootstrapDialog.TYPE_WARNING,
+                title: "提示",
+                message: msg,
+                buttons: [{
+                    label: '确认',
+                    cssClass: 'btn-warning',
+                    action: function(dialogRef){
+                        dialogRef.close();
+                    }
+                }]
+            });
+        }
         function submitResult() {
             var runStatus = $("input[name='runStatus']:checked").val();
             var checkUserPassword = $("#checkUserPassword").val();
@@ -13,68 +32,96 @@
                 || runStatus == null
                 || runStatus == 'null'
                 || runStatus.length < 1) {
-                alert('请选择状态');
+                dialogWarning("必须选择设备状态");
             } else if (checkUserPassword == undefined
                 || checkUserPassword == 'undefined'
                 || checkUserPassword == null
                 || checkUserPassword == 'null'
                 || checkUserPassword.length < 1) {
-                alert('请输入你的密码');
+                dialogWarning("请输入巡检员密码");
             } else {
                 $("#resultForm").submit();
             }
         }
+
+        $(function(){
+            var submitCheckResult = $('#submitCheckResult').val();
+            $('#submitCheckResult').val('');
+            if (submitCheckResult != undefined
+                && submitCheckResult != 'undefined'
+                && submitCheckResult != null
+                && submitCheckResult != 'null'
+                && submitCheckResult.length > 0) {
+                dialogWarning(submitCheckResult);
+            }
+        });
     </script>
 </head>
-<body>
-    <form:form id="resultForm" modelAttribute="checkResult" action="${ctx}/history/submitResult" method="post" class="form-horizontal">
-        <input type="hidden" name="equipmentId" id="equipmentId" value="${equipment.id}"/>
-        <input type="hidden" name="checkHistoryId" id="checkHistoryId" value="${checkHistoryId}"/>
-        <input type="hidden" name="checkUser.id" id="checkUserId" value="${equipment.checkUser.id}"/>
-        <table class="inputView" style="width: 100%;">
-            <tr>
-                <td class="left">设备编号:</td>
-                <td class="right"><label size="120" >${equipment.eno}</label></td>
-            </tr>
-            <tr>
-                <td class="left">设备名称:</td>
-                <td class="right"><label size="120" >${equipment.name}</label></td>
-            </tr>
-            <tr>
-                <td class="left">区域:</td>
-                <td class="right"><label size="120" >${equipment.area}</label></td>
-            </tr>
-            <tr>
-                <td class="left">位置:</td>
-                <td class="right"><label size="120" >${equipment.location}</label></td>
-            </tr>
-            <tr>
-                <td class="left">状态:</td>
-                <td class="right">
-                    <label><input name="runStatus" type="radio" value="1" />正常 </label>
-                    <label><input name="runStatus" type="radio" value="2" />异常 </label>
-                </td>
-            </tr>
-            <tr>
-                <td class="left">描述:</td>
-                <td class="right">
-                    <textarea id="comments" name="comments" ></textarea>
-                </td>
-            </tr>
-            <tr>
-                <td class="left">巡检员:</td>
-                <td class="right"><label size="120" >${equipment.checkUser.name}</label></td>
-            </tr>
-            <tr>
-                <td class="left">巡检员密码:</td>
-                <td class="right"><input id="checkUserPassword" name="checkUserPassword" type="password" size="120" value="" class="required" /></td>
-            </tr>
-            <tr>
-                <td colspan="2" class="bottom">
-                    <input class="btn btn-primary" id="submitBtn" value="提交" onclick="submitResult()"/>
-                </td>
-            </tr>
-        </table>
-    </form:form>
+<body class="panel-body">
+    <form id="resultForm" modelAttribute="checkResult" action="${ctx}/history/submitResult" method="post">
+        <div class="panel panel-default">
+            <!-- Default panel contents -->
+            <div class="panel-heading">设备信息</div>
+            <div class="panel-body">
+                <table class="table">
+                    <caption>${equipment.eno}-${equipment.name}</caption>
+                    <tbody>
+                    <tr>
+                        <td>设备编号</td>
+                        <td>${equipment.eno}</td>
+                    </tr>
+                    <tr>
+                        <td>设备名称</td>
+                        <td>${equipment.name}</td>
+                    </tr>
+                    <tr>
+                        <td>区域</td>
+                        <td>${equipment.area}</td>
+                    </tr>
+                    <tr>
+                        <td>位置</td>
+                        <td>${equipment.location}</td>
+                    </tr>
+                    <tr>
+                        <td>巡检员</td>
+                        <td>${equipment.checkUser.name}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <!-- Default panel contents -->
+            <div class="panel-heading">巡检信息录入</div>
+            <div class="panel-body">
+                <input type="hidden" name="submitCheckResult" id="submitCheckResult" value="${submitCheckResult}"/>
+                <input type="hidden" name="equipmentId" id="equipmentId" value="${equipment.id}"/>
+                <input type="hidden" name="checkHistoryId" id="checkHistoryId" value="${checkHistoryId}"/>
+                <input type="hidden" name="checkUser.id" id="checkUserId" value="${equipment.checkUser.id}"/>
+                <div class="form-group">
+                    <label>设备状态</label>
+                    <div>
+                        <label class="radio-inline">
+                            <input name="runStatus" type="radio" value="1" />正常
+                        </label>
+                        <label class="radio-inline">
+                            <input name="runStatus" type="radio" value="2" />异常
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="comments">描述</label>
+                    <textarea id="comments" name="comments" class="form-control" style="resize:none;" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="checkUserPassword">密码</label>
+                    <input id="checkUserPassword" name="checkUserPassword" type="password" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <button id="submitBtn" type="button" class="btn btn-primary btn-block" onclick="submitResult()">提交</button>
+                </div>
+            </div>
+        </div>
+    </form>
 </body>
 </html>
