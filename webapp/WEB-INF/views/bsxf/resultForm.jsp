@@ -63,6 +63,7 @@
                 dropZoneEnabled: false,
                 showUpload: false,
                 showClose: false,
+                maxFileSize: 2048,
                 allowedFileExtensions : ['jpg', 'png','gif', 'jpeg']
             }).on("fileuploaded", function(e, data) {//文件上传成功的回调函数
                 console.log("上传成功");

@@ -115,8 +115,7 @@ public class UploadServlet extends HttpServlet {
 		if ("1".equals(fileType)) {
 			// 巡检图片上传返回结果需要为json
 			Map<String, Object> map =  new HashMap<>();
-			map.put("status", true);
-			map.put("fileName", name);
+			map.put("chunkIndex", "0");
 			out.write(JSONObject.toJSONString(map));
 		} else {
 			out.write(name);
