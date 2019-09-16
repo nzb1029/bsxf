@@ -7,6 +7,12 @@
     font-size:20px;
 }
 
+#title {
+    font-size:45px;
+    color:#1E90FF;
+    font-weight: bold;
+}
+
 #des_1 {
     font-size:28px;
     color:#00ec8f;

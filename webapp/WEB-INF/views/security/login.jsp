@@ -50,14 +50,14 @@
 <body>
 	<div class="values" id="header">
     <div class="container">
-      <div class="row">
+      <%--<div class="row">
         <div id="logo_row" class="lLogo"/>
-      </div>
+      </div>--%>
       <div class="row top_20">
         <div class="one-half_1 column category">
-          <div id="des_1" class="top_122">中国农业智能测试系统</div>
-          <div id="des_2" class="top_40">智慧农业 创新未来</div>
-          <div id="des_3" class="top_66">爱科农公司自主研发的大数据驱动型智能农业技术系统(FIS)可以为农业种植者提供及时、高效、精准的管理决策，以解决中国农业当前存在的问题。</div>
+          <div id="title" class="top_40">消防管理系统</div>
+          <%--<div id="des_2" class="top_40">智慧农业 创新未来</div>--%>
+          <%--<div id="des_3" class="top_66">爱科农公司自主研发的大数据驱动型智能农业技术系统(FIS)可以为农业种植者提供及时、高效、精准的管理决策，以解决中国农业当前存在的问题。</div>--%>
         </div>
 		<form:form id="loginForm"  cssStyle="text-align: center;"  action="${ctx}/login" method="post">
         <div class="one-half_2 column category">
@@ -119,42 +119,7 @@
     </div>
   </div>
 
-    <div class="container">
-      <div class="row top_100" id="part2_des1">
-        全球顶级农业企业
-      </div>
-      <div class="row" id="part2_des21"></div>
-      <div class="row" class="top_70">
-        <div class="one-third column">
-            <div class="part2_des21_title">
-              农业大数据
-            </div>
-            <div class="part2_des21_text top_20">
-              该地块过去10年卫星图像，过去20年气候情况、地形变化、耕作制度等情况分析，并根据拟播种品种特性，计算出该地潜在产量和产量制约因素
-            </div>
-        </div>
-        <div class="one-third column">
-          <div class="part2_des21_title">
-            智能农业决策
-          </div>
-          <div class="part2_des21_text top_20">
-            该地块过去10年卫星图像，过去20年气候情况、地形变化、耕作制度等情况分析，并根据拟播种品种特性，计算出该地潜在产量和产量制约因素
-          </div>
-        </div>
-        <div class="one-third column">
-          <div class="part2_des21_title">
-            实时科学管理
-          </div>
-          <div class="part2_des21_text top_20">
-            该地块过去10年卫星图像，过去20年气候情况、地形变化、耕作制度等情况分析，并根据拟播种品种特性，计算出该地潜在产量和产量制约因素
-          </div>
-        </div>
-        </div>
-    </div>
-  <div id="map">
-
-  </div>
-  <div id="contact_us">
+  <%--<div id="contact_us">
     <div class="row top_40" id="contact_us_text">
       联系我们
     </div>
@@ -178,7 +143,7 @@
     <div class="container" id="footer">
       北京爱农科技有限公司
     </div>
-  </div>
+  </div>--%>
 </div>
 
 </body>
