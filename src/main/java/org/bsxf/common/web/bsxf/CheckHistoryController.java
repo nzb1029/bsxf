@@ -95,8 +95,11 @@ public class CheckHistoryController {
 			model.addAttribute("submitCheckResult", "未设置巡检员，请先设置");
 			return "bsxf/submitResult";
 		}
+		model.addAttribute("oldRunStatus", "");
+		model.addAttribute("oldComments", "");
+		model.addAttribute("oldCheckUserPassword", "");
+        model.addAttribute("checkHistoryId", Identities.uuid2());
 		model.addAttribute("equipment", equipment);
-		model.addAttribute("checkHistoryId", Identities.uuid2());
 		model.addAttribute("submitCheckResult", "");
 		return "bsxf/resultForm";
 	}
@@ -118,9 +121,12 @@ public class CheckHistoryController {
         } else {
             model.addAttribute("submitCheckResult", "巡检员密码有误，请重试");
         }
+		model.addAttribute("oldRunStatus", checkResult.getRunStatus());
+		model.addAttribute("oldComments", checkResult.getComments());
+		model.addAttribute("oldCheckUserPassword", checkResult.getCheckUserPassword());
+		model.addAttribute("checkHistoryId", checkResult.getCheckHistoryId());
 		Equipment equipment = equipmentManager.getEquipment(checkResult.getEquipmentId());
 		model.addAttribute("equipment", equipment);
-		model.addAttribute("checkHistoryId", checkResult.getCheckHistoryId());
 		return "bsxf/resultForm";
 
     }

@@ -30,7 +30,7 @@
         }
 
         function submitResult() {
-            var runStatus = $("input[name='runStatus']:checked").val();
+            var runStatus = $("input:radio[name='runStatus']:checked").val();
             var checkUserPassword = $("#checkUserPassword").val();
             if (runStatus == undefined
                 || runStatus == 'undefined'
@@ -72,6 +72,7 @@
         }
 
         $(function(){
+            // 提交结果判断
             var submitCheckResult = $('#submitCheckResult').val();
             $('#submitCheckResult').val('');
             if (submitCheckResult != undefined
@@ -81,6 +82,14 @@
                 && submitCheckResult.length > 0) {
                 dialogWarning(submitCheckResult);
             }
+            // 默认值
+            var oldRunStatus = $('#oldRunStatus').val();
+            $('input:radio[name="runStatus"][value="'+oldRunStatus+'"]').prop('checked', true);
+            var oldComments = $('#oldComments').val();
+            $('#comments').val(oldComments);
+            var oldCheckUserPassword = $('#oldCheckUserPassword').val();
+            $('#checkUserPassword').val(oldCheckUserPassword);
+            // 上传图片初始化
             var ctx = $('#ctx').val();
             var businessId = $('#checkHistoryId').val();
             initFileInput(ctx + '/upload.file?fileType=1&businessId=' + businessId);
@@ -124,8 +133,11 @@
             <!-- Default panel contents -->
             <div class="panel-heading">巡检信息录入</div>
             <div class="panel-body">
-                <input type="hidden" name="submitCheckResult" id="submitCheckResult" value="${submitCheckResult}"/>
                 <input type="hidden" name="ctx" id="ctx" value="${ctx}"/>
+                <input type="hidden" name="submitCheckResult" id="submitCheckResult" value="${submitCheckResult}"/>
+                <input type="hidden" name="oldRunStatus" id="oldRunStatus" value="${oldRunStatus}"/>
+                <input type="hidden" name="oldComments" id="oldComments" value="${oldComments}"/>
+                <input type="hidden" name="oldCheckUserPassword" id="oldCheckUserPassword" value="${oldCheckUserPassword}"/>
                 <input type="hidden" name="equipmentId" id="equipmentId" value="${equipment.id}"/>
                 <input type="hidden" name="checkHistoryId" id="checkHistoryId" value="${checkHistoryId}"/>
                 <input type="hidden" name="checkUser.id" id="checkUserId" value="${equipment.checkUser.id}"/>
