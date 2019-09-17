@@ -44,7 +44,15 @@
    -moz-background-size:100% 100%;
    background-size:100% 100%;
 }
-.form{background: rgba(255,255,255,0.2);width:400px;margin:120px auto;}
+.form{
+	background: rgba(255,255,255,0.7);
+	width:400px;
+	margin:220px 0px auto auto;
+}
+	.form-title {
+		color: #595959;
+		font-weight: bold;
+	}
 </style>
 
 	<script src="${ctx}/static/bootstrap/2.1.0/js/bootstrap.min.js" type="text/javascript"></script> 
