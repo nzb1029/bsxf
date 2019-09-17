@@ -63,11 +63,8 @@
 			and  s.eno=#{eno}
 	</select>
 
-	<select id="getEquipmentEnoList" parameterType="String" resultType="String">
-		select distinct eno from bsxf_equipment where id in
-		<foreach collection="idList" item="id" separator="," open="(" close=")">
-			#{id, jdbcType=VARCHAR}
-		</foreach>
+	<select id="getAllEquipmentId" parameterType="String" resultType="String">
+		select distinct id from bsxf_equipment
 	</select>
 	
     <select id="getUserEquipment" parameterType="string" resultType="Equipment">

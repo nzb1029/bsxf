@@ -47,7 +47,6 @@
             <input type="file" onchange="javascript:importEquipmentList(this)" id="importEquipmentList" style="display: none;"/>
             <button class="button_right" type="button" onclick="javascript:batchDel()" id="remove">批量删除</button>
             <button class="button_right" type="button" onclick="javascript:update()" id="add" >添加设备</button>
-            <button class="button_right" type="button" onclick="javascript:downloadQrcode()" id="download" >下载二维码</button>
         </div>
         <div id="table_center_table_wrapper">
             <table id="table_center_table"></table>

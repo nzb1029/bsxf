@@ -1,15 +1,17 @@
 package org.bsxf.common.service.bsxf;
 
 import org.apache.commons.lang3.StringUtils;
+import org.bsxf.common.entity.akl.Attachment;
 import org.bsxf.common.entity.bsxf.CheckResult;
 import org.bsxf.common.entity.bsxf.Equipment;
 import org.bsxf.common.repository.bsxf.EquipmentMybatisDao;
 import org.bsxf.common.service.SystemManager;
+import org.bsxf.common.service.akl.AttachmentManager;
 import org.bsxf.security.ShiroDbRealm.ShiroUser;
 import org.bsxf.utils.ExcelUtil;
+import org.bsxf.utils.Page;
 import org.bsxf.utils.PropertiesUtils;
 import org.bsxf.utils.QrcodeUtil;
-import org.bsxf.utils.Page;
 import org.bsxf.web.LtSecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +35,7 @@ public class EquipmentManager {
 	private static Logger logger = LoggerFactory.getLogger(EquipmentManager.class);
 
     private static final String defaultSheetName = PropertiesUtils.get("default_sheet_name");
-	private static final String ROOT_PATH = PropertiesUtils.get("dir_path");
+	private static final String ROOT_PATH = PropertiesUtils.getFileDir();
 	private static final String EXCEL_PATH = PropertiesUtils.get("excel_path");
 	private static final String QRCODE_PATH = PropertiesUtils.get("qrcode_path");
 	private static final String QRCODE_TYPE = PropertiesUtils.get("qrcode_type");
@@ -49,8 +51,11 @@ public class EquipmentManager {
 		}
 	}
 
+    @Autowired
+    private EquipmentMybatisDao equipmentDao;
+
 	@Autowired
-	private EquipmentMybatisDao equipmentDao;
+    private AttachmentManager attachmentManager;
 
 	@Transactional(readOnly = true)
 	public Equipment getEquipment(String id) {
@@ -72,8 +77,8 @@ public class EquipmentManager {
         //如果新增的话,需要设置剩余巡检次数
         equipment.setRemainNum(equipment.getCheckFreq());
         equipment.setLastRemainNum(0);
-        QrcodeUtil.generateQRCodeImage(ROOT_URL + equipment.getEno(), getQrcodePath(equipment.getEno()));
         equipmentDao.saveEquipment(equipment);
+        generateQrcodefile(equipment.getId(), equipment.getEno());
     }
 
 	@Transactional(rollbackFor = RuntimeException.class)
@@ -89,8 +94,8 @@ public class EquipmentManager {
 			//如果新增的话,需要设置剩余巡检次数
 			entity.setRemainNum(entity.getCheckFreq());
 			entity.setLastRemainNum(entity.getCheckFreq());
-			QrcodeUtil.generateQRCodeImage(ROOT_URL + entity.getEno(), getQrcodePath(entity.getEno()));
 			equipmentDao.saveEquipment(entity);
+			generateQrcodefile(entity.getId(), entity.getEno());
 		}
 		return id;
 
@@ -192,10 +197,17 @@ public class EquipmentManager {
 	}
 
 	public boolean generateQrcodefile(List<String> idList, String fileName) {
-		if (CollectionUtils.isEmpty(idList) || StringUtils.isBlank(fileName)) {
-			logger.error("二维码生成失败，参数有误：enoList[{}] qrcodePath[{}]", new Object[] {idList, fileName});
-			return false;
-		}
+        if (StringUtils.isBlank(fileName)) {
+            logger.error("二维码生成失败，参数有误：enoList[{}] qrcodePath[{}]", new Object[] {idList, fileName});
+            return false;
+        }
+	    if (CollectionUtils.isEmpty(idList)) {
+	        idList = equipmentDao.getAllEquipmentId();
+        }
+        if (CollectionUtils.isEmpty(idList)) {
+            logger.error("二维码生成失败，参数有误：enoList[{}] qrcodePath[{}]", new Object[] {idList, fileName});
+            return false;
+        }
 		String qrcodePath = getQrcodePath(fileName);
 		List<File> qrcodeFileList = new ArrayList<>(idList.size());
 		for (String id : idList) {
@@ -203,7 +215,8 @@ public class EquipmentManager {
 				String filePath = getQrcodePath(id);
 				File file = new File(filePath);
 				if (!file.exists()) {
-					QrcodeUtil.generateQRCodeImage(ROOT_URL + id, filePath);
+					Equipment equipment = equipmentDao.getEquipment(id);
+					generateQrcodefile(id, equipment.getEno());
 				}
 				qrcodeFileList.add(file);
 			}
@@ -211,6 +224,11 @@ public class EquipmentManager {
 		QrcodeUtil.mergeQRCode(qrcodeFileList, qrcodePath);
 		return true;
 	}
+
+	private void generateQrcodefile(String id, String eno) {
+        QrcodeUtil.generateQRCodeImage(ROOT_URL + id, eno, getQrcodePath(id));
+        saveQrcodeAttachment(id, getQrcodePath(id), getQrcodeFileName(id));
+    }
 
 	@Transactional(rollbackFor = RuntimeException.class)
 	public String checkResult(CheckResult checkResult) {
@@ -226,4 +244,14 @@ public class EquipmentManager {
 		saveOrUpdate(equipment);
 		return "";
 	}
+
+    private void saveQrcodeAttachment(String businessId, String fullpath, String fileName) {
+        Attachment attach = new Attachment();
+        attach.setFilename(fileName);
+        attach.setFileType("2");
+        attach.setFilepath(fullpath.substring(ROOT_PATH.length()));
+        attach.setField01("");
+        attach.setBusinessId(businessId);
+        attachmentManager.saveOrUpdate(attach);
+    }
 }
