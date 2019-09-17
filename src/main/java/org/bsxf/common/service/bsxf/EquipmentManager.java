@@ -209,7 +209,7 @@ public class EquipmentManager {
             return false;
         }
 		String qrcodePath = getQrcodePath(fileName);
-		List<File> qrcodeFileList = new ArrayList<>(idList.size());
+		List<File> qrcodeFileList = new ArrayList<File>(idList.size());
 		for (String id : idList) {
 			if (StringUtils.isNotBlank(id)) {
 				String filePath = getQrcodePath(id);
