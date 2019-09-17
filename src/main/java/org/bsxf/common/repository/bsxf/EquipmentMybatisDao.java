@@ -17,7 +17,7 @@ public interface EquipmentMybatisDao {
 
 	public List<Equipment> getEquipmentByEno(String eno);
 
-	public List<String> getEquipmentEnoList(@Param("idList") List<String> idList);
+	public List<String> getAllEquipmentId();
 
 	public List<Equipment> getAllEquipment();
 	

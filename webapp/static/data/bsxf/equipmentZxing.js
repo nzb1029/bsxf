@@ -39,42 +39,41 @@ $(function(){
 });
 
 function batchPrint(){
-	
 	var ids = jQGridSupport.getSelectRowIds(ggridId);
 	var idary=[];
 	for(var i=0;i<ids.length;i++){
-			idary.push(ids[i]);
+	    idary.push(ids[i]);
 	}
 	if(idary.length>0){
-		toPrint(idary.join(","));
+		toPrint(idary);
 	}
 	else {
 		alert("请至少选择一条记录!");
 	}
 }
 
-function toPrint(id){
-	$.ajax({
-		url:ctx+"/equipment/print/"+id,
-		dataType: 'json',
-		success:function(d){
-			 	jQGridSupport.reloadGrid(ggridId);
-			 	alert("打印成功");
-			}
-	}).fail(function(d) { 
-	alert( d.responseText); });
+function toPrint(ids){
+    $.ajax({
+        type: "POST",
+        url:ctx+"/equipment/generateQrcodefile",
+        data: JSON.stringify(ids),
+        contentType:'application/json;charset=utf-8',
+        success:function(d){
+            if (d == "") {
+                alert("下载失败，请重试")
+            } else {
+                window.location.href = ctx + "/equipment/downloadQrcodefile/" + d;
+                alert("下载二维码...");
+            }
+            jQGridSupport.reloadGrid(ggridId);
+        }
+    }).fail(function(d) {
+        alert( d.responseText);
+    });
 }
  
 function printAll(){
-	$.ajax({
-		url:ctx+"/equipment/printAll",
-		dataType: 'json',
-		success:function(d){
-			 	jQGridSupport.reloadGrid(ggridId);
-			 	alert("打印成功");
-			}
-	}).fail(function(d) { 
-	alert( d.responseText); });
+    toPrint([]);
 }
 
 function batchDel(){

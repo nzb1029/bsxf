@@ -192,10 +192,17 @@ public class EquipmentManager {
 	}
 
 	public boolean generateQrcodefile(List<String> idList, String fileName) {
-		if (CollectionUtils.isEmpty(idList) || StringUtils.isBlank(fileName)) {
-			logger.error("二维码生成失败，参数有误：enoList[{}] qrcodePath[{}]", new Object[] {idList, fileName});
-			return false;
-		}
+        if (StringUtils.isBlank(fileName)) {
+            logger.error("二维码生成失败，参数有误：enoList[{}] qrcodePath[{}]", new Object[] {idList, fileName});
+            return false;
+        }
+	    if (CollectionUtils.isEmpty(idList)) {
+	        idList = equipmentDao.getAllEquipmentId();
+        }
+        if (CollectionUtils.isEmpty(idList)) {
+            logger.error("二维码生成失败，参数有误：enoList[{}] qrcodePath[{}]", new Object[] {idList, fileName});
+            return false;
+        }
 		String qrcodePath = getQrcodePath(fileName);
 		List<File> qrcodeFileList = new ArrayList<>(idList.size());
 		for (String id : idList) {
