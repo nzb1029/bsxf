@@ -7,6 +7,8 @@
 <%@include file="/common/taglibs.jsp" %>
 <html>
 <head>
+	<link href="${ctx}/static/bootstrap/3.3.7/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
+	<script src="${ctx}/static/bootstrap/3.3.7/js/bootstrap.min.js" type="text/javascript"></script>
 	<link rel="shortcut icon" href="${ctx }/static/ico/favicon.ico" type="image/x-icon" />
 	<title><%=EhcacheManager.getStationConfig().getName()%></title>
 	<link href="${ctx}/static/login.css" type="text/css" rel="stylesheet" />
@@ -42,108 +44,93 @@
    -moz-background-size:100% 100%;
    background-size:100% 100%;
 }
+.form{
+	background: rgba(255,255,255,0.7);
+	width:400px;
+	margin:220px 0px auto auto;
+}
+	.form-title {
+		color: #595959;
+		font-weight: bold;
+	}
 </style>
 
 	<script src="${ctx}/static/bootstrap/2.1.0/js/bootstrap.min.js" type="text/javascript"></script> 
 </head>
 
 <body>
-	<div class="values" id="header">
+<div class="values" id="header">
     <div class="container">
-      <%--<div class="row">
-        <div id="logo_row" class="lLogo"/>
-      </div>--%>
-      <div class="row top_20">
-        <div class="one-half_1 column category">
-          <div id="title" class="top_40">消防管理系统</div>
-          <%--<div id="des_2" class="top_40">智慧农业 创新未来</div>--%>
-          <%--<div id="des_3" class="top_66">爱科农公司自主研发的大数据驱动型智能农业技术系统(FIS)可以为农业种植者提供及时、高效、精准的管理决策，以解决中国农业当前存在的问题。</div>--%>
+        <div class="form row">
+            <form:form id="loginForm"  cssStyle="text-align: center;"  action="${ctx}/login" method="post">
+                <div class="form-horizontal col-md-offset-3" id="login_form">
+                    <h3 class="form-title">账户登录</h3>
+                    <div class="col-md-9">
+                        <div class="form-group">
+                            <i class="fa fa-user fa-lg"></i>
+                            <input class="form-control required" type="text" placeholder="用户名" id="username" name="username" autofocus="autofocus"/>
+                        </div>
+                        <div class="form-group">
+                            <i class="fa fa-lock fa-lg"></i>
+                            <input class="form-control required" type="password" placeholder="密码" id="password" name="password"/>
+                        </div>
+                        <div class="form-group">
+                            <input class="form-control" type="text" placeholder="输入右图字符" id="valid" name="j_captcha" style="width:60%"/>
+                            <a href="javascript:void(0);"><img src="${ctx }/jcaptcha.jpg" id="validImg" onclick="reImg();" title="看不清请点击更换" style="width:30%"></a>
+                            <%--
+                            <input class="form-control" type="text" placeholder="输入右图字符" id="valid" name="j_captcha"/>
+                            <a href="javascript:void(0);"><img src="${ctx }/jcaptcha.jpg" id="validImg" onclick="reImg();" title="看不清请点击更换"></a>
+                         --%>
+                        </div>
+                        <div class="form-group">
+                            <%
+                                String error = (String) request.getAttribute(FormAuthenticationFilter.DEFAULT_ERROR_KEY_ATTRIBUTE_NAME);
+                                if(error != null){
+                                    if(error.contains("DisabledAccountException")){
+                                        request.getSession().removeAttribute(SessionKey.LOGIN_FAILED_COUNT);
+                            %>
+                            <span class="error">用户已被屏蔽,请登录其他用户.</span>
+                            <%
+                            }else if(error.contains("UnknownAccountException")){
+                                //System.out.println(error);
+                            %>
+                            <span class="error">用户不存在</span>
+                            <%
+                            }else if(error.contains("IncorrectCredentialsException")){
+                                //System.out.println(error);
+                            %>
+                            <span class="error">密码错误</span>
+                            <%
+                            }else if(error.contains("NoActivationException")){
+                                //System.out.println(error);
+                            %>
+                            <span class="error">当前用户尚未激活</span>
+                            <%
+                            }else {
+                            %>
+                            <span class="error">登录失败，请重试。</span>
+                            <%
+                                }
+                            }else {
+                                // String ems=request.getParameter("error");
+                                String errorII=(String)request.getSession().getAttribute("error");
+                                if(errorII!=null && errorII.equals("2")){
+                            %>
+                            <span class="error">验证码出错。</span>
+                            <%
+                                    }
+                                    request.getSession().removeAttribute("error");
+                                }
+                            %>
+                        </div>
+                        <div class="form-group col-md-offset-9">
+                            <button type="submit form-control" class="btn btn-success center-block" name="submit">登录</button>
+                        </div>
+                    </div>
+                </div>
+            </form:form>
         </div>
-		<form:form id="loginForm"  cssStyle="text-align: center;"  action="${ctx}/login" method="post">
-        <div class="one-half_2 column category">
-            <div id="login">
-              <div id="login_title">
-                账户登录
-              </div>
-              <input id="username" name="username" type="text" placeholder="用户名"/><br/>
-              <input id="password" name="password" type="password" placeholder="密码"/><br/>
-              <input id="valid" name="j_captcha" width="50px" type="text" placeholder="输入右图字符"/>
-              <a href="javascript:void(0);"><img src="${ctx }/jcaptcha.jpg" id="validImg" onclick="reImg();" title="看不清请点击更换"></a><br/>
-              <button type="submit">登录</button>
-              
-              <div class="top_20">
-	<%
-	String error = (String) request.getAttribute(FormAuthenticationFilter.DEFAULT_ERROR_KEY_ATTRIBUTE_NAME);
-	if(error != null){ 
-		if(error.contains("DisabledAccountException")){
-			request.getSession().removeAttribute(SessionKey.LOGIN_FAILED_COUNT);
-	%>		
-		<span class="error">用户已被屏蔽,请登录其他用户.</span>
-	<% 
-		}else if(error.contains("UnknownAccountException")){
-					//System.out.println(error);
-	%>
-		<span class="error">用户不存在</span>
-	<%
-		}else if(error.contains("IncorrectCredentialsException")){
-			//System.out.println(error);
-	%>
-		<span class="error">密码错误</span>
-	<%
-		}else if(error.contains("NoActivationException")){
-			//System.out.println(error);
-	%>
-		<span class="error">当前用户尚未激活</span>
-	<%
-	 	}else { 
-	%>
-		<span class="error">登录失败，请重试。</span>
-	<%
-		}
-	}else {
-		// String ems=request.getParameter("error"); 
-		String errorII=(String)request.getSession().getAttribute("error"); 
-		if(errorII!=null && errorII.equals("2")){
-	%>
-			<span class="error">验证码出错。</span>
-	<% 
-		} 
-		request.getSession().removeAttribute("error");
-	}
-	%>
-	</div>
-            </div>
-        </div>
-        </form:form>
-      </div>
     </div>
-  </div>
-
-  <%--<div id="contact_us">
-    <div class="row top_40" id="contact_us_text">
-      联系我们
-    </div>
-    <div class="row top_40">
-      <div class="one-half column">
-        <div id="wechat">
-        </div>
-      </div>
-      <div class="one-half column" id="wechat_text">
-        <div id="wechat_text_1">
-          微信扫一扫
-        </div>
-        <div id="wechat_text_2">
-          +86 188 1106 8098
-        </div>
-        <div id="wechat_text_3">
-          icanculture@sina.com
-        </div>
-      </div>
-    </div>
-    <div class="container" id="footer">
-      北京爱农科技有限公司
-    </div>
-  </div>--%>
 </div>
 
 </body>

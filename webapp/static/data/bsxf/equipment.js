@@ -89,9 +89,13 @@ function importEquipmentList(obj) {
         //回调
         xhr.onreadystatechange = function () {
             if (xhr.readyState==4 && xhr.status==200){
-                console.log(xhr.responseText);
                 $(obj).val('');
-                afterSave();
+                var result = xhr.responseText;
+                if (result == 'true') {
+                	afterSave();
+                } else {
+                	alert(result);
+                }
             }
         }
         //获取上传的进度

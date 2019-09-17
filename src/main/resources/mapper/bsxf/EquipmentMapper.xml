@@ -58,6 +58,11 @@
 		  and  s.id=#{id}
 	</select>
 
+	<select id="getEquipmentByEno" parameterType="string" resultType="Equipment">
+		<include refid="equipmentSql"/>
+			and  s.eno=#{eno}
+	</select>
+
 	<select id="getEquipmentEnoList" parameterType="String" resultType="String">
 		select distinct eno from bsxf_equipment where id in
 		<foreach collection="idList" item="id" separator="," open="(" close=")">

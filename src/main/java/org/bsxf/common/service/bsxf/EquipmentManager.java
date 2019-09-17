@@ -62,6 +62,21 @@ public class EquipmentManager {
 		return equipmentDao.getAllEquipment();
 	}
 
+	private void save(Equipment equipment) {
+        List<Equipment> equipmentList = equipmentDao.getEquipmentByEno(equipment.getEno());
+        if (!CollectionUtils.isEmpty(equipmentList)) {
+            throw new RuntimeException("消防器编码(" + equipment.getEno() + ")已存在，请确认");
+        }
+        equipment.setCreateTime(new Date());
+        equipment.setCreateUser(LtSecurityUtils.getLoginUser());
+        //如果新增的话,需要设置剩余巡检次数
+        equipment.setRemainNum(equipment.getCheckFreq());
+        equipment.setLastRemainNum(0);
+        QrcodeUtil.generateQRCodeImage(ROOT_URL + equipment.getEno(), getQrcodePath(equipment.getEno()));
+        equipmentDao.saveEquipment(equipment);
+    }
+
+	@Transactional(rollbackFor = RuntimeException.class)
 	public String saveOrUpdate(Equipment entity) {
         //Equipment 比较特殊，进页面时就生成了主键，所以这里要改一下。
 		String id = "";
@@ -102,25 +117,23 @@ public class EquipmentManager {
 		return page;
 	}
 
-	@Transactional
-	public String importEquipmentList(MultipartFile file) {
+	@Transactional(rollbackFor = RuntimeException.class)
+	public void importEquipmentList(MultipartFile file) {
 		File newFile = new File(ROOT_PATH + File.separator + EXCEL_PATH + File.separator + System.currentTimeMillis() + "_" + file.getOriginalFilename());
 		try {
 			file.transferTo(newFile);
 		} catch (IOException e) {
 			logger.error("模板文件转换失败，报错：", e);
-			return "文件转换失败，请确认";
+			throw new RuntimeException("文件转换失败，请确认");
 		}
 		List<Map<String, Object>> dataList = ExcelUtil.getData(newFile, defaultSheetName);
 		if (CollectionUtils.isEmpty(dataList)) {
-			return "文件无数据，请确认";
+		    throw new RuntimeException("文件无数据，请确认");
 		}
 		for (Map<String, Object> data : dataList) {
 			Equipment equipment = generateEquipment(data);
-			QrcodeUtil.generateQRCodeImage(ROOT_URL + equipment.getEno(), getQrcodePath(equipment.getEno()));
-			equipmentDao.saveEquipment(equipment);
+			save(equipment);
 		}
-		return "";
 	}
 
 	private SystemManager systemManager = new SystemManager();
@@ -134,9 +147,7 @@ public class EquipmentManager {
 		equipment.setCreateTime(new Date());
 		equipment.setCreateUser(LtSecurityUtils.getLoginUser());
 		equipment.setCheckFreq(1);
-		equipment.setRemainNum(1);
-		equipment.setLastRemainNum(1);
-		
+
 		for (String key : data.keySet()) {
 			if("设备编号".equals(key)) {
 				equipment.setEno(data.get(key).toString().trim());
@@ -201,6 +212,7 @@ public class EquipmentManager {
 		return true;
 	}
 
+	@Transactional(rollbackFor = RuntimeException.class)
 	public String checkResult(CheckResult checkResult) {
 		Equipment equipment = equipmentDao.getEquipment(checkResult.getEquipmentId());
 		if (equipment == null) {
