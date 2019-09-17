@@ -96,8 +96,13 @@ public class EquipmentController {
 	@RequestMapping(value = "importEquipmentList", method = RequestMethod.POST)
     @ResponseBody
 	public String importEquipmentList(@RequestParam("file") MultipartFile file) {
-	    String msg = equipmentManager.importEquipmentList(file);
-		return StringUtils.isNotBlank(msg) ? msg : "true";
+	    String result = "true";
+		try {
+			equipmentManager.importEquipmentList(file);
+		} catch (RuntimeException e) {
+		    result = e.getMessage();
+		}
+		return result;
 	}
 	
 	@SuppressWarnings("unchecked")

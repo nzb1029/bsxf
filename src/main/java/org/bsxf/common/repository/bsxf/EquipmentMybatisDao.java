@@ -12,8 +12,10 @@ import org.springframework.stereotype.Component;
  * */
 @Component
 public interface EquipmentMybatisDao {
-	
+
 	public Equipment getEquipment(String id);
+
+	public List<Equipment> getEquipmentByEno(String eno);
 
 	public List<String> getEquipmentEnoList(@Param("idList") List<String> idList);
 
