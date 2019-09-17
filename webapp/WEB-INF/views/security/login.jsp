@@ -8,7 +8,6 @@
 <html>
 <head>
 	<link href="${ctx}/static/bootstrap/3.3.7/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
-	<script src="${ctx}/static/bootstrap/3.3.7/js/bootstrap.min.js" type="text/javascript"></script>
 	<link rel="shortcut icon" href="${ctx }/static/ico/favicon.ico" type="image/x-icon" />
 	<title><%=EhcacheManager.getStationConfig().getName()%></title>
 	<link href="${ctx}/static/login.css" type="text/css" rel="stylesheet" />
