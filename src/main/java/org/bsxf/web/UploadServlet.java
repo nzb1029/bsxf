@@ -114,7 +114,7 @@ public class UploadServlet extends HttpServlet {
 		PrintWriter out = resp.getWriter();
 		if ("1".equals(fileType)) {
 			// 巡检图片上传返回结果需要为json
-			Map<String, Object> map =  new HashMap<>();
+			Map<String, Object> map =  new HashMap<String, Object>();
 			map.put("chunkIndex", "0");
 			out.write(JSONObject.toJSONString(map));
 		} else {

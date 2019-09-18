@@ -38,8 +38,8 @@
 	<!-- Timer式 Trigger定义-->
 	<bean id="timerTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
 		<property name="jobDetail" ref="timerJobDetail" />
-		<!-- 每次执行间隔5分钟(300000), 改成一年执行一次，单位是毫秒 -->
-		<property name="repeatInterval" value="31536000000" />
+		<!-- 每次执行间隔5分钟(300000), 改成1小时执行一次，单位是毫秒 -->
+		<property name="repeatInterval" value="3600000" />
 	</bean>
 
 	<!-- JobDetail, 基于JobDetailBean实例化Job Class,可持久化到数据库实现集群 -->

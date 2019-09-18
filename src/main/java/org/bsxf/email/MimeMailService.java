@@ -121,7 +121,7 @@ public class MimeMailService {
 
 			String content = generateEquipmentContent(list,userName);
 			helper.setText(content, true);
-			emialSend.setMessage(content);
+			//emialSend.setMessage(content);
 			//File attachment = generateAttachment();
 			//helper.addAttachment("mailAttachment.txt", attachment);
 			mailSender.send(msg);
