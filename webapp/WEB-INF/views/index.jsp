@@ -21,7 +21,7 @@
 <body>
 <div id="adminheader">
     <div id="logo">
-        <div style="width:60px;height:30px;margin-left:14px;float:left;"><img
+        <div style="width:auto;height:33px;margin-left:14px;float:left;"><img
                src="${ctx }/static-content?contentPath=logo.png&tt=<%=new Date().getTime() %>"> </div>
     </div>
 

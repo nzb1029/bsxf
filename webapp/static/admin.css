@@ -441,7 +441,7 @@ background: url("/zh_CN/htmledition/images/newicon/mail1d47c7.png") no-repeat sc
 
 #adminheader {
     height:44px;
-    background-color:#062734;
+    background-color:#979797;
 }
 
 #logo {
@@ -463,7 +463,7 @@ background: url("/zh_CN/htmledition/images/newicon/mail1d47c7.png") no-repeat sc
 }
 
 #user_name {
-    color:#999999;
+    color: #FFF0F0;
     font-size:12px;
     float:right;
     padding-right:20px;
@@ -471,13 +471,13 @@ background: url("/zh_CN/htmledition/images/newicon/mail1d47c7.png") no-repeat sc
 
 #header_delimiter {
     float:right;
-    color:#999999;
+    color:#FFF0F0;
     font-size:12px;
 }
 
 #logout {
     margin-left:20px;
-    color:#00de89;
+    color:#1EAEDB;
     float:right;
     margin-right:24px;
     font-size:12px;
