@@ -122,9 +122,9 @@
 			<tr>
 				<td class="left"><span class="req">*</span>类别：</td>
 				<td class="right">
-					<select  name="subTypeId" id="subTypeId" value="1" class="required" <c:if test="${readOnly == true}"> disabled="disabled" </c:if> >
+					<select  name="subTypeId" id="subTypeId" class="required" <c:if test="${readOnly == true}"> disabled="disabled" </c:if> >
 				 			<c:forEach items="${dic['xf_category']}" var="item">
-	          		 				<option value="${item.val }">${item.name }</option>
+	          		 				<option value="${item.val }"<c:if test="${equipment.subTypeId == item.val}">selected="true"</c:if>>${item.name }</option>
 	           				</c:forEach>
 				 	</select>
 				 </td>
@@ -163,10 +163,10 @@
 			<tr>
 				<td class="left"><span class="req">*</span>巡检频率设置：</td>
 				<td class="right">
-					<select  name="checkFreq" id="checkFreq" value="1" class="required" <c:if test="${readOnly == true}"> disabled="disabled" </c:if>  >
+					<select  name="checkFreq" id="checkFreq" class="required" <c:if test="${readOnly == true}"> disabled="disabled" </c:if>  >
 					  <option>请选择</option>
 			 			<c:forEach items="${dic['xf_check_freq']}" var="item">
-          		 				<option value="${item.val }">${item.name }</option>
+          		 				<option value="${item.val }" <c:if test="${equipment.checkFreq == item.val}">selected="true"</c:if>>${item.name }</option>
            				</c:forEach>
 				 	</select>
 				 </td>
