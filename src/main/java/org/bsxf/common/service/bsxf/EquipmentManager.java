@@ -41,6 +41,10 @@ public class EquipmentManager {
 	private static final String QRCODE_TYPE = PropertiesUtils.get("qrcode_type");
 	private static final String ROOT_URL = PropertiesUtils.get("qrcode_url");
 	public static String getQrcodePath(String fileName) {
+		File fold = new File(ROOT_PATH + File.separator + QRCODE_PATH);
+		if (!fold.exists()) {
+			fold.mkdirs();
+		}
 		return ROOT_PATH + File.separator + QRCODE_PATH + File.separator + getQrcodeFileName(fileName);
 	}
 	public static String getQrcodeFileName(String fileName) {
@@ -124,6 +128,10 @@ public class EquipmentManager {
 
 	@Transactional(rollbackFor = RuntimeException.class)
 	public void importEquipmentList(MultipartFile file) {
+		File fold = new File(ROOT_PATH + File.separator + EXCEL_PATH);
+		if (!fold.exists()) {
+			fold.mkdirs();
+		}
 		File newFile = new File(ROOT_PATH + File.separator + EXCEL_PATH + File.separator + System.currentTimeMillis() + "_" + file.getOriginalFilename());
 		try {
 			file.transferTo(newFile);
