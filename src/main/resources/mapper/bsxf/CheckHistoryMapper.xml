@@ -64,6 +64,9 @@
 		<if test="filters.endDate!=null"> 
 			 and s.check_time &lt;=	 str_to_date(#{filters.endDate},'%Y-%m-%d %H:%i:%s')  
 		</if>
+        <if test="filters.runStatus!=null and filters.runStatus!=''">
+            and s.runStatus like '%' #{filters.runStatus} '%'
+        </if>
 		<if test="orderBy!=null">
 	      order by ${orderBy} ${order}
 	   </if>
@@ -89,6 +92,9 @@
 			<if test="filters.endDate!=null"> 
 				 and s.check_time &lt;=	 str_to_date(#{filters.endDate},'%Y-%m-%d %H:%i:%s')  
 			</if>
+            <if test="filters.runStatus!=null">
+                and s.runStatus like '%' #{filters.runStatus} '%'
+            </if>
 			<if test="orderBy!=null">
 		      order by ${orderBy} ${order}
 		   </if>

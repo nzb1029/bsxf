@@ -32,6 +32,14 @@
         <div id="table_center_search">
            <form class="form-search" action="#"  ">
              <span class="margin_right_10">灭火器编号：<input type="text" name="filter_eno"   class="input-medium"  value=""> </span>
+            <span class="margin_right_10">设备状态：
+                <select  name="filter_runStatus">
+                    <option value="">请选择</option>
+                    <c:forEach items="${dic['xf_status']}" var="item">
+                        <option value="${item.val }">${item.name }</option>
+                    </c:forEach>
+                </select>
+            </span>
              <span class="margin_right_30">巡检日期：
                <input type="text"  name="filter_startDate" onclick="new WdatePicker() "  dateFmt="yyyy-MM-dd"/>
 				  至
