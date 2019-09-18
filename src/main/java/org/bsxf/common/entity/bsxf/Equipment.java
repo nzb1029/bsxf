@@ -24,6 +24,8 @@ public class Equipment extends IdEntity {
 	private String area;
 	@Description(description = "位置")
 	private String location;
+	@Description(description = "数量")
+	private Integer amount;
 	@Description(description = "详细描述")
 	private String comments;
 	@Description(description = "有效状态（删除时更改）：enabled; disabled")
@@ -31,6 +33,8 @@ public class Equipment extends IdEntity {
 	@Description(description = "状态：1-正常工作；2-运行异常")
 	private String runStatus="1";
 	private String runStatusDes;
+	@Description(description = "生产日期")
+	private Date productionDate;
 	@Description(description = "有效起期")
 	private Date effDate;
 	@Description(description = "有效止期")
@@ -186,5 +190,21 @@ public class Equipment extends IdEntity {
 	}
 	public void setCheckUser(User checkUser) {
 		this.checkUser = checkUser;
+	}
+
+	public Integer getAmount() {
+		return amount;
+	}
+
+	public void setAmount(Integer amount) {
+		this.amount = amount;
+	}
+
+	public Date getProductionDate() {
+		return productionDate;
+	}
+
+	public void setProductionDate(Date productionDate) {
+		this.productionDate = productionDate;
 	}
 }
