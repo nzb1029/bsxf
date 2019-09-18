@@ -120,6 +120,10 @@
 				<td class="right"><input type="text" name="location" size="40" id="location" value="${equipment.location}" <c:if test="${readOnly == true}"> disabled="disabled" </c:if>  class="required"/></td>
 			</tr>
 			<tr>
+				<td class="left"><span class="req">*</span>数量：</td>
+				<td class="right"><input type="text" name="amount" size="40" id="amount" value="${equipment.amount}" <c:if test="${readOnly == true}"> disabled="disabled" </c:if> class="required"/></td>
+			</tr>
+			<tr>
 				<td class="left"><span class="req">*</span>类别：</td>
 				<td class="right">
 					<select  name="subTypeId" id="subTypeId" class="required" <c:if test="${readOnly == true}"> disabled="disabled" </c:if> >
@@ -128,6 +132,12 @@
 	           				</c:forEach>
 				 	</select>
 				 </td>
+			</tr>
+			<tr>
+				<td class="left">出厂日期：</td>
+				<td class="right">
+					<input type="text" id="productionDate" name="productionDate" onclick="new WdatePicker() "  <c:if test="${readOnly == true}"> disabled="disabled" </c:if>  value="<fmt:formatDate value="${equipment.productionDate }" pattern="yyyy-MM-dd"/>" />
+				</td>
 			</tr>
 			
 			<tr>

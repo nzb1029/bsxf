@@ -58,6 +58,10 @@
 				<td class="right"><input type="text" name="location" disabled="disabled" size="40" id="location" value="${checkHistory.equipment.location}" class="required"/></td>
 			</tr>
 			<tr>
+				<td class="left"><span class="req">*</span>数量：</td>
+				<td class="right"><input type="text" name="amount" disabled="disabled" size="40" id="amount" value="${checkHistory.equipment.amount}" class="required"/></td>
+			</tr>
+			<tr>
 				<td class="left"><span class="req">*</span>巡检人:</td>
 				<td class="right">
 				<input type="text" name="checkUser.name" disabled="disabled" size="40" id="userName" value="${checkHistory.checkUser.name}" />

@@ -14,6 +14,7 @@
 		e.eno as "equipment.eno",
 		e.area as "equipment.area",
 		e.location as "equipment.location",
+		e.amount as "equipment.amount",
 		s.status,
 		s.comments,
 		s.runStatus,
