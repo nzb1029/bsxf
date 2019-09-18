@@ -34,7 +34,7 @@
 		s.field02,
 		s.field03,
 		s.amount,
-		s.productDate,
+		s.productDate
 		from bsxf_equipment s 
 		    left join ss_user u on u.id = s.create_user_id
 		    left join ss_user uu on uu.id = s.check_user_id
