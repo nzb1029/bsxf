@@ -39,12 +39,15 @@
 						      });
 				  });
 	 	          
-				var fileType = '3';	
 				var businessId = $("#id").val();
 				var readflag = $("#readflag").val();
-				var frameUrl="${ctx }/upload/upload2.jsp?fileType="+fileType+"&businessId="+businessId+"&fileSizeLimit=100MB&uploadLimit=20&multi=true&iframeId=okFrame&adap=true&fileTypeExts=*.jpg;*.jpge;*.gif;*.png;*.pdf";
-				if(readflag == true){
-					 frameUrl="${ctx }/upload/upload2.jsp?fileType="+fileType+"&businessId="+businessId+"&fileSizeLimit=100MB&uploadLimit=20&multi=true&iframeId=okFrame&adap=true&fileTypeExts=*.jpg;*.jpge;*.gif;*.png;*.pdf&isview=true";
+				var frameUrl;
+				if(readflag == true || readflag == 'true'){
+				    // 二维码
+					 frameUrl="${ctx }/upload/upload2.jsp?fileType=2&businessId="+businessId+"&fileSizeLimit=100MB&uploadLimit=20&multi=true&iframeId=okFrame&adap=true&fileTypeExts=*.jpg;*.jpge;*.gif;*.png;*.pdf&isview=true";
+				} else {
+				    // 设备图片
+					var frameUrl="${ctx }/upload/upload2.jsp?fileType=3&businessId="+businessId+"&fileSizeLimit=100MB&uploadLimit=20&multi=true&iframeId=okFrame&adap=true&fileTypeExts=*.jpg;*.jpge;*.gif;*.png;*.pdf";
 				}
 				$("#okFrame").attr("src",frameUrl);		
 		});

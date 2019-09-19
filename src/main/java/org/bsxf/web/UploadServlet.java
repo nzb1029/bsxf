@@ -43,18 +43,8 @@ public class UploadServlet extends HttpServlet {
 		super.init(config);
 	}
 	
-	/**
-	 * 获取上传文件子路径
-	 */
 	private String getSubPath(String blockId, String fileType, String field01) {
-		String path = "";
-		if (StringUtils.isNotBlank(blockId))
-			path = path + File.separator + blockId;
-		if (StringUtils.isNotBlank(fileType))
-			path = path + File.separator + fileType;
-		if (StringUtils.isNotBlank(field01))
-			path = path + File.separator + field01;
-		return path;
+		return org.bsxf.utils.FileUtils.getSubPath(blockId, fileType, field01);
 	}
 
 	/**

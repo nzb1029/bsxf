@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.bsxf.common.entity.akl.Attachment;
 import org.bsxf.common.repository.akl.AttachmentMybatisDao;
+import org.bsxf.utils.FileUtils;
 import org.bsxf.utils.Page;
 import org.bsxf.utils.PropertiesUtils;
 import org.slf4j.Logger;
@@ -58,14 +59,7 @@ public class UploadController {
 	 * 获取上传文件子路径
 	 */
 	private String getSubPath(String blockId, String fileType, String field01) {
-		String path = "";
-		if (StringUtils.isNotBlank(blockId))
-			path = path + File.separator + blockId;
-		if (StringUtils.isNotBlank(fileType))
-			path = path + File.separator + fileType;
-		if (StringUtils.isNotBlank(field01))
-			path = path + File.separator + field01;
-		return path;
+		return FileUtils.getSubPath(blockId, fileType, field01);
 	}
 
 	@RequestMapping(value = { "getFileList" })

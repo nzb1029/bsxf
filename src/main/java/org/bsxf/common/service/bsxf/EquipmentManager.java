@@ -9,10 +9,7 @@ import org.bsxf.common.repository.bsxf.EquipmentMybatisDao;
 import org.bsxf.common.service.SystemManager;
 import org.bsxf.common.service.akl.AttachmentManager;
 import org.bsxf.security.ShiroDbRealm.ShiroUser;
-import org.bsxf.utils.ExcelUtil;
-import org.bsxf.utils.Page;
-import org.bsxf.utils.PropertiesUtils;
-import org.bsxf.utils.QrcodeUtil;
+import org.bsxf.utils.*;
 import org.bsxf.web.LtSecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,15 +35,15 @@ public class EquipmentManager {
     private static final String defaultSheetName = PropertiesUtils.get("default_sheet_name");
 	private static final String ROOT_PATH = PropertiesUtils.getFileDir();
 	private static final String EXCEL_PATH = PropertiesUtils.get("excel_path");
-	private static final String QRCODE_PATH = PropertiesUtils.get("qrcode_path");
 	private static final String QRCODE_TYPE = PropertiesUtils.get("qrcode_type");
 	private static final String ROOT_URL = PropertiesUtils.get("qrcode_url");
 	public static String getQrcodePath(String fileName) {
-		File fold = new File(ROOT_PATH + File.separator + QRCODE_PATH);
+		String subPath = FileUtils.getSubPath(fileName, "2", "");
+		File fold = new File(ROOT_PATH + File.separator + subPath);
 		if (!fold.exists()) {
 			fold.mkdirs();
 		}
-		return ROOT_PATH + File.separator + QRCODE_PATH + File.separator + getQrcodeFileName(fileName);
+		return ROOT_PATH + File.separator + subPath + File.separator + getQrcodeFileName(fileName);
 	}
 	public static String getQrcodeFileName(String fileName) {
 		if (fileName.indexOf(QRCODE_TYPE) > 0) {
@@ -246,7 +243,7 @@ public class EquipmentManager {
 
 	private void generateQrcodefile(String id, String eno) {
         QrcodeUtil.generateQRCodeImage(ROOT_URL + id, eno, getQrcodePath(id));
-        saveQrcodeAttachment(id, getQrcodePath(id), getQrcodeFileName(id));
+        saveQrcodeAttachment(id, FileUtils.getSubPath(id, "2", ""), getQrcodeFileName(id));
     }
 
 	@Transactional(rollbackFor = RuntimeException.class)
@@ -264,11 +261,11 @@ public class EquipmentManager {
 		return "";
 	}
 
-    private void saveQrcodeAttachment(String businessId, String fullpath, String fileName) {
+    private void saveQrcodeAttachment(String businessId, String fullPath, String fileName) {
         Attachment attach = new Attachment();
         attach.setFilename(fileName);
         attach.setFileType("2");
-        attach.setFilepath(fullpath.substring(ROOT_PATH.length()));
+        attach.setFilepath(fullPath);
         attach.setField01("");
         attach.setBusinessId(businessId);
         attachmentManager.saveOrUpdate(attach);

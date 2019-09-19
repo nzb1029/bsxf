@@ -1,5 +1,7 @@
 package org.bsxf.utils;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -466,4 +468,17 @@ public class FileUtils {
 		return null;
 	}
 
+	/**
+	 * 获取上传文件子路径
+	 */
+	public static String getSubPath(String blockId, String fileType, String field01) {
+		String path = "";
+		if (StringUtils.isNotBlank(blockId))
+			path = path + File.separator + blockId;
+		if (StringUtils.isNotBlank(fileType))
+			path = path + File.separator + fileType;
+		if (StringUtils.isNotBlank(field01))
+			path = path + File.separator + field01;
+		return path;
+	}
 }
