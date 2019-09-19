@@ -160,7 +160,7 @@
 		        </td>
 			</tr>
 			<tr>
-				<td class="left" width="100">设备图片：</td>
+				<td class="left" width="100"><c:if test="${readOnly == true}">二维码图片：</c:if><c:if test="${readOnly != true}">设备图片：</c:if></td>
 		        <td   class="right" colspan="2">
 	         	  <iframe id="okFrame" src="" style="width: 100%;height:200px;  " frameborder="0">
 	  			</iframe></td>
