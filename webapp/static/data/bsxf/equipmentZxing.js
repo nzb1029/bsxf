@@ -4,7 +4,7 @@ $(function(){
 	  jQuery("#table_center_table").jqGrid({
           url: ctx + '/equipment/jqgrid',
           datatype: "json",
-          colNames: ['编号', '区域', '位置', '数量', '类别', '出厂日期', '有效起期', '有效止期', '巡检负责人', '巡检频率', '状态'],
+          colNames: ['编号', '区域', '位置', '数量', '类别', '出厂日期','巡检负责人', '巡检频率', '状态'],
           colModel: [
               {name: 'eno', index: 'eno', editable: false},
               {name: 'area', index: 'area', editable: false},
@@ -14,20 +14,6 @@ $(function(){
               {
                   name: 'productionDate',
                   index: 'productionDate',
-                  editable: false,
-                  formatter: "date",
-                  formatoptions: {srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s'}
-              },
-              {
-                  name: 'effDate',
-                  index: 'effDate',
-                  editable: false,
-                  formatter: "date",
-                  formatoptions: {srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s'}
-              },
-              {
-                  name: 'expDate',
-                  index: 'expDate',
                   editable: false,
                   formatter: "date",
                   formatoptions: {srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s'}

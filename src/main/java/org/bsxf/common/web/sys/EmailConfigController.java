@@ -23,6 +23,7 @@ import org.bsxf.utils.ImportException;
 import org.bsxf.utils.ImportUtil;
 import org.bsxf.utils.JqGirds;
 import org.bsxf.utils.Page;
+import org.bsxf.utils.PropertiesUtils;
 import org.bsxf.web.LtSecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -117,7 +118,7 @@ public class EmailConfigController {
 	     if(StringUtils.isNotBlank(config.getId())){
 	    	 /*******************************test begin************************************/
 	    	 List<Equipment> list = equipmentManager.getAllEquipment();
-		     boolean e = EmailUtil.sendMineEmailByNow("【系统通知】尚未提交巡检提醒" ,list , config.getUsername(),"蒋老师");
+		     boolean e = EmailUtil.sendMineEmailByNow(PropertiesUtils.get("email_subject") ,list ,PropertiesUtils.get("email_to"),PropertiesUtils.get("email_userName"));
 	    	/****************************test begin********************************************/ 
 	    	 boolean f= EmailUtil.sendSimpleEmailByNow("test", "本邮件为测试邮件", config.getUsername());
 	    	if(f)

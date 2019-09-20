@@ -30,7 +30,7 @@
 </div>
     <div id="header_delimiter">|</div>
     <div id="user_name">
-       <%=LtSecurityUtils.getShiroUser().getName() %> 
+                         欢迎您， <%=LtSecurityUtils.getShiroUser().getName() %> 
     </div>
 </div>
    <%

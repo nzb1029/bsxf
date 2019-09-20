@@ -9,6 +9,7 @@ import org.bsxf.common.entity.sys.EmailConfig;
 import org.bsxf.common.service.bsxf.EquipmentManager;
 import org.bsxf.utils.EhcacheManager;
 import org.bsxf.utils.EmailUtil;
+import org.bsxf.utils.PropertiesUtils;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.springframework.scheduling.quartz.QuartzJobBean;
@@ -16,9 +17,9 @@ import org.springside.web.SpringContextHolder;
 
 public class XJEmailNoticeQuartz extends QuartzJobBean {
 
-	private static String subject = "【系统通知】尚未提交巡检提醒";
-	private static String userName = "蒋老师";
-	private static String to = "binnz_java@163.com";
+	private static String subject = PropertiesUtils.get("email_subject");
+	private static String userName = PropertiesUtils.get("email_userName");
+	private static String to =  PropertiesUtils.get("email_to");
 	@Override
 	protected void executeInternal(JobExecutionContext arg0) throws JobExecutionException {
 		

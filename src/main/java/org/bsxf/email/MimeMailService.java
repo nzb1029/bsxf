@@ -7,6 +7,7 @@ package org.bsxf.email;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -116,12 +117,14 @@ public class MimeMailService {
 			MimeMessageHelper helper = new MimeMessageHelper(msg, true, DEFAULT_ENCODING);
 
 			helper.setTo(to);
+			helper.setTo((String [])Arrays.asList(config.getUsername(),to).toArray());
 			helper.setFrom(config.getUsername());
 			helper.setSubject(subject);
 
 			String content = generateEquipmentContent(list,userName);
 			helper.setText(content, true);
-			//emialSend.setMessage(content);
+			emialSend.setMessage("详情见具体邮件");
+			emialSend.setToemail(Arrays.asList(config.getUsername(),to).toString());
 			//File attachment = generateAttachment();
 			//helper.addAttachment("mailAttachment.txt", attachment);
 			mailSender.send(msg);
