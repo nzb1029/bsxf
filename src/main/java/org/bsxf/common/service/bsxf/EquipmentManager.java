@@ -1,6 +1,8 @@
 package org.bsxf.common.service.bsxf;
 
 import org.apache.commons.lang3.StringUtils;
+import org.bsxf.common.dao.UserDao;
+import org.bsxf.common.entity.account.User;
 import org.bsxf.common.entity.akl.Attachment;
 import org.bsxf.common.entity.bsxf.CheckResult;
 import org.bsxf.common.entity.bsxf.Equipment;
@@ -61,6 +63,9 @@ public class EquipmentManager {
 
 	@Autowired
 	private SystemManager systemManager;
+
+	@Autowired
+	private UserDao userDao;
 
 	@Transactional(readOnly = true)
 	public Equipment getEquipment(String id) {
@@ -152,46 +157,53 @@ public class EquipmentManager {
 	}
 	
 	private Equipment generateEquipment(Map<String, Object> data, List<Dictionary> categoryList) {
-        Equipment equipment = new Equipment();
-        //set deafult value
-        equipment.setId(Identities.uuid2());
-        equipment.setEquipmentTypeId("1");
-        equipment.setName("灭火器");
-        equipment.setCreateTime(new Date());
-        equipment.setCreateUser(LtSecurityUtils.getLoginUser());
-        equipment.setCheckFreq(1);
+		Equipment equipment = new Equipment();
+		//set deafult value
+		equipment.setId(Identities.uuid2());
+		equipment.setEquipmentTypeId("1");
+		equipment.setName("灭火器");
+		equipment.setCreateTime(new Date());
+		equipment.setCreateUser(LtSecurityUtils.getLoginUser());
+		equipment.setCheckFreq(1);
 
-        for (String key : data.keySet()) {
-            if ("设备编号".equals(key)) {
-                equipment.setEno(data.get(key).toString().trim());
-            } else if ("设备类别".equals(key)) {
-                equipment.setSubTypeName(data.get(key).toString().trim());
-                for (Dictionary category : categoryList) {
-                    if (category.getName().equalsIgnoreCase(equipment.getSubTypeName())) {
-                        equipment.setSubTypeId(category.getVal());
-                        break;
-                    }
+		for (String key : data.keySet()) {
+			if ("设备编号".equals(key)) {
+				equipment.setEno(data.get(key).toString().trim());
+			} else if ("设备类别".equals(key)) {
+				equipment.setSubTypeName(data.get(key).toString().trim());
+				for (Dictionary category : categoryList) {
+					if (category.getName().equalsIgnoreCase(equipment.getSubTypeName())) {
+						equipment.setSubTypeId(category.getVal());
+						break;
+					}
+				}
+			} else if ("区域".equals(key)) {
+				equipment.setArea(data.get(key).toString().trim());
+			} else if ("位置".equals(key)) {
+				equipment.setLocation(data.get(key).toString().trim());
+			} else if ("有效起期".equals(key)) {
+				equipment.setEffDate((Date) data.get(key));
+			} else if ("有效止期".equals(key)) {
+				equipment.setExpDate((Date) data.get(key));
+			} else if ("出厂日期".equals(key)) {
+				equipment.setProductionDate((Date) data.get(key));
+			} else if ("备注".equals(key)) {
+				equipment.setComments(data.get(key).toString().trim());
+			} else if ("数量".equals(key)) {
+				equipment.setAmount(((Double) data.get(key)).intValue());
+			} else if ("巡检员姓名".equalsIgnoreCase(key)) {
+				String userName = data.get(key).toString().trim();
+				List<User> userList = userDao.getUserByName(userName);
+				if (CollectionUtils.isEmpty(userList) || userList.size() > 1) {
+				    throw new RuntimeException("巡检员(" + userName + ")设置有误，请确认");
                 }
-            } else if ("区域".equals(key)) {
-                equipment.setArea(data.get(key).toString().trim());
-            } else if ("位置".equals(key)) {
-                equipment.setLocation(data.get(key).toString().trim());
-            } else if ("有效起期".equals(key)) {
-                equipment.setEffDate((Date) data.get(key));
-            } else if ("有效止期".equals(key)) {
-                equipment.setExpDate((Date) data.get(key));
-            } else if ("出厂日期".equals(key)) {
-                equipment.setProductionDate((Date) data.get(key));
-            } else if ("备注".equals(key)) {
-                equipment.setComments(data.get(key).toString().trim());
-            } else if ("数量".equals(key)) {
-                equipment.setAmount(((Double) data.get(key)).intValue());
-            } else {
-                logger.error("{}-{} 无匹配字段", new Object[]{key, data.get(key)});
-            }
-        }
-        return equipment;
-    }
+				equipment.setCheckUser(userList.get(0));
+			} else {
+				logger.error("{}-{} 无匹配字段", new Object[]{key, data.get(key)});
+			}
+		}
+		return equipment;
+	}
 
 	/**
 	 * 每月剩余巡检次数,在下个月时会将这个字段复制到lastremainNum字段，这个字段重置
