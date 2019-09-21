@@ -125,10 +125,10 @@ public class EquipmentController {
 
 	@RequestMapping(value = "generateQrcodefile", method = RequestMethod.POST)
 	@ResponseBody
-	public String generateQrcodefile(@RequestBody List<String> idList) {
+	public String generateQrcodePDFFile(@RequestBody List<String> idList) {
 		try {
 			String fileName = System.currentTimeMillis() + "";
-			if (equipmentManager.generateQrcodefile(idList, fileName)) {
+			if (equipmentManager.generateQrcodePDFFile(idList, fileName)) {
 				return fileName;
 			} else {
 				return "";
@@ -143,8 +143,8 @@ public class EquipmentController {
 		// 读到流中
 		InputStream inStream = null;// 文件的存放路径
 		try {
-			inStream = new FileInputStream(equipmentManager.getQrcodePath(fileName));
-			String downloadFileName = URLEncoder.encode(equipmentManager.getQrcodeFileName("二维码"),"UTF-8");
+			inStream = new FileInputStream(equipmentManager.getQrcodePDFPath(fileName));
+			String downloadFileName = URLEncoder.encode(equipmentManager.getQrcodeFileName("二维码", equipmentManager.QRCODE_PDF_TYPE),"UTF-8");
 			// 设置输出的格式
 			response.reset();
 			response.setContentType("bin");

@@ -16,6 +16,9 @@ public class UserDao extends SqlSessionDaoSupport {
 	public User findUserByLoginName(String loginName) {
 		return getSqlSession().selectOne("Account.getUserByLoginName", loginName);
 	}
+	public List<User> getUserByName(String name) {
+		return getSqlSession().selectList("Account.getUserByName", name);
+	}
 	public User findUserByLoginNameOrEmailOrMobile(String loginName) {
 		return getSqlSession().selectOne("Account.findUserByLoginNameOrEmailOrMobile", loginName);
 	}
