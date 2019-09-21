@@ -37,7 +37,9 @@ public class EquipmentManager {
     private static final String defaultSheetName = PropertiesUtils.get("default_sheet_name");
 	private static final String ROOT_PATH = PropertiesUtils.getFileDir();
 	private static final String EXCEL_PATH = PropertiesUtils.get("excel_path");
+	private static final String PDF_PATH = PropertiesUtils.get("pdf_path");
 	private static final String QRCODE_TYPE = PropertiesUtils.get("qrcode_type");
+	public static final String QRCODE_PDF_TYPE = PropertiesUtils.get("qrcode_pdf_type");
 	private static final String ROOT_URL = PropertiesUtils.get("qrcode_url");
 	public static String getQrcodePath(String fileName) {
 		String subPath = FileUtils.getSubPath(fileName, "2", "");
@@ -45,13 +47,20 @@ public class EquipmentManager {
 		if (!fold.exists()) {
 			fold.mkdirs();
 		}
-		return ROOT_PATH + File.separator + subPath + File.separator + getQrcodeFileName(fileName);
+		return ROOT_PATH + File.separator + subPath + File.separator + getQrcodeFileName(fileName, QRCODE_TYPE);
 	}
-	public static String getQrcodeFileName(String fileName) {
-		if (fileName.indexOf(QRCODE_TYPE) > 0) {
+	public static String getQrcodePDFPath(String fileName) {
+		File fold = new File(ROOT_PATH + File.separator + PDF_PATH);
+		if (!fold.exists()) {
+			fold.mkdirs();
+		}
+		return ROOT_PATH + File.separator + PDF_PATH + File.separator + getQrcodeFileName(fileName, QRCODE_PDF_TYPE);
+	}
+	public static String getQrcodeFileName(String fileName, String fileType) {
+		if (fileName.indexOf(fileType) > 0) {
 			return fileName;
 		} else {
-			return fileName + QRCODE_TYPE;
+			return fileName + fileType;
 		}
 	}
 
@@ -224,7 +233,7 @@ public class EquipmentManager {
 		return equipmentDao.getRemainEquipments();
 	}
 
-	public boolean generateQrcodefile(List<String> idList, String fileName) {
+	public boolean generateQrcodePDFFile(List<String> idList, String fileName) {
         if (StringUtils.isBlank(fileName)) {
             logger.error("二维码生成失败，参数有误：enoList[{}] qrcodePath[{}]", new Object[] {idList, fileName});
             return false;
@@ -236,8 +245,7 @@ public class EquipmentManager {
             logger.error("二维码生成失败，参数有误：enoList[{}] qrcodePath[{}]", new Object[] {idList, fileName});
             return false;
         }
-		String qrcodePath = getQrcodePath(fileName);
-		List<File> qrcodeFileList = new ArrayList<File>(idList.size());
+		List<String> qrcodeFilePathList = new ArrayList<>(idList.size());
 		for (String id : idList) {
 			if (StringUtils.isNotBlank(id)) {
 				String filePath = getQrcodePath(id);
@@ -246,16 +254,17 @@ public class EquipmentManager {
 					Equipment equipment = equipmentDao.getEquipment(id);
 					generateQrcodefile(id, equipment.getEno());
 				}
-				qrcodeFileList.add(file);
+				qrcodeFilePathList.add(filePath);
 			}
 		}
-		QrcodeUtil.mergeQRCode(qrcodeFileList, qrcodePath);
+		String qrcodePath = getQrcodePDFPath(fileName);
+		QrcodeUtil.mergeQRCode(qrcodeFilePathList, qrcodePath);
 		return true;
 	}
 
 	private void generateQrcodefile(String id, String eno) {
         QrcodeUtil.generateQRCodeImage(ROOT_URL + id, eno, getQrcodePath(id));
-        saveQrcodeAttachment(id, FileUtils.getSubPath(id, "2", ""), getQrcodeFileName(id));
+        saveQrcodeAttachment(id, FileUtils.getSubPath(id, "2", ""), getQrcodeFileName(id, QRCODE_TYPE));
     }
 
 	@Transactional(rollbackFor = RuntimeException.class)

@@ -112,6 +112,7 @@ function importEquipmentList(obj) {
                 $(obj).val('');
                 var result = xhr.responseText;
                 if (result == 'true') {
+                    alert('导入成功');
                 	afterSave();
                 } else {
                 	alert(result);
