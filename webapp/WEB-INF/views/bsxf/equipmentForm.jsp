@@ -187,7 +187,7 @@
 			<tr>
 				<td class="left"><span class="req">*</span>备注：</td>
 				<td   class="right">
-		          <textarea rows="3" style="width: 300px;" name="comments" <c:if test="${readOnly == true}"> disabled="disabled" </c:if>  >${equipment.comments}</textarea>
+					<textarea rows="3" style="width: 300px;" name="comments" <c:if test="${readOnly == true}"> disabled="disabled" </c:if>  >${equipment.comments}</textarea>
        		    </td>
 			</tr>
 			<tr style='display:none'>
