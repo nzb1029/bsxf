@@ -19,11 +19,11 @@ public class ExcelUtil {
     private static final String OFFICE_EXCEL_XLS = ".xls";
     private static final String OFFICE_EXCEL_XLSX = ".xlsx";
 
-    public static List<Map<String, Object>> getData(File file, String sheetName) {
+    public static List<Map<String, Object>> getData(File file, String sheetName, int startRow) {
 //        logger.info("解析Excel开始；文件名[{}] sheet-name[{}]", file.getName(), sheetName);
         Workbook workbook = getWorkbook(file);
         Sheet sheet = getSheet(workbook, sheetName);
-        Integer firstRowNum = sheet.getFirstRowNum();
+        Integer firstRowNum = startRow;
         Integer lastRowNum = sheet.getLastRowNum();
         List<Map<String, Object>> dataMapList = new ArrayList<Map<String, Object>>(lastRowNum);
         Map<Integer, String> titleMap = getTitleMap(sheet.getRow(firstRowNum));
@@ -134,11 +134,5 @@ public class ExcelUtil {
             }
         }
         return dataMap;
-    }
-
-    public static void main(String... args) {
-        String path = "D:\\test - 副本.xlsx";
-        File file =new File(path);
-        ExcelUtil.getData(file, "Sheet1");
     }
 }

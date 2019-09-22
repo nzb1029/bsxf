@@ -154,18 +154,21 @@ public class EquipmentManager {
 			logger.error("模板文件转换失败，报错：", e);
 			throw new RuntimeException("文件转换失败，请确认");
 		}
-		List<Map<String, Object>> dataList = ExcelUtil.getData(newFile, defaultSheetName);
+		List<Map<String, Object>> dataList = ExcelUtil.getData(newFile, defaultSheetName, 5);
 		if (CollectionUtils.isEmpty(dataList)) {
 		    throw new RuntimeException("文件无数据，请确认");
 		}
 		List<Dictionary> categoryList = systemManager.getDictionaryByCode("xf_category");
 		for (Map<String, Object> data : dataList) {
 			Equipment equipment = generateEquipment(data, categoryList);
-			save(equipment);
+			if (equipment != null) {
+				save(equipment);
+			}
 		}
 	}
 	
 	private Equipment generateEquipment(Map<String, Object> data, List<Dictionary> categoryList) {
+		logger.info("解析设备：{}", data);
 		Equipment equipment = new Equipment();
 		//set deafult value
 		equipment.setId(Identities.uuid2());
@@ -175,10 +178,13 @@ public class EquipmentManager {
 		equipment.setCreateUser(LtSecurityUtils.getLoginUser());
 		equipment.setCheckFreq(1);
 
+		String eno = data.get("设备编号").toString().trim();
+		if (StringUtils.isBlank(eno)) {
+			return null;
+		}
+		equipment.setEno(eno);
 		for (String key : data.keySet()) {
-			if ("设备编号".equals(key)) {
-				equipment.setEno(data.get(key).toString().trim());
-			} else if ("设备类别".equals(key)) {
+			if ("设备类别".equals(key)) {
 				equipment.setSubTypeName(data.get(key).toString().trim());
 				for (Dictionary category : categoryList) {
 					if (category.getName().equalsIgnoreCase(equipment.getSubTypeName())) {
@@ -200,14 +206,15 @@ public class EquipmentManager {
 				equipment.setComments(data.get(key).toString().trim());
 			} else if ("数量".equals(key)) {
 				equipment.setAmount(((Double) data.get(key)).intValue());
-			} else if ("巡检员姓名".equalsIgnoreCase(key)) {
+			} else if ("巡检负责人".equalsIgnoreCase(key)) {
 				String userName = data.get(key).toString().trim();
 				List<User> userList = userDao.getUserByName(userName);
 				if (CollectionUtils.isEmpty(userList) || userList.size() > 1) {
-				    throw new RuntimeException("巡检员(" + userName + ")设置有误，请确认");
+					logger.error("数据有误：{}", data);
+				    throw new RuntimeException(equipment.getEno()+" 设备的巡检员(" + userName + ")设置有误，请确认");
                 }
 				equipment.setCheckUser(userList.get(0));
-			} else {
+			} else if (!"设备编号".equals(key)){
 				logger.error("{}-{} 无匹配字段", new Object[]{key, data.get(key)});
 			}
 		}
