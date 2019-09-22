@@ -178,6 +178,10 @@ public class EquipmentManager {
 		equipment.setCreateUser(LtSecurityUtils.getLoginUser());
 		equipment.setCheckFreq(1);
 
+		Object enoObj = data.get("设备编号");
+		if (enoObj == null) {
+		    return null;
+        }
 		String eno = data.get("设备编号").toString().trim();
 		if (StringUtils.isBlank(eno)) {
 			return null;
