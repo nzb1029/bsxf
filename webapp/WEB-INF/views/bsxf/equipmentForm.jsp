@@ -41,14 +41,8 @@
 	 	          
 				var businessId = $("#id").val();
 				var readflag = $("#readflag").val();
-				var frameUrl;
-				if(readflag == true || readflag == 'true'){
-				    // 二维码
-					 frameUrl="${ctx }/upload/upload2.jsp?fileType=2&businessId="+businessId+"&fileSizeLimit=100MB&uploadLimit=20&multi=true&iframeId=okFrame&adap=true&fileTypeExts=*.jpg;*.jpge;*.gif;*.png;*.pdf&isview=true";
-				} else {
-				    // 设备图片
-					var frameUrl="${ctx }/upload/upload2.jsp?fileType=3&businessId="+businessId+"&fileSizeLimit=100MB&uploadLimit=20&multi=true&iframeId=okFrame&adap=true&fileTypeExts=*.jpg;*.jpge;*.gif;*.png;*.pdf";
-				}
+			    // 二维码
+				var frameUrl="${ctx }/upload/upload2.jsp?fileType=2&businessId="+businessId+"&fileSizeLimit=100MB&uploadLimit=20&multi=true&iframeId=okFrame&adap=true&fileTypeExts=*.jpg;*.jpge;*.gif;*.png;*.pdf&isview=true";
 				$("#okFrame").attr("src",frameUrl);		
 		});
 		
@@ -90,14 +84,14 @@
 
 <body>
 	<fieldset >
-			<legend><small>设备管理</small></legend>
+			<legend><small>灭火器管理</small></legend>
 		<div id="messageBox" class="alert alert-error" style="display:none">输入有误，请先更正。</div>
         <form:form id="inputForm" modelAttribute="equipment" action="${ctx}/equipment/save" method="post" class="form-horizontal">
 		<input type="hidden" name="id" id="id" value="${equipment.id}"/>
 		<input type="hidden" name="readflag" id="readflag" value="${readOnly}"/>
 		<table class="inputView" style="width: 700px;">
 			<tr>
-				<td class="left"><span class="req">*</span>设备类型：</td>
+				<td class="left"><span class="req">*</span>灭火器类型：</td>
 				<td class="right">
 				<select name="equipmentTypeId" id="equipmentTypeId" value="1" class="required" <c:if test="${readOnly == true}"> disabled="disabled" </c:if> >
 			 			<c:forEach items="${dic['xf_type']}" var="item">
@@ -106,12 +100,12 @@
 			 		</select>
 				 </td>
 			</tr>
-			<tr>
-				<td class="left">设备名称：</td>
+			<tr style="display:none" >
+				<td class="left">灭火器名称：</td>
 				<td class="right"><input type="text" name="name" size="40" id="name" value="${equipment.name}" <c:if test="${readOnly == true}"> disabled="disabled" </c:if>/></td>
 			</tr>
 			<tr>
-				<td class="left"><span class="req">*</span>设备编号：</td>
+				<td class="left"><span class="req">*</span>灭火器编号：</td>
 				<td class="right"><input type="text" name="eno" size="40" id="eno" value="${equipment.eno}" <c:if test="${readOnly == true}"> disabled="disabled" </c:if> class="required"/></td>
 			</tr>
 			<tr>
@@ -151,7 +145,7 @@
 				 <input type="text" id="expDate" name="expDate" onclick="new WdatePicker() "  <c:if test="${readOnly == true}"> disabled="disabled" </c:if>  value="<fmt:formatDate value="${equipment.expDate }" pattern="yyyy-MM-dd"/>" />
 				</td>
 			</tr>
-			<tr>
+			<tr  style="display:none">
 				<td class="left" width="100">经纬度信息：</td>
 		        <td   class="right" colspan="3">
 		        <input type="text" class="number" style="width: 80px;"  name="pointx"  id="pointx" value="${equipment.pointx}" <c:if test="${readOnly == true}"> disabled="disabled" </c:if> />
@@ -160,7 +154,7 @@
 		        </td>
 			</tr>
 			<tr>
-				<td class="left" width="100"><c:if test="${readOnly == true}">二维码图片：</c:if><c:if test="${readOnly != true}">设备图片：</c:if></td>
+				<td class="left" width="100">二维码图片：</td>
 		        <td   class="right" colspan="2">
 	         	  <iframe id="okFrame" src="" style="width: 100%;height:200px;  " frameborder="0">
 	  			</iframe></td>

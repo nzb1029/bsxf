@@ -22,7 +22,7 @@
 	</head>
 	<body>
        <div id="table_center_header">
-           设备管理
+           灭火器管理
        </div>
        <div id="table_center_info">
            <div id="table_center_info_header">本管理列表帮助你配置</div>
@@ -41,12 +41,12 @@
         </div>
         <div id="table_center_search_header">
             <span id="table_center_search_header_name">
-                                   设备管理列表
+                                   灭火器管理列表
             </span>
             <button class="button_right" type="button" onclick="javascript:batchImp()" id="imp" >批量导入</button>
             <input type="file" onchange="javascript:importEquipmentList(this)" id="importEquipmentList" style="display: none;"/>
             <button class="button_right" type="button" onclick="javascript:batchDel()" id="remove">批量删除</button>
-            <button class="button_right" type="button" onclick="javascript:update()" id="add" >添加设备</button>
+            <button class="button_right" type="button" onclick="javascript:update()" id="add" >添加灭火器</button>
         </div>
         <div id="table_center_table_wrapper">
             <table id="table_center_table"></table>

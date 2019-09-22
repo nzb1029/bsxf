@@ -43,8 +43,8 @@
             <span id="table_center_search_header_name">
                                    二维码打印列表
             </span>
-            <button class="button_right" type="button" onclick="javascript:batchPrint()" id="batchPrint" >批量打印</button>
             <button class="button_right" type="button" onclick="javascript:printAll()" id="printAll">打印全部</button>
+            <button class="button_right" type="button" onclick="javascript:batchPrint()" id="batchPrint" >批量打印</button>
         </div>
         <div id="table_center_table_wrapper">
             <table id="table_center_table"></table>
