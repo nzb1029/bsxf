@@ -61,7 +61,6 @@
                 maxFileCount: 2,
                 browseLabel: '选择附件',
                 dropZoneEnabled: false,
-                showUpload: false,
                 showClose: false,
                 maxFileSize: 2048,
                 allowedFileExtensions : ['jpg', 'png','gif', 'jpeg']
@@ -166,7 +165,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <button id="importPicturesBtn" type="button" class="btn btn-primary btn-block" onclick="importPictures()">上传图片</button>
+                    <!--<button id="importPicturesBtn" type="button" class="btn btn-primary btn-block" onclick="importPictures()">上传图片</button>-->
                     <button id="submitBtn" type="button" class="btn btn-primary btn-block" onclick="submitResult()">提交</button>
                 </div>
             </div>
