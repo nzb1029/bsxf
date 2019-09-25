@@ -105,6 +105,8 @@ public class EquipmentManager {
         //Equipment 比较特殊，进页面时就生成了主键，所以这里要改一下。
 		String id = "";
 		if (this.getEquipment(entity.getId()) != null) {
+			//如果修改了CheckFreq的话,也要更新下remainNumber
+			entity.setRemainNum(entity.getCheckFreq());
 			equipmentDao.updateEquipment(entity);
 			id = entity.getId();
 		} else {

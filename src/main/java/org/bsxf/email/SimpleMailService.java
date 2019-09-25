@@ -34,10 +34,10 @@ public class SimpleMailService {
 			msg.setSubject(subject);
 			msg.setText(message);
 			try {
-				mailSender.setHost(config.getHost());
-				mailSender.setUsername(config.getUsername());
-				mailSender.setPassword(config.getPassword());
-				mailSender.setPort(Integer.valueOf(config.getPort()));
+//				mailSender.setHost(config.getHost());
+//				mailSender.setUsername(config.getUsername());
+//				mailSender.setPassword(config.getPassword());
+//				mailSender.setPort(Integer.valueOf(config.getPort()));
 				mailSender.send(msg);
 				if (logger.isInfoEnabled()) {
 					logger.info("纯文本邮件已发送至{}", StringUtils.join(msg.getTo(), ","));

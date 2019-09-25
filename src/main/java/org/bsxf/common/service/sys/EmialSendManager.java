@@ -35,16 +35,16 @@ public class EmialSendManager {
 		String id = "";
 		if (StringUtils.isNotBlank(entity.getId())) {
 		    entity.setLastUpdateTime(new Date());
-			entity.setLastUpdateUser(LtSecurityUtils.getLoginUser());
+			//entity.setLastUpdateUser(LtSecurityUtils.getLoginUser());
 			emialSendDao.updateEmialSend(entity);
 			id = entity.getId();
 		} else {
 			id = Identities.uuid2();
 			entity.setId(id);
 			entity.setCreateTime(new Date());
-			entity.setCreateUser(LtSecurityUtils.getLoginUser());
+			//entity.setCreateUser(LtSecurityUtils.getLoginUser());
 			entity.setLastUpdateTime(new Date());
-			entity.setLastUpdateUser(LtSecurityUtils.getLoginUser());
+			//entity.setLastUpdateUser(LtSecurityUtils.getLoginUser());
 			emialSendDao.saveEmialSend(entity);
 		}
 		return id;
