@@ -92,7 +92,7 @@ public class CheckHistoryController {
 		if (equipment == null
 				|| equipment.getCheckUser() == null
 				|| StringUtils.isBlank(equipment.getCheckUser().getId())) {
-			model.addAttribute("submitCheckResult", "未设置巡检员，请先设置");
+			model.addAttribute("submitCheckResult", "未设置巡检员，请联系管理员对该灭火器设置巡检员");
 			return "bsxf/submitResult";
 		}
 		model.addAttribute("oldRunStatus", "");
@@ -129,5 +129,11 @@ public class CheckHistoryController {
 		model.addAttribute("equipment", equipment);
 		return "bsxf/resultForm";
 
+    }
+	
+	@RequestMapping(value = "submitResult" , method = RequestMethod.GET)
+	public String submitResult(Model model) {
+		model.addAttribute("submitCheckResult", "巡检完成，请关闭页面");
+		return "bsxf/submitResult";
     }
 }
