@@ -117,7 +117,7 @@ public class QrcodeUtil {
             Graphics g = image.createGraphics();
             g.drawImage(src, 0, 0, imageW, imageH, null);
             g.setColor(Color.BLACK);
-            Font font = new Font("Arial", Font.BOLD, FONT_SIZE);
+            Font font = new Font("宋体", Font.BOLD, FONT_SIZE);
             g.setFont(font);
             g.drawString(desc, startX, startY);
             g.dispose();
