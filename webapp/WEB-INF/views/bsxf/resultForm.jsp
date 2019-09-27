@@ -22,6 +22,24 @@
     <script src="${ctx}/static/bootstrap-fileinput/js/fileinput.min.js" type="text/javascript"></script>
     <script src="${ctx}/static/bootstrap-fileinput/js/locales/zh.js" type="text/javascript"></script>
     <script type="application/javascript">
+        $.fn.serializeJson=function(){
+            var serializeObj={};
+            var array=this.serializeArray(); //将form表单序列化数组对象
+            var str=this.serialize();  //将form表单序列化字符串
+            $(array).each(function(){  //遍历表单数组拼接json串
+                if(serializeObj[this.name]){
+                    if($.isArray(serializeObj[this.name])){
+                        serializeObj[this.name].push(this.value);
+                    }else{
+                        serializeObj[this.name]=[serializeObj[this.name],this.value];
+                    }
+                }else{
+                    serializeObj[this.name]=this.value;
+                }
+            });
+            return serializeObj;
+        };
+
         function dialogWarning (msg) {
             BootstrapDialog.show({
                 closable: false,
@@ -31,6 +49,25 @@
                 buttons: [{
                     label: '确认',
                     cssClass: 'btn-warning',
+                    action: function(dialogRef){
+                        dialogRef.close();
+                    }
+                }]
+            });
+        }
+
+        function endMsg (msg) {
+            $("input").attr("disabled", true);
+            $("textarea").attr("disabled", true);
+            $("button").attr("disabled", true);
+            BootstrapDialog.show({
+                closable: false,
+                type: BootstrapDialog.TYPE_SUCCESS,
+                title: "提示",
+                message: msg,
+                buttons: [{
+                    label: '确认',
+                    cssClass: 'btn-primary',
                     action: function(dialogRef){
                         dialogRef.close();
                     }
@@ -54,7 +91,23 @@
                 || checkUserPassword.length < 1) {
                 dialogWarning("请输入巡检员密码");
             } else {
-                $("#resultForm").submit();
+                var ctx = $('#ctx').val();
+                var data = $("#resultForm").serializeJson();
+                $.ajax({
+                    url : ctx + "/history/submitResult",
+                    success:function(data){
+                        if (data.status == 'success') {
+                            endMsg(data.msg);
+                        } else {
+                            dialogWarning(data.msg);
+                        }
+                    },
+                    complete:function(data){
+                    },
+                    type:"POST",
+                    cache:false,
+                    data:data
+                });
             }
         }
 
@@ -90,13 +143,6 @@
                 && submitCheckResult.length > 0) {
                 dialogWarning(submitCheckResult);
             }
-            // 默认值
-            var oldRunStatus = $('#oldRunStatus').val();
-            $('input:radio[name="runStatus"][value="'+oldRunStatus+'"]').prop('checked', true);
-            var oldComments = $('#oldComments').val();
-            $('#comments').val(oldComments);
-            var oldCheckUserPassword = $('#oldCheckUserPassword').val();
-            $('#checkUserPassword').val(oldCheckUserPassword);
 			//display1 display2
 			var displayflag=$('#displayflag').val();
 			$('#display1').css('display',displayflag);
@@ -147,9 +193,6 @@
             <div class="panel-body">
                 <input type="hidden" name="ctx" id="ctx" value="${ctx}"/>
                 <input type="hidden" name="submitCheckResult" id="submitCheckResult" value="${submitCheckResult}"/>
-                <input type="hidden" name="oldRunStatus" id="oldRunStatus" value="${oldRunStatus}"/>
-                <input type="hidden" name="oldComments" id="oldComments" value="${oldComments}"/>
-                <input type="hidden" name="oldCheckUserPassword" id="oldCheckUserPassword" value="${oldCheckUserPassword}"/>
                 <input type="hidden" name="equipmentId" id="equipmentId" value="${equipment.id}"/>
                 <input type="hidden" name="checkHistoryId" id="checkHistoryId" value="${checkHistoryId}"/>
                 <input type="hidden" name="checkUser.id" id="checkUserId" value="${equipment.checkUser.id}"/>

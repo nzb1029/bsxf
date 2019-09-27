@@ -1,5 +1,6 @@
 package org.bsxf.common.web.bsxf;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -112,12 +113,13 @@ public class CheckHistoryController {
 		model.addAttribute("oldCheckUserPassword", "");
         model.addAttribute("checkHistoryId", Identities.uuid2());
 		model.addAttribute("equipment", equipment);
-		model.addAttribute("submitCheckResult", "");
 		return "bsxf/resultForm";
 	}
 
 	@RequestMapping(value = "submitResult" , method = RequestMethod.POST)
-	public String submitResult(@Valid @ModelAttribute("checkResult") CheckResult checkResult, Model model) {
+    @ResponseBody
+	public Map<String, String> submitResult(@Valid @ModelAttribute("checkResult") CheckResult checkResult) {
+	    Map<String, String> resultMap = new HashMap<>();
         // 验证密码
         if (shiroDbRealm.checkPassword(checkResult.getCheckUserPassword(), checkResult.getCheckUser().getId())) {
             // 更新设备信息
@@ -125,27 +127,17 @@ public class CheckHistoryController {
             if (StringUtils.isBlank(submitResult)) {
                 // 保存巡检历史
                 historyManager.checkResult(checkResult);
-                model.addAttribute("submitCheckResult", "巡检完成，请关闭页面");
-                return "bsxf/submitResult";
+                resultMap.put("msg", "巡检完成，请关闭页面");
+                resultMap.put("status", "success");
             } else {
-                model.addAttribute("submitCheckResult", submitResult);
+                resultMap.put("msg", submitResult);
+                resultMap.put("status", "fail");
             }
         } else {
-            model.addAttribute("submitCheckResult", "巡检员密码有误，请重试");
+            resultMap.put("msg", "巡检员密码有误，请重试");
+            resultMap.put("status", "fail");
         }
-		model.addAttribute("oldRunStatus", checkResult.getRunStatus());
-		model.addAttribute("oldComments", checkResult.getComments());
-		model.addAttribute("oldCheckUserPassword", checkResult.getCheckUserPassword());
-		model.addAttribute("checkHistoryId", checkResult.getCheckHistoryId());
-		Equipment equipment = equipmentManager.getEquipment(checkResult.getEquipmentId());
-		model.addAttribute("equipment", equipment);
-		return "bsxf/resultForm";
+        return resultMap;
 
-    }
-	
-	@RequestMapping(value = "submitResult" , method = RequestMethod.GET)
-	public String submitResult(Model model) {
-		model.addAttribute("submitCheckResult", "巡检完成，请关闭页面");
-		return "bsxf/submitResult";
     }
 }
