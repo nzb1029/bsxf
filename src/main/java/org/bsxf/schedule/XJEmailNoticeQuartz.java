@@ -24,16 +24,12 @@ public class XJEmailNoticeQuartz extends QuartzJobBean {
 	protected void executeInternal(JobExecutionContext arg0) throws JobExecutionException {
 		
 		System.out.print("XJEmailNoticeQuartz==========执行了==============="+new Date());
-		EmailConfig config =	EhcacheManager.getEmailConfig();
+		EmailConfig config = EhcacheManager.getEmailConfig();
 		EquipmentManager eqManager = SpringContextHolder.getBean(EquipmentManager.class);
 	    List<Equipment> elist = eqManager.getRemainEquipments();
 	    if(CollectionUtils.isNotEmpty(elist)){
-	    	EmailUtil.sendMineEmailByNow(subject,elist,to,userName);
+	    	EmailUtil.sendMineEmailByNow(subject,elist,to,userName,"1");
 	    }
-		
-		
-		
-//		eqManager.updateKLEquipmentMTG();
 	}
 
 }

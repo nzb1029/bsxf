@@ -117,10 +117,8 @@ public class EmailConfigController {
 	     EmailConfig config = EhcacheManager.getEmailConfig();
 	     if(StringUtils.isNotBlank(config.getId())){
 	    	 /*******************************test begin************************************/
-	    	 List<Equipment> list = equipmentManager.getAllEquipment();
-		     boolean e = EmailUtil.sendMineEmailByNow(PropertiesUtils.get("email_subject") ,list ,PropertiesUtils.get("email_to"),PropertiesUtils.get("email_userName"));
-	    	/****************************test begin********************************************/ 
 	    	 boolean f= EmailUtil.sendSimpleEmailByNow("test", "本邮件为测试邮件", config.getUsername());
+	    	/****************************test end********************************************/ 
 	    	if(f)
 	    		 return "1";
 	    	 else
