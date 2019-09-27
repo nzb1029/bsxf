@@ -33,12 +33,24 @@ public class Equipment extends IdEntity {
 	@Description(description = "状态：1-正常工作；2-运行异常")
 	private String runStatus="1";
 	private String runStatusDes;
-	@Description(description = "生产日期")
+	@Description(description = "设备1生产日期")
 	private Date productionDate;
-	@Description(description = "有效起期")
+	@Description(description = "设备1有效起期")
 	private Date effDate;
-	@Description(description = "有效止期")
+	@Description(description = "设备1有效止期")
 	private Date expDate;
+	@Description(description = "设备2生产日期")
+	private Date productionDate2;
+	@Description(description = "设备2有效起期")
+	private Date effDate2;
+	@Description(description = "设备2有效止期")
+	private Date expDate2;
+	@Description(description = "设备3生产日期")
+	private Date productionDate3;
+	@Description(description = "设备3有效起期")
+	private Date effDate3;
+	@Description(description = "设备3有效止期")
+	private Date expDate3;
 	@Description(description = "巡检频率:1-每月一次；2-半月1次；3-10天每次；4-每周一次")
 	private int checkFreq;
 	private String checkFreqDes;
@@ -299,5 +311,53 @@ public class Equipment extends IdEntity {
 
 	public void setProductionDate(Date productionDate) {
 		this.productionDate = productionDate;
+	}
+
+	public Date getProductionDate2() {
+		return productionDate2;
+	}
+
+	public void setProductionDate2(Date productionDate2) {
+		this.productionDate2 = productionDate2;
+	}
+
+	public Date getEffDate2() {
+		return effDate2;
+	}
+
+	public void setEffDate2(Date effDate2) {
+		this.effDate2 = effDate2;
+	}
+
+	public Date getExpDate2() {
+		return expDate2;
+	}
+
+	public void setExpDate2(Date expDate2) {
+		this.expDate2 = expDate2;
+	}
+
+	public Date getProductionDate3() {
+		return productionDate3;
+	}
+
+	public void setProductionDate3(Date productionDate3) {
+		this.productionDate3 = productionDate3;
+	}
+
+	public Date getEffDate3() {
+		return effDate3;
+	}
+
+	public void setEffDate3(Date effDate3) {
+		this.effDate3 = effDate3;
+	}
+
+	public Date getExpDate3() {
+		return expDate3;
+	}
+
+	public void setExpDate3(Date expDate3) {
+		this.expDate3 = expDate3;
 	}
 }

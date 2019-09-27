@@ -131,18 +131,47 @@
 				 </td>
 			</tr>
 			<tr>
-				<td class="left">出厂日期：</td>
+				<td class="left">设备1出厂日期：</td>
 				<td class="right">
 					<input type="text" id="productionDate" name="productionDate" onclick="new WdatePicker() "  <c:if test="${readOnly == true}"> disabled="disabled" </c:if>  value="<fmt:formatDate value="${equipment.productionDate }" pattern="yyyy-MM-dd"/>" />
 				</td>
 			</tr>
-			
 			<tr>
-				<td class="left">有效期：</td>
+				<td class="left">设备1有效期：</td>
 				<td class="right">
 				 <input type="text" id="effDate" name="effDate" onclick="new WdatePicker() "  <c:if test="${readOnly == true}"> disabled="disabled" </c:if>  value="<fmt:formatDate value="${equipment.effDate }" pattern="yyyy-MM-dd"/>" />
 				  至
 				 <input type="text" id="expDate" name="expDate" onclick="new WdatePicker() "  <c:if test="${readOnly == true}"> disabled="disabled" </c:if>  value="<fmt:formatDate value="${equipment.expDate }" pattern="yyyy-MM-dd"/>" />
+				</td>
+			</tr>
+			<tr>
+				<td class="left">设备2出厂日期：</td>
+				<td class="right">
+					<input type="text" id="productionDate2" name="productionDate2" onclick="new WdatePicker() "  <c:if test="${readOnly == true}"> disabled="disabled" </c:if>  value="<fmt:formatDate value="${equipment.productionDate2 }" pattern="yyyy-MM-dd"/>" />
+				</td>
+			</tr>
+
+			<tr>
+				<td class="left">设备2有效期：</td>
+				<td class="right">
+					<input type="text" id="effDate2" name="effDate2" onclick="new WdatePicker() "  <c:if test="${readOnly == true}"> disabled="disabled" </c:if>  value="<fmt:formatDate value="${equipment.effDate2 }" pattern="yyyy-MM-dd"/>" />
+					至
+					<input type="text" id="expDate2" name="expDate2" onclick="new WdatePicker() "  <c:if test="${readOnly == true}"> disabled="disabled" </c:if>  value="<fmt:formatDate value="${equipment.expDate2 }" pattern="yyyy-MM-dd"/>" />
+				</td>
+			</tr>
+			<tr>
+				<td class="left">设备3出厂日期：</td>
+				<td class="right">
+					<input type="text" id="productionDate3" name="productionDate3" onclick="new WdatePicker() "  <c:if test="${readOnly == true}"> disabled="disabled" </c:if>  value="<fmt:formatDate value="${equipment.productionDate3 }" pattern="yyyy-MM-dd"/>" />
+				</td>
+			</tr>
+
+			<tr>
+				<td class="left">设备3有效期：</td>
+				<td class="right">
+					<input type="text" id="effDate3" name="effDate3" onclick="new WdatePicker() "  <c:if test="${readOnly == true}"> disabled="disabled" </c:if>  value="<fmt:formatDate value="${equipment.effDate3 }" pattern="yyyy-MM-dd"/>" />
+					至
+					<input type="text" id="expDate3" name="expDate3" onclick="new WdatePicker() "  <c:if test="${readOnly == true}"> disabled="disabled" </c:if>  value="<fmt:formatDate value="${equipment.expDate3 }" pattern="yyyy-MM-dd"/>" />
 				</td>
 			</tr>
 			<tr  style="display:none">
