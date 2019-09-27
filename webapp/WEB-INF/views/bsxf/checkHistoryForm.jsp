@@ -21,7 +21,12 @@
 				 	          });
 						} 
 				 });
-	 	          
+				//display1 display2
+				var displayflag=$('#displayflag').val();
+				if(displayflag =="none"){
+					$('#display1').css('display',"none");
+					$('#display2').css('display',"none");  
+				}
 				var fileType = '1';	
 				var businessId = $("#id").val();
 				var frameUrl="${ctx }/upload/upload2.jsp?fileType="+fileType+"&businessId="+businessId+"&fileSizeLimit=100MB&uploadLimit=20&multi=true&iframeId=okFrame&adap=true&fileTypeExts=*.jpg;*.jpge;*.gif;*.png;*.pdf&isview=true"
@@ -44,6 +49,7 @@
 		<div id="messageBox" class="alert alert-error" style="display:none">输入有误，请先更正。</div>
         <form:form id="inputForm" modelAttribute="checkHistory" action="${ctx}/checkHistory/save" method="post" class="form-horizontal">
 		<input type="hidden" name="id" id="id" value="${checkHistory.id}"/>
+		<input type="hidden" name="displayflag" id="displayflag" value="${displayflag}"/>
 		<table class="inputView" style="width: 700px;">
 			<tr>
 				<td class="left"><span class="req">*</span>灭火器编号：</td>
@@ -74,22 +80,126 @@
 				</td>
 			</tr>
 			<tr>
-				<td class="left"><span class="req">*</span>状态:</td>
+				<td class="left">消防设施是否被遮挡，灭火器箱是否完好，灭火器数量是否缺少：</td>
 				<td class="right">
-				<input type="text" name="runStatusDes" disabled="disabled" size="40" id="runStatusDes" value="${checkHistory.runStatusDes}" />
-				</td>
+					<select  name="checkFreq" id="checkFreq" class="required" disabled="disabled">
+					  <option>请选择</option>
+			 			<c:forEach items="${dic['xf_status']}" var="item">
+          		 				<option value="${item.val }" <c:if test="${checkHistory.field04 == item.val}">selected="true"</c:if>>${item.name }</option>
+           				</c:forEach>
+				 	</select>
+				 </td>
+			</tr>
+			<tr>
+				<td class="left">灭火器的铭牌是否残缺，并清晰明了：</td>
+				<td class="right">
+					<select  name="checkFreq" id="checkFreq" class="required" disabled="disabled">
+					  <option>请选择</option>
+			 			<c:forEach items="${dic['xf_status']}" var="item">
+          		 				<option value="${item.val }" <c:if test="${checkHistory.field05 == item.val}">selected="true"</c:if>>${item.name }</option>
+           				</c:forEach>
+				 	</select>
+				 </td>
+			</tr>
+			<tr>
+				<td class="left">灭火器上关于灭火剂、驱动气体的种类、充装压力、总质量、灭火级别、制造厂名和生产日期或维修日期等标志及操作说明是否齐全：</td>
+				<td class="right">
+					<select  name="checkFreq" id="checkFreq" class="required" disabled="disabled">
+					  <option>请选择</option>
+			 			<c:forEach items="${dic['xf_status']}" var="item">
+          		 				<option value="${item.val }" <c:if test="${checkHistory.field06 == item.val}">selected="true"</c:if>>${item.name }</option>
+           				</c:forEach>
+				 	</select>
+				 </td>
+			</tr>
+			<tr>
+				<td class="left">灭火器的铅封、销闩等保险装置是否损坏：</td>
+				<td class="right">
+					<select  name="checkFreq" id="checkFreq" class="required" disabled="disabled">
+					  <option>请选择</option>
+			 			<c:forEach items="${dic['xf_status']}" var="item">
+          		 				<option value="${item.val }" <c:if test="${checkHistory.field07 == item.val}">selected="true"</c:if>>${item.name }</option>
+           				</c:forEach>
+				 	</select>
+				 </td>
+			</tr>
+			<tr>
+				<td class="left">灭火器的筒体是否无明显的损伤（磕伤、划伤）、缺陷、锈蚀（特别是筒底和焊缝）、泄漏：</td>
+				<td class="right">
+					<select  name="checkFreq" id="checkFreq" class="required" disabled="disabled">
+					  <option>请选择</option>
+			 			<c:forEach items="${dic['xf_status']}" var="item">
+          		 				<option value="${item.val }" <c:if test="${checkHistory.field08 == item.val}">selected="true"</c:if>>${item.name }</option>
+           				</c:forEach>
+				 	</select>
+				 </td>
+			</tr>
+			<tr>
+				<td class="left">灭火器的喷射软管是否完好，无明显龟裂，喷嘴不堵塞：</td>
+				<td class="right">
+					<select  name="checkFreq" id="checkFreq" class="required" disabled="disabled">
+					  <option>请选择</option>
+			 			<c:forEach items="${dic['xf_status']}" var="item">
+          		 				<option value="${item.val }" <c:if test="${checkHistory.field09 == item.val}">selected="true"</c:if>>${item.name }</option>
+           				</c:forEach>
+				 	</select>
+				 </td>
+			</tr>
+			<tr>
+				<td class="left">灭火器的驱动气体压力是否在工作压力范围：</td>
+				<td class="right">
+					<select  name="checkFreq" id="checkFreq" class="required" disabled="disabled">
+					  <option>请选择</option>
+			 			<c:forEach items="${dic['xf_status']}" var="item">
+          		 				<option value="${item.val }" <c:if test="${checkHistory.field10 == item.val}">selected="true"</c:if>>${item.name }</option>
+           				</c:forEach>
+				 	</select>
+				 </td>
+			</tr>
+			<tr>
+				<td class="left">灭火器的零部件是否齐全，并且无松动、脱落或损伤现象：</td>
+				<td class="right">
+					<select  name="checkFreq" id="checkFreq" class="required" disabled="disabled">
+					  <option>请选择</option>
+			 			<c:forEach items="${dic['xf_status']}" var="item">
+          		 				<option value="${item.val }" <c:if test="${checkHistory.field11 == item.val}">selected="true"</c:if>>${item.name }</option>
+           				</c:forEach>
+				 	</select>
+				 </td>
+			</tr>
+			<tr id="display1">
+				<td class="left">水枪、水带、水管是否齐全，无破损，易连接：</td>
+				<td class="right">
+					<select  name="checkFreq" id="checkFreq" class="required" disabled="disabled">
+					  <option>请选择</option>
+			 			<c:forEach items="${dic['xf_status']}" var="item">
+          		 				<option value="${item.val }" <c:if test="${checkHistory.field12 == item.val}">selected="true"</c:if>>${item.name }</option>
+           				</c:forEach>
+				 	</select>
+				 </td>
+			</tr>
+			<tr id="display2">
+				<td class="left">消火栓水压是否正常，启泵按钮是否有效：</td>
+				<td class="right">
+					<select  name="checkFreq" id="checkFreq" class="required" disabled="disabled">
+					  <option>请选择</option>
+			 			<c:forEach items="${dic['xf_status']}" var="item">
+          		 				<option value="${item.val }" <c:if test="${checkHistory.field13 == item.val}">selected="true"</c:if>>${item.name }</option>
+           				</c:forEach>
+				 	</select>
+				 </td>
+			</tr>
+			<tr>
+				<td class="left">异常描述：</td>
+				<td   class="right">
+		          <textarea rows="3" style="width: 300px;" name="comments" disabled="disabled">${checkHistory.comments}</textarea>
+       		    </td>
 			</tr>
 			<tr>
 				<td class="left"><span class="req">*</span>上传图片：</td>
 				<td   class="right" colspan="2">
 	         	<iframe id="okFrame" src="" style="width: 100%;height:200px;  " frameborder="0">
 	  			</iframe></td>
-			</tr>
-			<tr>
-				<td class="left">备注：</td>
-				<td   class="right">
-		          <textarea rows="3" style="width: 300px;" name="comments" disabled="disabled">${checkHistory.comments}</textarea>
-       		    </td>
 			</tr>
 		</table>
 	</form:form>

@@ -97,6 +97,10 @@
             $('#comments').val(oldComments);
             var oldCheckUserPassword = $('#oldCheckUserPassword').val();
             $('#checkUserPassword').val(oldCheckUserPassword);
+			//display1 display2
+			var displayflag=$('#displayflag').val();
+			$('#display1').css('display',displayflag);
+			$('#display2').css('display',displayflag);
             // 上传图片初始化
             var ctx = $('#ctx').val();
             var businessId = $('#checkHistoryId').val();
@@ -149,11 +153,122 @@
                 <input type="hidden" name="equipmentId" id="equipmentId" value="${equipment.id}"/>
                 <input type="hidden" name="checkHistoryId" id="checkHistoryId" value="${checkHistoryId}"/>
                 <input type="hidden" name="checkUser.id" id="checkUserId" value="${equipment.checkUser.id}"/>
+                <input type="hidden" name="displayflag" id="displayflag" value="${displayflag}"/>
                 <div class="form-group">
-                    <label>设备状态</label>
+                    <label>消防设施是否被遮挡，灭火器箱是否完好，灭火器数量是否缺少</label>
                     <div>
                         <label class="radio-inline">
-                            <input name="runStatus" type="radio" value="1" />正常
+                            <input name="field04" type="radio" value="1" checked="checked" />正常
+                        </label>
+                        <label class="radio-inline">
+                            <input name="field04" type="radio" value="2" />异常
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>灭火器的铭牌是否残缺，并清晰明了</label>
+                    <div>
+                        <label class="radio-inline">
+                            <input name="field05" type="radio" value="1" checked="checked" />正常
+                        </label>
+                        <label class="radio-inline">
+                            <input name="field05" type="radio" value="2" />异常
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>灭火器上关于灭火剂、驱动气体的种类、充装压力、总质量、灭火级别、制造厂名和生产日期或维修日期等标志及操作说明是否齐全</label>
+                    <div>
+                        <label class="radio-inline">
+                            <input name="field06" type="radio" value="1" checked="checked" />正常
+                        </label>
+                        <label class="radio-inline">
+                            <input name="field06" type="radio" value="2" />异常
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>灭火器的铅封、销闩等保险装置是否损坏</label>
+                    <div>
+                        <label class="radio-inline">
+                            <input name="field07" type="radio" value="1" checked="checked" />正常
+                        </label>
+                        <label class="radio-inline">
+                            <input name="field07" type="radio" value="2" />异常
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>灭火器的筒体是否无明显的损伤（磕伤、划伤）、缺陷、锈蚀（特别是筒底和焊缝）、泄漏</label>
+                    <div>
+                        <label class="radio-inline">
+                            <input name="field08" type="radio" value="1" checked="checked" />正常
+                        </label>
+                        <label class="radio-inline">
+                            <input name="field08" type="radio" value="2" />异常
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>灭火器的喷射软管是否完好，无明显龟裂，喷嘴不堵塞</label>
+                    <div>
+                        <label class="radio-inline">
+                            <input name="field09" type="radio" value="1" checked="checked" />正常
+                        </label>
+                        <label class="radio-inline">
+                            <input name="field09" type="radio" value="2" />异常
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>灭火器的驱动气体压力是否在工作压力范围</label>
+                    <div>
+                        <label class="radio-inline">
+                            <input name="field10" type="radio" value="1" checked="checked" />正常
+                        </label>
+                        <label class="radio-inline">
+                            <input name="field10" type="radio" value="2" />异常
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>灭火器的零部件是否齐全，并且无松动、脱落或损伤现象</label>
+                    <div>
+                        <label class="radio-inline">
+                            <input name="field11" type="radio" value="1" checked="checked" />正常
+                        </label>
+                        <label class="radio-inline">
+                            <input name="field11" type="radio" value="2" />异常
+                        </label>
+                    </div>
+                </div>
+                <div id="display1" class="form-group">
+                    <label>水枪、水带、水管是否齐全，无破损，易连接</label>
+                    <div>
+                        <label class="radio-inline">
+                            <input name="field12" type="radio" value="1" checked="checked" />正常
+                        </label>
+                        <label class="radio-inline">
+                            <input name="field12" type="radio" value="2" />异常
+                        </label>
+                    </div>
+                </div>
+                <div id="display2" class="form-group">
+                    <label>消火栓水压是否正常，启泵按钮是否有效</label>
+                    <div>
+                        <label class="radio-inline">
+                            <input name="field13" type="radio" value="1" checked="checked" />正常
+                        </label>
+                        <label class="radio-inline">
+                            <input name="field13" type="radio" value="2" />异常
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>设备总体运行状态</label>
+                    <div>
+                        <label class="radio-inline">
+                            <input name="runStatus" type="radio" value="1" checked="checked" />正常
                         </label>
                         <label class="radio-inline">
                             <input name="runStatus" type="radio" value="2" />异常
@@ -161,7 +276,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="comments">描述</label>
+                    <label for="comments">异常描述</label>
                     <textarea id="comments" name="comments" class="form-control" style="resize:none;" rows="3"></textarea>
                 </div>
                 <div class="form-group">

@@ -21,7 +21,18 @@
 		d1.name as runStatusDes,
 		s.field01,
 		s.field02,
-		s.field03
+		s.field03,
+		s.field04,
+		s.field05,
+		s.field06,
+		s.field07,
+		s.field08,
+		s.field09,
+		s.field10,
+		s.field11,
+		s.field12,
+		s.field13,
+		s.field14
 		from bsxf_check_history s 
 		left join bsxf_equipment e on e.id = s.equipment_id
 	    left join ss_user u on u.id = s.create_user_id
@@ -114,7 +125,18 @@
 		    runStatus,
 		    field01,
 		    field02,
-		    field03
+		    field03,
+		    field04,
+		    field05,
+		    field06,
+		    field07,
+		    field08,
+		    field09,
+		    field10,
+		    field11,
+		    field12,
+		    field13,
+		    field14
 		    ) 
 		 values(#{id},
 			#{createTime},
@@ -129,7 +151,18 @@
 		    #{runStatus},
 		    #{field01},
 		    #{field02},
-		    #{field03}
+		    #{field03},
+		    #{field04},
+		    #{field05},
+		    #{field06},
+		    #{field07},
+		    #{field08},
+		    #{field09},
+		    #{field10},
+		    #{field11},
+		    #{field12},
+		    #{field13},
+		    #{field14}
 			)
 	</insert>
 	<update id="updateCheckHistory" parameterType="CheckHistory">
@@ -146,7 +179,18 @@
 			runStatus           = #{runStatus},      
 			field01             = #{field01},        
 			field02             = #{field02},        
-			field03             = #{field03}         
+			field03             = #{field03},   
+			field04             = #{field04},   
+			field05             = #{field05},   
+			field06             = #{field06},   
+			field07             = #{field07},   
+			field08             = #{field08},   
+			field09             = #{field09},   
+			field10             = #{field10},   
+			field11             = #{field11},   
+			field12             = #{field12},   
+			field13             = #{field13},   
+			field14             = #{field14}
 		 where id=#{id} 
 	</update>
 	<delete id="disabledCheckHistory" >

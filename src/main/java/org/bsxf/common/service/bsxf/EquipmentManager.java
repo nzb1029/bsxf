@@ -287,6 +287,17 @@ public class EquipmentManager {
 			return "设备未在系统中维护，请确认";
 		}
 		equipment.setRunStatus(checkResult.getRunStatus());
+		equipment.setField04(checkResult.getField04());
+		equipment.setField05(checkResult.getField05());
+		equipment.setField06(checkResult.getField06());
+		equipment.setField07(checkResult.getField07());
+		equipment.setField08(checkResult.getField08());
+		equipment.setField09(checkResult.getField09());
+		equipment.setField10(checkResult.getField10());
+		equipment.setField11(checkResult.getField11());
+		equipment.setField12(checkResult.getField12());
+		equipment.setField13(checkResult.getField13());
+		equipment.setField14(checkResult.getField14());
 		int newRemainNum = equipment.getRemainNum() - 1;
 		equipment.setRemainNum(newRemainNum < 0 ? 0 : newRemainNum);
 		equipment.setLastUpdateTime(new Date());

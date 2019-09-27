@@ -79,6 +79,18 @@ public class CheckHistoryManager {
 		checkHistory.setComments(checkResult.getComments());
 		checkHistory.setStatus(equipment.getStatus());
 		checkHistory.setRunStatus(equipment.getRunStatus());
+		checkHistory.setField04(checkResult.getField04());
+		checkHistory.setField05(checkResult.getField05());
+		checkHistory.setField06(checkResult.getField06());
+		checkHistory.setField07(checkResult.getField07());
+		checkHistory.setField08(checkResult.getField08());
+		checkHistory.setField09(checkResult.getField09());
+		checkHistory.setField10(checkResult.getField10());
+		checkHistory.setField11(checkResult.getField11());
+		checkHistory.setField12(checkResult.getField12());
+		checkHistory.setField13(checkResult.getField13());
+		checkHistory.setField14(checkResult.getField14());
+		
 		checkHistory.setCheckUser(checkResult.getCheckUser());
 		checkHistory.setCheckTime(new Date());
 		saveOrUpdate(checkHistory);

@@ -66,6 +66,12 @@ public class CheckHistoryController {
 		if (StringUtils.isNotBlank(id)&& !"undefined".equals(id)) {
 			checkHistory = historyManager.getCheckHistory(id);
 		}
+		if(StringUtils.isNotEmpty(checkHistory.getEquipment().getEno()) &&
+		   StringUtils.contains(checkHistory.getEquipment().getEno(), "FHB")){
+		    model.addAttribute("displayflag", "block");
+		}else{
+			model.addAttribute("displayflag", "none");
+		}
 		model.addAttribute("checkHistory", checkHistory);
 		model.addAttribute("readOnly", true);
 		return "bsxf/checkHistoryForm";
@@ -94,6 +100,12 @@ public class CheckHistoryController {
 				|| StringUtils.isBlank(equipment.getCheckUser().getId())) {
 			model.addAttribute("submitCheckResult", "未设置巡检员，请联系管理员对该灭火器设置巡检员");
 			return "bsxf/submitResult";
+		}
+		if(StringUtils.isNotEmpty(equipment.getEno()) &&
+		   StringUtils.contains(equipment.getEno(), "FHB")){
+			model.addAttribute("displayflag", "block");
+		}else{
+			model.addAttribute("displayflag", "none");
 		}
 		model.addAttribute("oldRunStatus", "");
 		model.addAttribute("oldComments", "");

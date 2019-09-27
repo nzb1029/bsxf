@@ -33,6 +33,17 @@
 		s.field01,
 		s.field02,
 		s.field03,
+		s.field04,
+		s.field05,
+		s.field06,
+		s.field07,
+		s.field08,
+		s.field09,
+		s.field10,
+		s.field11,
+		s.field12,
+		s.field13,
+		s.field14,
 		s.amount,
 		s.productionDate
 		from bsxf_equipment s 
@@ -137,7 +148,7 @@
 			comments            ,
 			status              ,
 			runStatus           ,
-			productionDate         ,
+			productionDate      ,
 			effDate             ,
 			expDate             ,
 			checkFreq           ,
@@ -146,9 +157,20 @@
 			check_user_id       ,
 			pointx              ,
 			pointy              ,
-			field01             ,
-			field02             ,
-			field03             
+			field01,
+		    field02,
+		    field03,
+		    field04,
+		    field05,
+		    field06,
+		    field07,
+		    field08,
+		    field09,
+		    field10,
+		    field11,
+		    field12,
+		    field13,
+		    field14
 		    ) 
 		 values(#{id},
 			#{createTime},
@@ -176,7 +198,18 @@
 		    #{pointy},
 		    #{field01},
 		    #{field02},
-		    #{field03}
+		    #{field03},
+		    #{field04},
+		    #{field05},
+		    #{field06},
+		    #{field07},
+		    #{field08},
+		    #{field09},
+		    #{field10},
+		    #{field11},
+		    #{field12},
+		    #{field13},
+		    #{field14}
 			)
 	</insert>
 	<update id="updateEquipment" parameterType="Equipment">
@@ -204,9 +237,20 @@
 			check_user_id       =	#{checkUser.id},   
 			pointx              =	#{pointx},         
 			pointy              =	#{pointy},         
-			field01             =	#{field01},        
-			field02             =	#{field02},        
-			field03             =	#{field03}         
+			field01             = #{field01},        
+			field02             = #{field02},        
+			field03             = #{field03},   
+			field04             = #{field04},   
+			field05             = #{field05},   
+			field06             = #{field06},   
+			field07             = #{field07},   
+			field08             = #{field08},   
+			field09             = #{field09},   
+			field10             = #{field10},   
+			field11             = #{field11},   
+			field12             = #{field12},   
+			field13             = #{field13},   
+			field14             = #{field14}         
 		 where id=#{id} 
 	</update>
 	<delete id="disabledEquipment" >
