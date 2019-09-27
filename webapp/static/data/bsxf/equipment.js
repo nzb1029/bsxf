@@ -4,34 +4,34 @@ $(function(){
 	  jQuery("#table_center_table").jqGrid({
           url: ctx + '/equipment/jqgrid',
           datatype: "json",
-          colNames: ['编号', '区域', '位置', '数量', '类别', '设备1出厂日期', '设备2出厂日期', '设备3出厂日期', '巡检负责人', '巡检频率', '状态', '操作'],
+          colNames: ['编号', '区域', '位置', '数量', '类别', '巡检负责人', '巡检频率', '状态', '操作'],
           colModel: [
               {name: 'eno', index: 'eno', editable: false},
               {name: 'area', index: 'area', editable: false},
               {name: 'location', index: 'location', editable: false},
               {name: 'amount', index: 'amount', editable: false},
               {name: 'subTypeName', index: 'subTypeName', editable: false, sortable: false},
-              {
-                  name: 'productionDate',
-                  index: 'productionDate',
-                  editable: false,
-                  formatter: "date",
-                  formatoptions: {srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s'}
-              },
-              {
-                  name: 'productionDate2',
-                  index: 'productionDate2',
-                  editable: false,
-                  formatter: "date",
-                  formatoptions: {srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s'}
-              },
-              {
-                  name: 'productionDate3',
-                  index: 'productionDate3',
-                  editable: false,
-                  formatter: "date",
-                  formatoptions: {srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s'}
-              },
+//              {
+//                  name: 'productionDate',
+//                  index: 'productionDate',
+//                  editable: false,
+//                  formatter: "date",
+//                  formatoptions: {srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s'}
+//              },
+//              {
+//                  name: 'productionDate2',
+//                  index: 'productionDate2',
+//                  editable: false,
+//                  formatter: "date",
+//                  formatoptions: {srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s'}
+//              },
+//              {
+//                  name: 'productionDate3',
+//                  index: 'productionDate3',
+//                  editable: false,
+//                  formatter: "date",
+//                  formatoptions: {srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s'}
+//              },
 //              {
 //                  name: 'effDate',
 //                  index: 'effDate',
@@ -90,7 +90,7 @@ function update(id){
 	          id: 'LHG1976D1',
 	          content: "url:"+url,
 	          lock:true,
-	          title: cn+'设备',
+	          title: cn+'灭火器',
 	          height:500,
 	          width:750,
 	          ok:function(){return this.content.okFunc();},
