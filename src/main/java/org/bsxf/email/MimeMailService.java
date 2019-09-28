@@ -49,6 +49,7 @@ public class MimeMailService {
 	private JavaMailSender mailSender;
 	private String from;
 	private Template template;
+	private Template equiptemplate;
 
 	/**
 	 * 发送纯文本的邮件
@@ -109,22 +110,25 @@ public class MimeMailService {
 	/** Equipment 发送邮件使用
 	 *  发送MIME格式的
 	 */
-	public boolean sendMimeMail(String subject,String to, List<Equipment> list,String userName,EmialSend emialSend) {
+	public boolean sendMimeMail(String subject,String to, List<Equipment> list,String userName,EmialSend emialSend,String flag) {
 		 
 		EmailConfig config= EhcacheManager.getEmailConfig();
+		String content="" ;
 		try {
 			MimeMessage msg = mailSender.createMimeMessage();
 			MimeMessageHelper helper = new MimeMessageHelper(msg, true, DEFAULT_ENCODING);
 
-			helper.setTo(to);
-			helper.setTo((String [])Arrays.asList(config.getUsername(),to).toArray());
+			helper.setTo(to.split(","));
 			helper.setFrom(config.getUsername());
 			helper.setSubject(subject);
-
-			String content = generateEquipmentContent(list,userName);
+            if("1".equals(flag)){
+            	content = generateXJContent(list,userName);
+            }else if("2".equals(flag)){
+            	content = generateEquipmentContent(list,userName);
+            }
 			helper.setText(content, true);
 			emialSend.setMessage("详情见具体邮件");
-			emialSend.setToemail(Arrays.asList(config.getUsername(),to).toString());
+			emialSend.setToemail(to);
 			//File attachment = generateAttachment();
 			//helper.addAttachment("mailAttachment.txt", attachment);
 			mailSender.send(msg);
@@ -139,12 +143,27 @@ public class MimeMailService {
 	return true;
   }
 
-	private String generateEquipmentContent(List<Equipment> list, String userName) throws MessagingException  {
+	private String generateXJContent(List<Equipment> list, String userName) throws MessagingException  {
 		try {
 			Map context = new HashMap();
 			context.put("userName", userName);
 			context.put("equipmentList", list);
 			return FreeMarkerTemplateUtils.processTemplateIntoString(template, context);
+		} catch (IOException e) {
+			logger.error("生成邮件内容失败, FreeMarker模板不存在", e);
+			throw new MessagingException("FreeMarker模板不存在", e);
+		} catch (TemplateException e) {
+			logger.error("生成邮件内容失败, FreeMarker处理失败", e);
+			throw new MessagingException("FreeMarker处理失败", e);
+		}
+	}
+	
+	private String generateEquipmentContent(List<Equipment> list, String userName) throws MessagingException  {
+		try {
+			Map context = new HashMap();
+			context.put("userName", userName);
+			context.put("equipmentList", list);
+			return FreeMarkerTemplateUtils.processTemplateIntoString(equiptemplate, context);
 		} catch (IOException e) {
 			logger.error("生成邮件内容失败, FreeMarker模板不存在", e);
 			throw new MessagingException("FreeMarker模板不存在", e);
@@ -197,6 +216,7 @@ public class MimeMailService {
 	public void setFreemarkerConfiguration(Configuration freemarkerConfiguration) throws IOException {
 		// 根据freemarkerConfiguration的templateLoaderPath载入文件.
 		template = freemarkerConfiguration.getTemplate("mailTemplate.ftl", DEFAULT_ENCODING);
+		equiptemplate = freemarkerConfiguration.getTemplate("equipmailTemplate.ftl", DEFAULT_ENCODING);
 	}
 
 	public String getFrom() {

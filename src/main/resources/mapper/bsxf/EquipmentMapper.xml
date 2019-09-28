@@ -83,7 +83,7 @@
 	</select>
 
 	<select id="getAllEquipmentId" parameterType="String" resultType="String">
-		select distinct id from bsxf_equipment
+		select distinct id from bsxf_equipment where status = 'enabled' order by eno asc
 	</select>
 	
     <select id="getUserEquipment" parameterType="string" resultType="Equipment">

@@ -43,11 +43,11 @@ public class EmailUtil {
 	 *  Equipment list
 	 * 及时发送HTML邮件
 	 * */
-	public static boolean sendMineEmailByNow(String subject, List<Equipment> list , String to,String userName){
+	public static boolean sendMineEmailByNow(String subject, List<Equipment> list , String to,String userName,String flag){
 		MimeMailService mimeMailService=SpringContextHolder.getBean(MimeMailService.class);
 		EmailConfig c = EhcacheManager.getEmailConfig();
 		EmialSend emialSend = new EmialSend();
-		boolean f = mimeMailService.sendMimeMail(subject,to,list,userName,emialSend);
+		boolean f = mimeMailService.sendMimeMail(subject,to,list,userName,emialSend,flag);
 		emialSend.setHost(c.getHost());
 		emialSend.setUsername(c.getUsername());
 		emialSend.setPort(c.getPort());

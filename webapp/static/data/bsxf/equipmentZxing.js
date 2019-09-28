@@ -4,37 +4,42 @@ $(function(){
 	  jQuery("#table_center_table").jqGrid({
           url: ctx + '/equipment/jqgrid',
           datatype: "json",
-          colNames: ['编号', '区域', '位置', '数量', '类别', '设备1出厂日期', '设备2出厂日期', '设备3出厂日期','巡检负责人', '巡检频率', '状态'],
+          colNames: ['编号', '区域', '位置', '数量', '类别','巡检负责人', '巡检频率', '状态',''],
           colModel: [
               {name: 'eno', index: 'eno', editable: false},
               {name: 'area', index: 'area', editable: false},
               {name: 'location', index: 'location', editable: false},
               {name: 'amount', index: 'amount', editable: false},
               {name: 'subTypeName', index: 'subTypeName', editable: false, sortable: false},
-              {
-                  name: 'productionDate',
-                  index: 'productionDate',
-                  editable: false,
-                  formatter: "date",
-                  formatoptions: {srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s'}
-              },
-              {
-                  name: 'productionDate2',
-                  index: 'productionDate2',
-                  editable: false,
-                  formatter: "date",
-                  formatoptions: {srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s'}
-              },
-              {
-                  name: 'productionDate3',
-                  index: 'productionDate3',
-                  editable: false,
-                  formatter: "date",
-                  formatoptions: {srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s'}
-              },
+//              {
+//                  name: 'productionDate',
+//                  index: 'productionDate',
+//                  editable: false,
+//                  formatter: "date",
+//                  formatoptions: {srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s'}
+//              },
+//              {
+//                  name: 'productionDate2',
+//                  index: 'productionDate2',
+//                  editable: false,
+//                  formatter: "date",
+//                  formatoptions: {srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s'}
+//              },
+//              {
+//                  name: 'productionDate3',
+//                  index: 'productionDate3',
+//                  editable: false,
+//                  formatter: "date",
+//                  formatoptions: {srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s'}
+//              },
               {name: 'checkUser.name', index: 'checkUser.name', editable: false, sortable: false},
               {name: 'checkFreqDes', index: 'checkFreqDes', editable: false, sortable: false},
-              {name: 'runStatusDes', index: 'runStatusDes', editable: false}
+              {name: 'runStatusDes', index: 'runStatusDes', editable: false},
+              {
+                  name: 'edit', index: 'edit', formatter: function (value, options, rData) {
+                      return "<a  style=\"cursor: pointer;\" title='详情' onclick=\"viewDetail('" + rData['id'] + "')\" >查看详情</a>";
+                  }, sortable: false
+              }
           ],
           rowNum: 10,
           multiselect: true,
@@ -80,10 +85,10 @@ function toPrint(ids){
         contentType:'application/json;charset=utf-8',
         success:function(d){
             if (d == "") {
-                alert("下载失败，请重试")
+                alert("打印失败，请重试")
             } else {
                 window.location.href = ctx + "/equipment/downloadQrcodefile/" + d;
-                alert("下载二维码...");
+                alert("二维码打印成功...");
             }
             jQGridSupport.reloadGrid(ggridId);
         }
@@ -129,4 +134,20 @@ function toRemove(id){
 
 function afterSave(){
 	 jQGridSupport.reloadGrid(ggridId);
+}
+function viewDetail(id){
+    $.dialog({
+	          id: 'LHG1976D15',
+	          content: 'url:'+ctx+'/equipment/viewDetail/'+id,
+	          lock:true,
+	          title: '查看灭火器详情',
+	          height:600,
+	          width:700,
+	          ok:false,
+	          init:function(){//this.max();alert(123);
+	           //this.max();
+	          },
+		      cancel: true//,
+		    //  button:[{name:"打印",callback:function(){ this.iframe.contentWindow.printpreview();return false;}}]
+	      }); 
 }
