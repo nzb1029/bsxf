@@ -55,7 +55,6 @@ public class DictionaryController {
 			page.setOrder("sort", "asc");
 		} else
 			page.setOrder("typeCode", "asc");
-		System.out.println(page.getOrder());
 		page = systemManager.findDictionaryByPage(page);
 		return JqGirds.renderJson(page);
 	}

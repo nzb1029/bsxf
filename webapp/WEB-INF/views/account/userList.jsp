@@ -32,8 +32,8 @@
            <form class="form-search" action="#"  ">
             <span class="margin_right_10">登录名：<input type="text" name="filter_loginName"   class="input-medium"  value=""> </span>
             <span class="margin_right_10">用户名：<input type="text" name="filter_name"   class="input-medium"  value=""> </span>
-            <span class="margin_right_30"><button type="reset" id="search_btn">清空</button></span>
             <span class="margin_right_30"><button type="submit" id="search_btn">搜索</button></span>
+            <span class="margin_right_30"><button type="reset" id="search_btn">清空</button></span>
            </form>
         </div>
         <div id="table_center_search_header">

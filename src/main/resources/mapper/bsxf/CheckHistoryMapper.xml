@@ -64,10 +64,10 @@
 			 and s.check_user_id=#{filters.checkUserId}
 		</if>
 		<if test="filters.eno!=null"> 
-			 and e.eno=#{filters.eno}
+			 and e.eno like '%' #{filters.eno} '%'
 		</if>
 		<if test="filters.userName!=null"> 
-			 and uu.name=#{filters.userName}
+			 and uu.name like '%' #{filters.userName} '%' 
 		</if>
 		<if test="filters.startDate!=null"> 
 			 and s.check_time &gt;= str_to_date(#{filters.startDate},'%Y-%m-%d %H:%i:%s')  
@@ -92,10 +92,10 @@
 				 and s.check_user_id=#{filters.checkUserId}
 			</if>
 			<if test="filters.eno!=null"> 
-				 and e.eno=#{filters.eno}
+				 and e.eno like '%' #{filters.eno} '%'
 			</if>
 			<if test="filters.userName!=null"> 
-				 and uu.name=#{filters.userName}
+				 and uu.name like '%' #{filters.userName} '%' 
 			</if>
 			<if test="filters.startDate!=null"> 
 				 and s.check_time &gt;= str_to_date(#{filters.startDate},'%Y-%m-%d %H:%i:%s')  

@@ -105,7 +105,7 @@
 			 and s.check_user_id=#{filters.checkUserId}
 		</if>
 		<if test="filters.eno!=null"> 
-			 and s.eno=#{filters.eno}
+			 and s.eno like '%' #{filters.eno} '%'
 		</if>
 		<if test="filters.userName!=null"> 
 			 and uu.name like '%' #{filters.userName} '%'
@@ -127,7 +127,7 @@
 			 and s.check_user_id=#{filters.checkUserId}
 		</if>
 		<if test="filters.eno!=null"> 
-			 and s.eno=#{filters.eno}
+			 and s.eno like '%' #{filters.eno} '%'
 		</if>
 		<if test="filters.userName!=null"> 
 			 and uu.name like '%' #{filters.userName} '%'
