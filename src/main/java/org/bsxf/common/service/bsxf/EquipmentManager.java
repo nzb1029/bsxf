@@ -171,74 +171,92 @@ public class EquipmentManager {
 	}
 	
 	private Equipment generateEquipment(Map<String, Object> data, List<Dictionary> categoryList) {
-		logger.info("解析设备：{}", data);
-		Equipment equipment = new Equipment();
-		//set deafult value
-		equipment.setId(Identities.uuid2());
-		equipment.setEquipmentTypeId("1");
-		equipment.setName("灭火器");
-		equipment.setCreateTime(new Date());
-		equipment.setCreateUser(LtSecurityUtils.getLoginUser());
-		equipment.setCheckFreq(1);
+        logger.info("解析设备：{}", data);
+        Equipment equipment = new Equipment();
+        //set deafult value
+        equipment.setId(Identities.uuid2());
+        equipment.setEquipmentTypeId("1");
+        equipment.setName("灭火器");
+        equipment.setCreateTime(new Date());
+        equipment.setCreateUser(LtSecurityUtils.getLoginUser());
+        equipment.setCheckFreq(1);
 
-		Object enoObj = data.get("设备编号");
-		if (enoObj == null) {
-		    return null;
+        Object enoObj = data.get("设备编号");
+        if (enoObj == null) {
+            return null;
         }
-		String eno = data.get("设备编号").toString().trim();
-		if (StringUtils.isBlank(eno)) {
-			return null;
-		}
-		equipment.setEno(eno);
-		for (String key : data.keySet()) {
-			if ("设备类别".equals(key)) {
-				equipment.setSubTypeName(data.get(key).toString().trim());
-				for (Dictionary category : categoryList) {
-					if (category.getName().equalsIgnoreCase(equipment.getSubTypeName())) {
-						equipment.setSubTypeId(category.getVal());
-						break;
-					}
-				}
-			} else if ("区域".equals(key)) {
-				equipment.setArea(data.get(key).toString().trim());
-			} else if ("位置".equals(key)) {
-				equipment.setLocation(data.get(key).toString().trim());
-			} else if ("001有效起期".equals(key)) {
-				equipment.setEffDate((Date) data.get(key));
-			} else if ("001有效止期".equals(key)) {
-				equipment.setExpDate((Date) data.get(key));
-			} else if ("001出厂日期".equals(key)) {
-				equipment.setProductionDate((Date) data.get(key));
-			} else if ("002有效起期".equals(key)) {
-				equipment.setEffDate2((Date) data.get(key));
-			} else if ("002有效止期".equals(key)) {
-				equipment.setExpDate2((Date) data.get(key));
-			} else if ("002出厂日期".equals(key)) {
-				equipment.setProductionDate2((Date) data.get(key));
-			} else if ("003有效起期".equals(key)) {
-				equipment.setEffDate3((Date) data.get(key));
-			} else if ("003有效止期".equals(key)) {
-				equipment.setExpDate3((Date) data.get(key));
-			} else if ("003出厂日期".equals(key)) {
-				equipment.setProductionDate3((Date) data.get(key));
-			} else if ("备注".equals(key)) {
-				equipment.setComments(data.get(key).toString().trim());
-			} else if ("数量".equals(key)) {
-				equipment.setAmount(((Double) data.get(key)).intValue());
-			} else if ("巡检负责人".equalsIgnoreCase(key)) {
-				String userName = data.get(key).toString().trim();
-				List<User> userList = userDao.getUserByName(userName);
-				if (CollectionUtils.isEmpty(userList) || userList.size() > 1) {
-					logger.error("数据有误：{}", data);
-				    throw new RuntimeException(equipment.getEno()+" 设备的巡检员(" + userName + ")设置有误，请确认");
+        String eno = data.get("设备编号").toString().trim();
+        if (StringUtils.isBlank(eno)) {
+            return null;
+        }
+        equipment.setEno(eno);
+        for (String key : data.keySet()) {
+            if ("设备类别".equals(key)) {
+                equipment.setSubTypeName(data.get(key).toString().trim());
+                for (Dictionary category : categoryList) {
+                    if (category.getName().equalsIgnoreCase(equipment.getSubTypeName())) {
+                        equipment.setSubTypeId(category.getVal());
+                        break;
+                    }
                 }
-				equipment.setCheckUser(userList.get(0));
-			} else if (!"设备编号".equals(key)){
-				logger.error("{}-{} 无匹配字段", new Object[]{key, data.get(key)});
-			}
-		}
-		return equipment;
-	}
+            } else if ("区域".equals(key)) {
+                equipment.setArea(data.get(key).toString().trim());
+            } else if ("位置".equals(key)) {
+                equipment.setLocation(data.get(key).toString().trim());
+            } else if ("001有效起期".equals(key)) {
+                if (StringUtils.isNotBlank(data.get(key).toString())) {
+                    equipment.setEffDate((Date) data.get(key));
+                }
+            } else if ("001有效止期".equals(key)) {
+                if (StringUtils.isNotBlank(data.get(key).toString())) {
+                    equipment.setExpDate((Date) data.get(key));
+                }
+            } else if ("001出厂日期".equals(key)) {
+                if (StringUtils.isNotBlank(data.get(key).toString())) {
+                    equipment.setProductionDate((Date) data.get(key));
+                }
+            } else if ("002有效起期".equals(key)) {
+                if (StringUtils.isNotBlank(data.get(key).toString())) {
+                    equipment.setEffDate2((Date) data.get(key));
+                }
+            } else if ("002有效止期".equals(key)) {
+                if (StringUtils.isNotBlank(data.get(key).toString())) {
+                    equipment.setExpDate2((Date) data.get(key));
+                }
+            } else if ("002出厂日期".equals(key)) {
+                if (StringUtils.isNotBlank(data.get(key).toString())) {
+                    equipment.setProductionDate2((Date) data.get(key));
+                }
+            } else if ("003有效起期".equals(key)) {
+                if (StringUtils.isNotBlank(data.get(key).toString())) {
+                    equipment.setEffDate3((Date) data.get(key));
+                }
+            } else if ("003有效止期".equals(key)) {
+                if (StringUtils.isNotBlank(data.get(key).toString())) {
+                    equipment.setExpDate3((Date) data.get(key));
+                }
+            } else if ("003出厂日期".equals(key)) {
+                if (StringUtils.isNotBlank(data.get(key).toString())) {
+                    equipment.setProductionDate3((Date) data.get(key));
+                }
+            } else if ("备注".equals(key)) {
+                equipment.setComments(data.get(key).toString().trim());
+            } else if ("数量".equals(key)) {
+                equipment.setAmount(((Double) data.get(key)).intValue());
+            } else if ("巡检负责人".equalsIgnoreCase(key)) {
+                String userName = data.get(key).toString().trim();
+                List<User> userList = userDao.getUserByName(userName);
+                if (CollectionUtils.isEmpty(userList) || userList.size() > 1) {
+                    logger.error("数据有误：{}", data);
+                    throw new RuntimeException(equipment.getEno() + " 设备的巡检员(" + userName + ")设置有误，请确认");
+                }
+                equipment.setCheckUser(userList.get(0));
+            } else if (!"设备编号".equals(key)) {
+                logger.error("{}-{} 无匹配字段", new Object[]{key, data.get(key)});
+            }
+        }
+        return equipment;
+    }
 
 	/**
 	 * 每月剩余巡检次数,在下个月时会将这个字段复制到lastremainNum字段，这个字段重置
