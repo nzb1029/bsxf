@@ -110,6 +110,7 @@ public class EquipmentManager {
 			equipmentDao.updateEquipment(entity);
 			id = entity.getId();
 		} else {
+		    entity.setName("灭火器");
 			entity.setCreateTime(new Date());
 			entity.setCreateUser(LtSecurityUtils.getLoginUser());
 			//如果新增的话,需要设置剩余巡检次数
@@ -203,23 +204,41 @@ public class EquipmentManager {
 			} else if ("位置".equals(key)) {
 				equipment.setLocation(data.get(key).toString().trim());
 			} else if ("设备1有效起期".equals(key)) {
-				equipment.setEffDate((Date) data.get(key));
+				if (StringUtils.isNotBlank(data.get(key).toString())) {
+					equipment.setEffDate((Date) data.get(key));
+				}
 			} else if ("设备1有效止期".equals(key)) {
-				equipment.setExpDate((Date) data.get(key));
+				if (StringUtils.isNotBlank(data.get(key).toString())) {
+					equipment.setExpDate((Date) data.get(key));
+				}
 			} else if ("设备1出厂日期".equals(key)) {
-				equipment.setProductionDate((Date) data.get(key));
+				if (StringUtils.isNotBlank(data.get(key).toString())) {
+					equipment.setProductionDate((Date) data.get(key));
+				}
 			} else if ("设备2有效起期".equals(key)) {
-				equipment.setEffDate2((Date) data.get(key));
+				if (StringUtils.isNotBlank(data.get(key).toString())) {
+					equipment.setEffDate2((Date) data.get(key));
+				}
 			} else if ("设备2有效止期".equals(key)) {
-				equipment.setExpDate2((Date) data.get(key));
+				if (StringUtils.isNotBlank(data.get(key).toString())) {
+					equipment.setExpDate2((Date) data.get(key));
+				}
 			} else if ("设备2出厂日期".equals(key)) {
-				equipment.setProductionDate2((Date) data.get(key));
+				if (StringUtils.isNotBlank(data.get(key).toString())) {
+					equipment.setProductionDate2((Date) data.get(key));
+				}
 			} else if ("设备3有效起期".equals(key)) {
-				equipment.setEffDate3((Date) data.get(key));
+				if (StringUtils.isNotBlank(data.get(key).toString())) {
+					equipment.setEffDate3((Date) data.get(key));
+				}
 			} else if ("设备3有效止期".equals(key)) {
-				equipment.setExpDate3((Date) data.get(key));
+				if (StringUtils.isNotBlank(data.get(key).toString())) {
+					equipment.setExpDate3((Date) data.get(key));
+				}
 			} else if ("设备3出厂日期".equals(key)) {
-				equipment.setProductionDate3((Date) data.get(key));
+				if (StringUtils.isNotBlank(data.get(key).toString())) {
+					equipment.setProductionDate3((Date) data.get(key));
+				}
 			} else if ("备注".equals(key)) {
 				equipment.setComments(data.get(key).toString().trim());
 			} else if ("数量".equals(key)) {
