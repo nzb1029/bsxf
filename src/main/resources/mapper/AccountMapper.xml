@@ -180,6 +180,23 @@
 		where u.name=#{name} and u.status='enabled'
 	</select>
 	
+	<select id="getUserByType" parameterType="string" resultType="User">
+	   select u.id,
+		    u.name,
+		    u.login_name as loginName,
+		    u.email ,
+		    u.password,
+		    u.status,
+            u.is_lock as isLock,
+            u.lock_time as lockTime,
+            u.user_type as userType,
+            u.phone_no as phoneNo,
+            u.exp_date as expDate,
+	        u.card_NO as cardNo
+		from ss_user u
+		where u.user_type =#{type} and u.status='enabled'
+	</select>
+	
 	<select id="findUserByLoginNameOrEmailOrMobile" parameterType="string" resultType="User">
 	   select u.id, 
 		    u.name, 

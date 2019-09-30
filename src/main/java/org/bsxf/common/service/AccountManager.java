@@ -128,7 +128,6 @@ public class AccountManager {
 	public User findUserByCarno(String cardNo) {
 		try {
 			User u = userDao.findUserByCarno(cardNo);
-			 
 			return u;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -149,6 +148,13 @@ public class AccountManager {
 
 		List<User> us = userDao.search(q, limit);
 
+		return us;
+	}
+	
+	@Transactional(readOnly = true)
+	public List<User> getUserByType(String type) {
+		List<User> us = userDao.getUserByType(type);
+		
 		return us;
 	}
 

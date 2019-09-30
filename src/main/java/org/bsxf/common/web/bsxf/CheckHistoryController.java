@@ -10,6 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.bsxf.common.entity.bsxf.CheckHistory;
 import org.bsxf.common.entity.bsxf.CheckResult;
 import org.bsxf.common.entity.bsxf.Equipment;
+import org.bsxf.common.service.AccountManager;
 import org.bsxf.common.service.bsxf.CheckHistoryManager;
 import org.bsxf.common.service.bsxf.EquipmentManager;
 import org.bsxf.security.ShiroDbRealm;
@@ -18,8 +19,11 @@ import org.bsxf.utils.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springside.utils.Collections3;
 import org.springside.utils.Identities;
@@ -31,6 +35,8 @@ public class CheckHistoryController {
 	private CheckHistoryManager historyManager ;
 	@Autowired
 	private EquipmentManager equipmentManager ;
+	@Autowired
+	private AccountManager accountManager ;
 	@Autowired
     private ShiroDbRealm shiroDbRealm;
 
@@ -96,18 +102,19 @@ public class CheckHistoryController {
 	@RequestMapping(value = "resultForm/{id}")
 	public String resultForm(@PathVariable("id")String id, Model model) {
 		Equipment equipment = equipmentManager.getEquipment(id);
-		if (equipment == null
-				|| equipment.getCheckUser() == null
-				|| StringUtils.isBlank(equipment.getCheckUser().getId())) {
-			model.addAttribute("submitCheckResult", "未设置巡检员，请联系管理员对该灭火器设置巡检员");
-			return "bsxf/submitResult";
-		}
+//		if (equipment == null
+//				|| equipment.getCheckUser() == null
+//				|| StringUtils.isBlank(equipment.getCheckUser().getId())) {
+//			model.addAttribute("submitCheckResult", "未设置巡检员，请联系管理员对该灭火器设置巡检员");
+//			return "bsxf/submitResult";
+//		}
 		if(StringUtils.isNotEmpty(equipment.getEno()) &&
 		   StringUtils.contains(equipment.getEno(), "FHB")){
 			model.addAttribute("displayflag", "block");
 		}else{
 			model.addAttribute("displayflag", "none");
 		}
+		model.addAttribute("xjUserList", accountManager.getUserByType("1"));
 		model.addAttribute("oldRunStatus", "");
 		model.addAttribute("oldComments", "");
 		model.addAttribute("oldCheckUserPassword", "");

@@ -60,6 +60,7 @@
             $("input").attr("disabled", true);
             $("textarea").attr("disabled", true);
             $("button").attr("disabled", true);
+            $("select").attr("disabled", true);
             BootstrapDialog.show({
                 closable: false,
                 type: BootstrapDialog.TYPE_SUCCESS,
@@ -78,19 +79,26 @@
         function submitResult() {
             var runStatus = $("input:radio[name='runStatus']:checked").val();
             var checkUserPassword = $("#checkUserPassword").val();
+            var checkUser = $("#checkUserId").val();
             if (runStatus == undefined
                 || runStatus == 'undefined'
                 || runStatus == null
                 || runStatus == 'null'
                 || runStatus.length < 1) {
                 dialogWarning("必须选择设备状态");
+            } else if (checkUser == undefined
+                || checkUser == 'undefined'
+                || checkUser == null
+                || checkUser == 'null'
+                || checkUser.length < 1) {
+                dialogWarning("请选择巡检员");
             } else if (checkUserPassword == undefined
                 || checkUserPassword == 'undefined'
                 || checkUserPassword == null
                 || checkUserPassword == 'null'
                 || checkUserPassword.length < 1) {
                 dialogWarning("请输入巡检员密码");
-            } else {
+            }else {
                 var ctx = $('#ctx').val();
                 var data = $("#resultForm").serializeJson();
                 $.ajax({
@@ -179,10 +187,6 @@
                         <td>位置</td>
                         <td>${equipment.location}</td>
                     </tr>
-                    <tr>
-                        <td>巡检员</td>
-                        <td>${equipment.checkUser.name}</td>
-                    </tr>
                     </tbody>
                 </table>
             </div>
@@ -195,7 +199,6 @@
                 <input type="hidden" name="submitCheckResult" id="submitCheckResult" value="${submitCheckResult}"/>
                 <input type="hidden" name="equipmentId" id="equipmentId" value="${equipment.id}"/>
                 <input type="hidden" name="checkHistoryId" id="checkHistoryId" value="${checkHistoryId}"/>
-                <input type="hidden" name="checkUser.id" id="checkUserId" value="${equipment.checkUser.id}"/>
                 <input type="hidden" name="displayflag" id="displayflag" value="${displayflag}"/>
                 <div class="form-group">
                     <label>消防设施是否被遮挡，灭火器箱是否完好，灭火器数量是否缺少</label>
@@ -321,6 +324,15 @@
                 <div class="form-group">
                     <label for="comments">异常描述</label>
                     <textarea id="comments" name="comments" class="form-control" style="resize:none;" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="checkUserId">巡检员</label>
+                    <select name="checkUser.id" id="checkUserId" class="form-control" >
+                            <option value="">请选择</option>
+				 			<c:forEach items="${xjUserList}" var="item">
+	          		 				<option value="${item.id}">${item.name }</option>
+	           				</c:forEach>
+				 	</select>
                 </div>
                 <div class="form-group">
                     <label for="checkUserPassword">密码</label>
