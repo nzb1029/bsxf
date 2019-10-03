@@ -322,7 +322,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="comments">异常描述</label>
+                    <label for="comments">检查情况</label>
                     <textarea id="comments" name="comments" class="form-control" style="resize:none;" rows="3"></textarea>
                 </div>
                 <div class="form-group">

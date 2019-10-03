@@ -1,3 +1,4 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
@@ -17,7 +18,7 @@
 <td>${equipment.eno}</td>
 <td>${equipment.area}</td>
 <td>${equipment.location}</td>
-<td><font color="#ff0000">${equipment.effDate} &nbsp;&nbsp; 至   &nbsp;&nbsp;  ${equipment.expDate}</font></td>
+<td><font color="#ff0000"><fmt:formatDate value="${equipment.effDate}" pattern="yyyy-MM-dd"/>&nbsp;&nbsp; 至   &nbsp;&nbsp;<fmt:formatDate value="${equipment.expDate}" pattern="yyyy-MM-dd"/> </font></td>
 <td><font color="#ff0000">${equipment.effDate2} &nbsp;&nbsp; 至   &nbsp;&nbsp;  ${equipment.expDate2}</font></td>
 <td><font color="#ff0000">${equipment.effDate3} &nbsp;&nbsp; 至   &nbsp;&nbsp;  ${equipment.expDate3}</font></td>
 </tr>

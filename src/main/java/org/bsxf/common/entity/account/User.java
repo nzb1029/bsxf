@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.bsxf.common.entity.IdEntity;
-import org.bsxf.common.entity.akl.Block;
 import org.springside.utils.Collections3;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -90,12 +89,6 @@ public class User extends IdEntity {
 	private String plainPassword;
 	
 	private String userTypeName;
-	
-	/**
-	 * @变量 roleList : 角色表
-	 */
-	private List<Block> blockList = Lists.newArrayList(); 
-	
 	/**
 	 * 
 	 * 构造函数
@@ -255,14 +248,4 @@ public class User extends IdEntity {
 	public void setRoles(String roles) {
 		this.roles = roles;
 	}
-
-	public List<Block> getBlockList() {
-		return blockList;
-	}
-
-	public void setBlockList(List<Block> blockList) {
-		this.blockList = blockList;
-	}
-	
-	
 }

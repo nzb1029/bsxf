@@ -1,7 +1,6 @@
 package org.bsxf.common.service;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,9 +13,7 @@ import org.bsxf.common.dao.UserDao;
 import org.bsxf.common.entity.account.Menu;
 import org.bsxf.common.entity.account.Role;
 import org.bsxf.common.entity.account.User;
-import org.bsxf.common.repository.akl.BlockMybatisDao;
 import org.bsxf.common.web.UserLogUtil;
-import org.bsxf.security.ShiroDbRealm;
 import org.bsxf.utils.EncryptUtils;
 import org.bsxf.utils.Page;
 import org.bsxf.web.LtSecurityUtils;
@@ -54,10 +51,6 @@ public class AccountManager {
 	private RoleDao roleDao;
 	@Autowired
 	private MenuDao menuDao;
-	
-	@Autowired
-	private BlockMybatisDao blockDao;
-
 
 	public void setUserDao(UserDao userDao) {
 		this.userDao = userDao;
@@ -74,7 +67,6 @@ public class AccountManager {
 			User u = userDao.findUserByLoginNameOrEmailOrMobile(loginName);
 			if (u != null){
 				u.setRoleList(userDao.getUserRole(u.getId()));
-				u.setBlockList(blockDao.getUserBlock(u.getId()));
 			}
 			return u;
 		} catch (Exception e) {

@@ -49,7 +49,6 @@ import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.bsxf.common.entity.account.Permission;
 import org.bsxf.common.entity.account.Role;
 import org.bsxf.common.entity.account.User;
-import org.bsxf.common.entity.akl.Block;
 import org.bsxf.common.service.AccountManager;
 import org.bsxf.common.service.PermissionManager;
 import org.bsxf.common.web.SessionKey;
