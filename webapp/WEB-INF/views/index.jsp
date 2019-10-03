@@ -6,7 +6,6 @@
 <%@page import="org.bsxf.common.service.AccountManager"%>
 <%@page import="java.util.List"%>
 <%@page import="org.bsxf.common.entity.account.Menu"%>
-<%@page import="org.bsxf.common.entity.akl.Block"%>
 <%@include file="/common/taglibs.jsp" %>
 <%@ include file="/WEB-INF/common/lhgdialog.jsp" %>
 <%@page import="org.bsxf.utils.EhcacheManager;"%>
