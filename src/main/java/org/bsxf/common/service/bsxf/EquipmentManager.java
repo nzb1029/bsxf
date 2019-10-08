@@ -105,8 +105,6 @@ public class EquipmentManager {
         //Equipment 比较特殊，进页面时就生成了主键，所以这里要改一下。
 		String id = "";
 		if (this.getEquipment(entity.getId()) != null) {
-			//如果修改了CheckFreq的话,也要更新下remainNumber
-			entity.setRemainNum(entity.getCheckFreq());
 			equipmentDao.updateEquipment(entity);
 			id = entity.getId();
 		} else {
@@ -317,7 +315,7 @@ public class EquipmentManager {
 		if (equipment == null) {
 			return "设备未在系统中维护，请确认";
 		}
-		equipment.setRunStatus(checkResult.getRunStatus());
+		equipment.setRunStatus(getRunStatus(checkResult));
 		equipment.setField04(checkResult.getField04());
 		equipment.setField05(checkResult.getField05());
 		equipment.setField06(checkResult.getField06());
@@ -329,6 +327,7 @@ public class EquipmentManager {
 		equipment.setField12(checkResult.getField12());
 		equipment.setField13(checkResult.getField13());
 		equipment.setField14(checkResult.getField14());
+		equipment.setComments(checkResult.getComments());
 		int newRemainNum = equipment.getRemainNum() - 1;
 		equipment.setRemainNum(newRemainNum < 0 ? 0 : newRemainNum);
 		equipment.setLastUpdateTime(new Date());
@@ -337,7 +336,27 @@ public class EquipmentManager {
 		return "";
 	}
 
-    private void saveQrcodeAttachment(String businessId, String fullPath, String fileName) {
+	/**
+                全都正常,总的状态才正常
+	 */
+    private String getRunStatus(CheckResult checkResult) {
+		if("1".equals(checkResult.getField04()) &&
+		   "1".equals(checkResult.getField05()) &&
+		   "1".equals(checkResult.getField06()) &&
+		   "1".equals(checkResult.getField07()) &&
+		   "1".equals(checkResult.getField08()) &&
+		   "1".equals(checkResult.getField09()) &&
+		   "1".equals(checkResult.getField10()) &&
+		   "1".equals(checkResult.getField11()) &&
+		   "1".equals(checkResult.getField12()) &&
+		   "1".equals(checkResult.getField13()) &&
+		   "1".equals(checkResult.getField14())){
+			return "1";
+		}else{
+			return "2";
+		}
+	}
+	private void saveQrcodeAttachment(String businessId, String fullPath, String fileName) {
         Attachment attach = new Attachment();
         attach.setFilename(fileName);
         attach.setFileType("2");

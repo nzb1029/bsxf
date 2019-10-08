@@ -107,6 +107,9 @@
 		<if test="filters.eno!=null"> 
 			 and s.eno like '%' #{filters.eno} '%'
 		</if>
+		<if test="filters.area!=null"> 
+			 and s.area like '%' #{filters.area} '%'
+		</if>
 		<if test="filters.userName!=null"> 
 			 and uu.name like '%' #{filters.userName} '%'
 		</if>
@@ -128,6 +131,9 @@
 		</if>
 		<if test="filters.eno!=null"> 
 			 and s.eno like '%' #{filters.eno} '%'
+		</if>
+		<if test="filters.area!=null"> 
+			 and s.area like '%' #{filters.area} '%'
 		</if>
 		<if test="filters.userName!=null"> 
 			 and uu.name like '%' #{filters.userName} '%'

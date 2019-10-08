@@ -190,7 +190,7 @@
 				 </td>
 			</tr>
 			<tr>
-				<td class="left">异常描述：</td>
+				<td class="left">检查情况：</td>
 				<td   class="right">
 		          <textarea rows="3" style="width: 300px;" name="comments" disabled="disabled">${checkHistory.comments}</textarea>
        		    </td>

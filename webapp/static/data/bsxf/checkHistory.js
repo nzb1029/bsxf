@@ -3,7 +3,7 @@ $(function(){
 	  jQuery("#table_center_table").jqGrid({
           url: ctx + '/history/jqgrid',
           datatype: "json",
-          colNames: ['灭火器编号', '区域', '位置', '数量', '状态', '巡检人', '巡检时间', '备注', '操作'],
+          colNames: ['灭火器编号', '区域', '位置', '数量', '状态', '巡检人', '巡检时间', '检查情况', '操作'],
           colModel: [
               {name: 'equipment.eno', index: 'equipment.eno', editable: false},
               {name: 'equipment.area', index: 'equipment.area', editable: false},

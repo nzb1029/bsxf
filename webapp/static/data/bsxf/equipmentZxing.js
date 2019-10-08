@@ -4,7 +4,7 @@ $(function(){
 	  jQuery("#table_center_table").jqGrid({
           url: ctx + '/equipment/jqgrid',
           datatype: "json",
-          colNames: ['编号', '区域', '位置', '数量', '类别','巡检负责人', '巡检频率', '状态',''],
+          colNames: ['编号', '区域', '位置', '数量', '类别','巡检负责人', '巡检频率', '状态','检查情况', ''],
           colModel: [
               {name: 'eno', index: 'eno', editable: false},
               {name: 'area', index: 'area', editable: false},
@@ -35,6 +35,7 @@ $(function(){
               {name: 'checkUser.name', index: 'checkUser.name', editable: false, sortable: false},
               {name: 'checkFreqDes', index: 'checkFreqDes', editable: false, sortable: false},
               {name: 'runStatusDes', index: 'runStatusDes', editable: false},
+              {name: 'comments', index: 'comments', editable: false},
               {
                   name: 'edit', index: 'edit', formatter: function (value, options, rData) {
                       return "<a  style=\"cursor: pointer;\" title='详情' onclick=\"viewDetail('" + rData['id'] + "')\" >查看详情</a>";
