@@ -5,11 +5,11 @@ $(function(){
           datatype: "json",
           colNames: ['灭火器编号', '区域', '位置', '数量', '状态', '巡检人', '巡检时间', '检查情况', '操作'],
           colModel: [
-              {name: 'equipment.eno', index: 'equipment.eno', editable: false},
-              {name: 'equipment.area', index: 'equipment.area', editable: false},
-              {name: 'equipment.location', index: 'equipment.location', editable: false,},
-              {name: 'equipment.amount', index: 'equipment.amount', editable: false},
-              {name: 'runStatusDes', index: 'runStatusDes', editable: false, sortable: false},
+              {name: 'equipment.eno', index: 'e.eno', editable: false},
+              {name: 'equipment.area', index: 'e.area', editable: false},
+              {name: 'equipment.location', index: 'e.location', editable: false,},
+              {name: 'equipment.amount', index: 'e.amount', editable: false},
+              {name: 'runStatusDes', index: 'runStatus', editable: false},
               {name: 'checkUser.name', index: 'checkUser.name', editable: false, sortable: false},
               {
                   name: 'checkTime',

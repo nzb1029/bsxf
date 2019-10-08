@@ -34,7 +34,7 @@ $(function(){
 //              },
               {name: 'checkUser.name', index: 'checkUser.name', editable: false, sortable: false},
               {name: 'checkFreqDes', index: 'checkFreqDes', editable: false, sortable: false},
-              {name: 'runStatusDes', index: 'runStatusDes', editable: false},
+              {name: 'runStatusDes', index: 'runStatus', editable: false},
               {name: 'comments', index: 'comments', editable: false},
               {
                   name: 'edit', index: 'edit', formatter: function (value, options, rData) {
