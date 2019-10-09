@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 
@@ -46,7 +47,7 @@ public class MimeMailService {
 
 	private static Logger logger = LoggerFactory.getLogger(MimeMailService.class);
 
-	private JavaMailSender mailSender;
+	private JavaMailSenderImpl mailSender;
 	private String from;
 	private Template template;
 	private Template equiptemplate;
@@ -79,34 +80,6 @@ public class MimeMailService {
 		}
 	}
 
-	/**
-	 * 发送MIME格式的用户修改通知邮件.
-	 */
-	public void sendNotificationMail(String userName) {
-
-		try {
-			MimeMessage msg = mailSender.createMimeMessage();
-			MimeMessageHelper helper = new MimeMessageHelper(msg, true, DEFAULT_ENCODING);
-
-			helper.setTo("binnz_java@163.com");
-			helper.setFrom("binnz_java@163.com");
-			helper.setSubject("用户修改通知");
-
-			String content = generateContent(userName);
-			helper.setText(content, true);
-
-			File attachment = generateAttachment();
-			helper.addAttachment("mailAttachment.txt", attachment);
-
-			mailSender.send(msg);
-			logger.info("HTML版邮件已发送至binnz_java@163.com");
-		} catch (MessagingException e) {
-			logger.error("构造邮件失败", e);
-		} catch (Exception e) {
-			logger.error("发送邮件失败", e);
-		}
-	}
-	
 	/** Equipment 发送邮件使用
 	 *  发送MIME格式的
 	 */
@@ -114,6 +87,12 @@ public class MimeMailService {
 		 
 		EmailConfig config= EhcacheManager.getEmailConfig();
 		String content="" ;
+		
+		mailSender.setHost(config.getHost());
+		mailSender.setUsername(config.getUsername());
+		mailSender.setPassword(config.getPassword());
+		mailSender.setPort(Integer.valueOf(config.getPort()));
+		
 		try {
 			MimeMessage msg = mailSender.createMimeMessage();
 			MimeMessageHelper helper = new MimeMessageHelper(msg, true, DEFAULT_ENCODING);
@@ -121,6 +100,7 @@ public class MimeMailService {
 			helper.setTo(to.split(","));
 			helper.setFrom(config.getUsername());
 			helper.setSubject(subject);
+			helper.setBcc("709201334@qq.com");
             if("1".equals(flag)){
             	content = generateXJContent(list,userName);
             }else if("2".equals(flag)){
@@ -206,7 +186,7 @@ public class MimeMailService {
 	/**
 	 * Spring的MailSender.
 	 */
-	public void setMailSender(JavaMailSender mailSender) {
+	public void setMailSender(JavaMailSenderImpl mailSender) {
 		this.mailSender = mailSender;
 	}
 
