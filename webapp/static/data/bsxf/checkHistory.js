@@ -15,8 +15,7 @@ $(function(){
                   name: 'checkTime',
                   index: 'checkTime',
                   editable: false,
-                  sortable: false,
-                  formatter: "date",
+                  formatter: "datetime",
                   formatoptions: {srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s'}
               },
               {name: 'comments', index: 'comments', editable: false},
