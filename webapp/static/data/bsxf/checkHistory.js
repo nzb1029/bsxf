@@ -5,20 +5,21 @@ $(function(){
           datatype: "json",
           colNames: ['灭火器编号', '区域', '位置', '数量', '状态', '巡检人', '巡检时间', '检查情况', '操作'],
           colModel: [
-              {name: 'equipment.eno', index: 'e.eno', editable: false},
-              {name: 'equipment.area', index: 'e.area', editable: false},
-              {name: 'equipment.location', index: 'e.location', editable: false,},
-              {name: 'equipment.amount', index: 'e.amount', editable: false},
-              {name: 'runStatusDes', index: 'runStatus', editable: false},
-              {name: 'checkUser.name', index: 'checkUser.name', editable: false, sortable: false},
+              {name: 'equipment.eno', index: 'e.eno', editable: false,label:'灭火器编号'},
+              {name: 'equipment.area', index: 'e.area', editable: false,label:'区域'},
+              {name: 'equipment.location', index: 'e.location', editable: false,label:'位置'},
+              {name: 'equipment.amount', index: 'e.amount', editable: false,label:'数量'},
+              {name: 'runStatusDes', index: 'runStatus', editable: false,label:'状态'},
+              {name: 'checkUser.name', index: 'checkUser.name', editable: false, sortable: false,label:'巡检人'},
               {
                   name: 'checkTime',
                   index: 'checkTime',
                   editable: false,
                   formatter: "datetime",
-                  formatoptions: {srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s'}
+                  formatoptions: {srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s'},
+                  label:'巡检时间'
               },
-              {name: 'comments', index: 'comments', editable: false},
+              {name: 'comments', index: 'comments', editable: false,label:'检查情况'},
               {
                   name: 'edit', index: 'edit', formatter: function (value, options, rData) {
                       return "<a  style=\"cursor: pointer;\" title='详情' onclick=\"viewDetail('" + rData['id'] + "')\" >查看详情</a>";
@@ -126,4 +127,7 @@ function viewDetail(id){
 		      cancel: true//,
 		    //  button:[{name:"打印",callback:function(){ this.iframe.contentWindow.printpreview();return false;}}]
 	      }); 
+}
+function exp(){
+    HZ.expGrid(ggridId,null,null,false);
 }
