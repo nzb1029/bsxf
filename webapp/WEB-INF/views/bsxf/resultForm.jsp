@@ -1,5 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@page import="org.bsxf.web.LtSecurityUtils"%>
+<%@page import="org.bsxf.common.entity.bsxf.Equipment"%>
+<%@page import="org.apache.commons.lang3.StringUtils"%>
 <%@page import="org.springside.mapper.JsonMapper"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
@@ -151,10 +153,6 @@
                 && submitCheckResult.length > 0) {
                 dialogWarning(submitCheckResult);
             }
-			//display1 display2
-			var displayflag=$('#displayflag').val();
-			$('#display1').css('display',displayflag);
-			$('#display2').css('display',displayflag);
             // 上传图片初始化
             var ctx = $('#ctx').val();
             var businessId = $('#checkHistoryId').val();
@@ -199,7 +197,58 @@
                 <input type="hidden" name="submitCheckResult" id="submitCheckResult" value="${submitCheckResult}"/>
                 <input type="hidden" name="equipmentId" id="equipmentId" value="${equipment.id}"/>
                 <input type="hidden" name="checkHistoryId" id="checkHistoryId" value="${checkHistoryId}"/>
-                <input type="hidden" name="displayflag" id="displayflag" value="${displayflag}"/>
+               <%
+                  Equipment e =  (Equipment)request.getAttribute("equipment");
+                  if(StringUtils.isNotEmpty(e.getEno()) &&
+               		   StringUtils.contains(e.getEno(), "FBGG")){
+                %>
+                 <div class="form-group">
+                    <label>CO2标识</label>
+                    <div>
+                        <label class="radio-inline">
+                            <input name="field04" type="radio" value="1" checked="checked" />正常
+                        </label>
+                        <label class="radio-inline">
+                            <input name="field04" type="radio" value="2" />异常
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>模块报警是否正常</label>
+                    <div>
+                        <label class="radio-inline">
+                            <input name="field05" type="radio" value="1" checked="checked" />正常
+                        </label>
+                        <label class="radio-inline">
+                            <input name="field05" type="radio" value="2" />异常
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>灭火器联动盘是否无锈蚀，无变形，指示是否在绿区</label>
+                    <div>
+                        <label class="radio-inline">
+                            <input name="field06" type="radio" value="1" checked="checked" />正常
+                        </label>
+                        <label class="radio-inline">
+                            <input name="field06" type="radio" value="2" />异常
+                        </label>
+                    </div>
+                </div>  
+                <div class="form-group">
+                    <label>灭火器插销，阀门是否正常</label>
+                    <div>
+                        <label class="radio-inline">
+                            <input name="field07" type="radio" value="1" checked="checked" />正常
+                        </label>
+                        <label class="radio-inline">
+                            <input name="field07" type="radio" value="2" />异常
+                        </label>
+                    </div>
+                </div> 
+                <%
+                  }else{
+               %>
                 <div class="form-group">
                     <label>消防设施是否被遮挡，灭火器箱是否完好，灭火器数量是否缺少</label>
                     <div>
@@ -288,7 +337,9 @@
                         </label>
                     </div>
                 </div>
-                <div id="display1" class="form-group">
+                <%if(StringUtils.isNotEmpty(e.getEno()) &&
+             		   StringUtils.contains(e.getEno(), "FHB")){ %>
+                <div class="form-group">
                     <label>水枪、水带、水管是否齐全，无破损，易连接</label>
                     <div>
                         <label class="radio-inline">
@@ -299,7 +350,7 @@
                         </label>
                     </div>
                 </div>
-                <div id="display2" class="form-group">
+                <div class="form-group">
                     <label>消火栓水压是否正常，启泵按钮是否有效</label>
                     <div>
                         <label class="radio-inline">
@@ -310,6 +361,10 @@
                         </label>
                     </div>
                 </div>
+               <% 
+                  }
+                }
+                %>
                 <div class="form-group">
                     <label>设备总体运行状态</label>
                     <div>

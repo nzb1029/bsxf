@@ -5,6 +5,10 @@
 <%@ include file="/WEB-INF/common/jqgrid.jsp"%>
 <%@include file="/WEB-INF/common/lhgdialog.jsp" %>
 <%@include file="/WEB-INF/common/calendar.jsp" %>
+<%@page import="org.bsxf.common.entity.bsxf.CheckHistory"%>
+<%@page import="org.bsxf.common.entity.bsxf.Equipment"%>
+<%@page import="org.apache.commons.lang3.StringUtils"%>
+
 <html>
 <head>
 	<title>巡检记录详情</title>
@@ -21,12 +25,6 @@
 				 	          });
 						} 
 				 });
-				//display1 display2
-				var displayflag=$('#displayflag').val();
-				if(displayflag =="none"){
-					$('#display1').css('display',"none");
-					$('#display2').css('display',"none");  
-				}
 				var fileType = '1';	
 				var businessId = $("#id").val();
 				var frameUrl="${ctx }/upload/upload2.jsp?fileType="+fileType+"&businessId="+businessId+"&fileSizeLimit=100MB&uploadLimit=20&multi=true&iframeId=okFrame&adap=true&fileTypeExts=*.jpg;*.jpge;*.gif;*.png;*.pdf&isview=true"
@@ -49,7 +47,6 @@
 		<div id="messageBox" class="alert alert-error" style="display:none">输入有误，请先更正。</div>
         <form:form id="inputForm" modelAttribute="checkHistory" action="${ctx}/checkHistory/save" method="post" class="form-horizontal">
 		<input type="hidden" name="id" id="id" value="${checkHistory.id}"/>
-		<input type="hidden" name="displayflag" id="displayflag" value="${displayflag}"/>
 		<table class="inputView" style="width: 700px;">
 			<tr>
 				<td class="left"><span class="req">*</span>灭火器编号：</td>
@@ -79,6 +76,56 @@
 				<input type="text" id="checkTime" name="checkTime" onclick="new WdatePicker() " disabled="disabled"  value="<fmt:formatDate value="${checkHistory.checkTime}" pattern="yyyy-MM-dd"/>" />
 				</td>
 			</tr>
+			<%
+			    CheckHistory check =  (CheckHistory)request.getAttribute("checkHistory");
+                  if(StringUtils.isNotEmpty(check.getEquipment().getEno()) &&
+               		   StringUtils.contains(check.getEquipment().getEno(), "FBGG")){
+           %>
+           <tr>
+				<td class="left">CO2标识：</td>
+				<td class="right">
+					<select  name="checkFreq" id="checkFreq" class="required" disabled="disabled">
+					  <option>请选择</option>
+			 			<c:forEach items="${dic['xf_status']}" var="item">
+          		 				<option value="${item.val }" <c:if test="${checkHistory.field04 == item.val}">selected="true"</c:if>>${item.name }</option>
+           				</c:forEach>
+				 	</select>
+				 </td>
+			</tr>
+			<tr>
+				<td class="left">模块报警是否正常：</td>
+				<td class="right">
+					<select  name="checkFreq" id="checkFreq" class="required" disabled="disabled">
+					  <option>请选择</option>
+			 			<c:forEach items="${dic['xf_status']}" var="item">
+          		 				<option value="${item.val }" <c:if test="${checkHistory.field05 == item.val}">selected="true"</c:if>>${item.name }</option>
+           				</c:forEach>
+				 	</select>
+				 </td>
+			</tr>
+			<tr>
+				<td class="left">灭火器联动盘是否无锈蚀，无变形，指示是否在绿区：</td>
+				<td class="right">
+					<select  name="checkFreq" id="checkFreq" class="required" disabled="disabled">
+					  <option>请选择</option>
+			 			<c:forEach items="${dic['xf_status']}" var="item">
+          		 				<option value="${item.val }" <c:if test="${checkHistory.field06 == item.val}">selected="true"</c:if>>${item.name }</option>
+           				</c:forEach>
+				 	</select>
+				 </td>
+			</tr>
+			<tr>
+				<td class="left">灭火器插销，阀门是否正常：</td>
+				<td class="right">
+					<select  name="checkFreq" id="checkFreq" class="required" disabled="disabled">
+					  <option>请选择</option>
+			 			<c:forEach items="${dic['xf_status']}" var="item">
+          		 				<option value="${item.val }" <c:if test="${checkHistory.field07 == item.val}">selected="true"</c:if>>${item.name }</option>
+           				</c:forEach>
+				 	</select>
+				 </td>
+			</tr>
+           <%}else{ %>
 			<tr>
 				<td class="left">消防设施是否被遮挡，灭火器箱是否完好，灭火器数量是否缺少：</td>
 				<td class="right">
@@ -167,7 +214,10 @@
 				 	</select>
 				 </td>
 			</tr>
-			<tr id="display1">
+			<% if(StringUtils.isNotEmpty(check.getEquipment().getEno()) &&
+            		   StringUtils.contains(check.getEquipment().getEno(), "FHB")){
+			%>
+			<tr>
 				<td class="left">水枪、水带、水管是否齐全，无破损，易连接：</td>
 				<td class="right">
 					<select  name="checkFreq" id="checkFreq" class="required" disabled="disabled">
@@ -178,7 +228,7 @@
 				 	</select>
 				 </td>
 			</tr>
-			<tr id="display2">
+			<tr>
 				<td class="left">消火栓水压是否正常，启泵按钮是否有效：</td>
 				<td class="right">
 					<select  name="checkFreq" id="checkFreq" class="required" disabled="disabled">
@@ -189,6 +239,8 @@
 				 	</select>
 				 </td>
 			</tr>
+			 <% }
+			   } %>
 			<tr>
 				<td class="left">检查情况：</td>
 				<td   class="right">
