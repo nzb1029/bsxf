@@ -110,8 +110,14 @@
 		<if test="filters.area!=null"> 
 			 and s.area like '%' #{filters.area} '%'
 		</if>
-		<if test="filters.userName!=null"> 
+		<if test="filters.userName!=null">
 			 and uu.name like '%' #{filters.userName} '%'
+		</if>
+		<if test="filters.haveCheck!=null and filters.haveCheck == 1">
+			and s.remainNum &gt; 0
+		</if>
+		<if test="filters.haveCheck!=null and filters.haveCheck == 0">
+			and s.remainNum 	&lt;= 0
 		</if>
 		<if test="orderBy!=null">
 	      order by ${orderBy} ${order}
@@ -135,8 +141,14 @@
 		<if test="filters.area!=null"> 
 			 and s.area like '%' #{filters.area} '%'
 		</if>
-		<if test="filters.userName!=null"> 
+		<if test="filters.userName!=null">
 			 and uu.name like '%' #{filters.userName} '%'
+		</if>
+		<if test="filters.haveCheck!=null and filters.haveCheck == 1">
+			and s.remainNum &gt; 0
+		</if>
+		<if test="filters.haveCheck!=null and filters.haveCheck == 0">
+			and s.remainNum 	&lt;= 0
 		</if>
 		<if test="orderBy!=null">
 	      order by ${orderBy} ${order}

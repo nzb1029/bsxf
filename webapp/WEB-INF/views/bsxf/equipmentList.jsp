@@ -36,6 +36,13 @@
             <span class="margin_right_10">编号：<input type="text" name="filter_eno"   class="input-medium"  value=""> </span>
             <span class="margin_right_10">区域：<input type="text" name="filter_area"   class="input-medium"  value=""> </span> <br><br>
             <span class="margin_right_30">巡检负责人：<input type="text" name="filter_userName"  class="input-medium"  value=""></span>
+            <span class="margin_right_30">是否巡检：
+                <select name="filter_haveCheck" class="input-medium">
+                    <option value="">请选择</option>
+                    <option value="0">已巡检</option>
+                    <option value="1">未巡检</option>
+                </select>
+            </span>
             <span class="margin_right_30"><button type="submit" id="search_btn">搜索</button></span>
             <span class="margin_right_30"><button type="reset" id="search_btn">清空</button></span>
            </form>
