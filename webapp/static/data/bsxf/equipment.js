@@ -4,13 +4,13 @@ $(function(){
 	  jQuery("#table_center_table").jqGrid({
           url: ctx + '/equipment/jqgrid',
           datatype: "json",
-          colNames: ['编号', '区域', '位置', '数量', '类别', '巡检负责人', '巡检频率', '状态','检查情况', '操作'],
+          colNames: ['编号', '区域', '位置', '数量', '类别', '巡检负责人', '巡检频率', '状态', '检查情况', '操作'],
           colModel: [
-              {name: 'eno', index: 'eno', editable: false},
-              {name: 'area', index: 'area', editable: false},
-              {name: 'location', index: 'location', editable: false},
-              {name: 'amount', index: 'amount', editable: false},
-              {name: 'subTypeName', index: 'subTypeName', editable: false, sortable: false},
+              {name: 'eno', index: 'eno', editable: false, label: '编号'},
+              {name: 'area', index: 'area', editable: false, label: '区域'},
+              {name: 'location', index: 'location', editable: false, label: '位置'},
+              {name: 'amount', index: 'amount', editable: false, label: '数量'},
+              {name: 'subTypeName', index: 'subTypeName', editable: false, sortable: false, label: '类别'},
 //              {
 //                  name: 'productionDate',
 //                  index: 'productionDate',
@@ -46,10 +46,10 @@ $(function(){
 //                  formatter: "date",
 //                  formatoptions: {srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s'}
 //              },
-              {name: 'checkUser.name', index: 'checkUser.name', editable: false, sortable: false},
-              {name: 'checkFreqDes', index: 'checkFreqDes', editable: false, sortable: false},
-              {name: 'runStatusDes', index: 'runStatus', editable: false},
-              {name: 'comments', index: 'comments', editable: false},
+              {name: 'checkUser.name', index: 'checkUser.name', editable: false, sortable: false, label: '巡检负责人'},
+              {name: 'checkFreqDes', index: 'checkFreqDes', editable: false, sortable: false, label: '巡检频率'},
+              {name: 'runStatusDes', index: 'runStatus', editable: false, label: '状态'},
+              {name: 'comments', index: 'comments', editable: false, label: '检查情况'},
               {name: 'edit', index: 'edit', formatter: updateAndDel, sortable: false}
           ],
           rowNum: 10,
@@ -196,4 +196,7 @@ function viewDetail(id){
 		      cancel: true//,
 		    //  button:[{name:"打印",callback:function(){ this.iframe.contentWindow.printpreview();return false;}}]
 	      }); 
+}
+function exp(){
+    HZ.expGrid(ggridId,null,null,false);
 }

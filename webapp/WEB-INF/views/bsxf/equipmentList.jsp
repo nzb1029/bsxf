@@ -44,6 +44,7 @@
             <span id="table_center_search_header_name">
                                    灭火器管理列表
             </span>
+            <button class="button_right" type="button" onclick="javascript:exp()" id="exportbtn" >导出</button>
             <button class="button_right" type="button" onclick="javascript:batchImp()" id="imp" >批量导入</button>
             <input type="file" onchange="javascript:importEquipmentList(this)" id="importEquipmentList" style="display: none;"/>
             <button class="button_right" type="button" onclick="javascript:batchDel()" id="remove">批量删除</button>
