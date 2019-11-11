@@ -14,6 +14,7 @@ import org.bsxf.common.entity.account.Menu;
 import org.bsxf.common.entity.account.Role;
 import org.bsxf.common.entity.account.User;
 import org.bsxf.common.web.UserLogUtil;
+import org.bsxf.security.ShiroDbRealm.ShiroUser;
 import org.bsxf.utils.EncryptUtils;
 import org.bsxf.utils.Page;
 import org.bsxf.web.LtSecurityUtils;
@@ -207,6 +208,13 @@ public class AccountManager {
 	 */
 	@Transactional(readOnly = true)
 	public Page findUserByPage(Page page) {
+		ShiroUser user = LtSecurityUtils.getShiroUser();
+		if(user != null && 
+			( "1".equals(user.getUserType()) || 
+			 ("0".equals(user.getUserType()) && !"admin".equals(user.getName())))){
+			
+			page.getFilters().put("userId", user.getId());
+		}
 
 		return userDao.findUserByPage(page);
 	}

@@ -131,6 +131,9 @@
 	     <if test="filters.loginName!=null">
 	      and  u.login_name like '%' #{filters.loginName} '%'
 	     </if>
+	     <if test="filters.userId!=null">
+	      and  u.id = #{filters.userId}
+	     </if>
 	      <if test="filters.email!=null">
 	       and   u.email like '%' #{filters.email} '%'
 	     </if>
@@ -141,6 +144,9 @@
 		 where u.status='enabled'
 	     <if test="filters.loginName!=null">
 	      and  u.login_name like '%' #{filters.loginName} '%'
+	     </if>
+	     <if test="filters.userId!=null">
+	      and  u.id = #{filters.userId}
 	     </if>
 	     <if test="filters.email!=null">
 	     and   u.email like '%' #{filters.email} '%'

@@ -23,28 +23,6 @@ public class EncryptUtils {
     public static String md5(String str) {
         return md5.getMD5ofStr(str);
     }
-    /**
-     * 返回经过网络监控云平台系统的加密算法加密之后的字符串. <br>
-     * <br>
-     * <b>示例: </b>
-     * 
-     * <pre>
-     * 
-     *  
-     *        EncryptUtils.sinosoftEncrypt ("")                           返回 "kkkkkkkk"
-     *        EncryptUtils.sinosoftEncrypt ("a")                          返回 "kkakkkkk"
-     *        EncryptUtils.sinosoftEncrypt ("abc")                        返回 "kkakkckb"
-     *        EncryptUtils.sinosoftEncrypt ("message digest")             返回 "acmbgckb"
-     *   
-     *  
-     * </pre>
-     * 
-     * @param str 明文
-     * @return 暗文
-     */
-    public static String aklEncrypt(String str) {
-        return aklEncrypt.aklEncrypt(str);
-    }
 }
 /*******************************************************************************
  * md5 类实现了RSA Data Security, Inc.在提交给IETF 的RFC1321中的MD5 message-digest 算法。
@@ -337,98 +315,5 @@ final class MD5 {
         ob[1] = Digit[ib & 0X0F];
         String s = new String(ob);
         return s;
-    }
-}
-/**
- * 云监控平台的加密算法类
- */
-final class aklEncrypt {
-    private static final String KEY1 = "54176382";
-    private static final String KEY2 = "1e4s2dj6l38 5097vw.";
-    private static final String KEY3 = "ab cdefghijklmn102p";
-    /**
-     * 云监控平台的加密算法
-     * 
-     * <pre>
-     * 
-     *               #############################################                    
-     *               ## (13)                                                         
-     *               ## 函数功能：字符串加密函数                  ##                 
-     *               ## 输入参数：lv_pass  需要操作的字符串       ##                 
-     *               ## 输出参数：返回加密后的字串 lv_pass        ##                 
-     *               #############################################                   
-     *               FUNCTION fencode(lv_pass)                                       
-     *               DEFINE  lv_pass,lv_pass1 CHAR(8)                                
-     *               DEFINE  lv_key1,lv_key2,lv_key3,lv_key4 CHAR(19)                
-     *               DEFINE  lv_i,lv_j SMALLINT                                      
-     *                   INITIALIZE lv_pass1,lv_key1,lv_key2,lv_key3,lv_key4 TO NULL 
-     *                                                                               
-     *                   LET lv_i = 0                                                
-     *                   LET lv_j = 0                                                
-     *                                                                               
-     *                   LET lv_key1="54176382"                                      
-     *                   LET lv_key2="1e4s2dj6l38 5097vw."                           
-     *                   LET lv_key3="ab cdefghijklmn102p"                           
-     *                   LET lv_key4=57                                              
-     *                   FOR lv_i=1 TO 8                                             
-     *                       LET lv_j=lv_key1[lv_i]                                  
-     *                       LET lv_pass1[lv_i]=lv_pass[lv_j]                        
-     *                   END FOR                                                     
-     *                   LET lv_pass=lv_pass1                                        
-     *                   FOR lv_i=1 TO 8                                             
-     *                       FOR lv_j=1 TO 19                                        
-     *                           IF lv_pass[lv_i]=lv_key2[lv_j] THEN                 
-     *                          LET lv_pass1[lv_i]=lv_key3[lv_j]                     
-     *                           END IF                                              
-     *                       END FOR                                                 
-     *                   END FOR                                                     
-     *                   LET lv_pass=lv_pass1                                        
-     *                   RETURN lv_pass1 CLIPPED                                     
-     *               END FUNCTION                                                    
-     *        
-     *       
-     *      
-     *     
-     *    
-     *   
-     *  
-     * </pre>
-     * 
-     * @param password 明文
-     * @return 密文
-     */
-    public static synchronized String aklEncrypt(String password) {
-        String[] oldPasswdArray = new String[8];
-        String[] newPasswdArray = new String[8];
-        int passwordLength = password.length();
-        if (passwordLength > 8) {
-            passwordLength = 8;
-        }
-        for (int i = 0; i < passwordLength; i++) {
-            oldPasswdArray[i] = password.substring(i, i + 1);
-        }
-        for (int i = passwordLength; i < 8; i++) {
-            oldPasswdArray[i] = " ";
-        }
-        for (int i = 0; i < 8; i++) {
-            newPasswdArray[i] = " ";
-        }
-        for (int i = 0; i < 8; i++) {
-            int j = Integer.parseInt(KEY1.substring(i, i + 1));
-            newPasswdArray[i] = oldPasswdArray[j - 1];
-        }
-        System.arraycopy(newPasswdArray, 0, oldPasswdArray, 0, 8);
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 19; j++) {
-                if (oldPasswdArray[i].equals(KEY2.substring(j, j + 1))) {
-                    newPasswdArray[i] = KEY3.substring(j, j + 1);
-                }
-            }
-        }
-        String newValue = "";
-        for (int i = 0, lv_pass1Length = newPasswdArray.length; i < lv_pass1Length; i++) {
-            newValue += newPasswdArray[i];
-        }
-        return newValue;
     }
 }
